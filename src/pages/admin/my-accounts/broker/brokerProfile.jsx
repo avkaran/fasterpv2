@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { Row, Col, message, Space } from "antd";
 import { Button, Card } from "antd";
 import {
@@ -49,8 +49,8 @@ const BrokerProfile = (props) => {
   const [visiblePasswordModal, setVisiblePasswordModal] = useState(false);
   const [passwordLoader, setPasswordLoader] = useState(false);
   useEffect(() => {
-    setViewId(context.adminUser(props.match.params.userId).ref_id);
-    loadViewData(context.adminUser(props.match.params.userId).ref_id);
+    setViewId(context.adminUser(userId).ref_id);
+    loadViewData(context.adminUser(userId).ref_id);
   }, []);
   const loadViewData = (id) => {
     setLoader(true);
@@ -88,7 +88,7 @@ const BrokerProfile = (props) => {
       };
 
       context.psGlobal
-        .apiRequest(reqData, context.adminUser(props.match.params.userId).mode)
+        .apiRequest(reqData, context.adminUser(userId).mode)
         .then((res, error) => {
           setPasswordLoader(false);
           message.success("Password Changed Successfully");
@@ -135,7 +135,7 @@ const BrokerProfile = (props) => {
                 setCurAction("view");
                 loadViewData(viewId);
               }}
-              userId={props.match.params.userId}
+              userId={userId}
             />
           </Card>
         )}

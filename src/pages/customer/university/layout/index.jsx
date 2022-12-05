@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, withRouter } from 'react-router-dom';
+import { Navigate, Route, useParams } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../../context';
 import customerRoutes from '../routes';

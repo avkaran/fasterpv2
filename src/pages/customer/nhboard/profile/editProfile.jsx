@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter,useNavigate } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { ImageUpload } from '../../../../comp'
 import { Spin, Card } from 'antd';

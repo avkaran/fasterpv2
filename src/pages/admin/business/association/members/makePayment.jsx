@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Checkbox, Form, Input, Space, Spin, Select, DatePicker, Row, Col, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import moment from 'moment';
 
 import { CardFixedTop, momentDate } from '../../../../../utils';
@@ -12,6 +12,7 @@ import PsContext from '../../../../../context';
 
 const MakePayment = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Step } = Steps;
     const { TextArea } = Input;
     const navigate = useNavigate();
@@ -72,7 +73,7 @@ const MakePayment = (props) => {
             query: "select * from members where id='" + id + "'"
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setViewData(res[0]);
             setLoader(false);
 
@@ -107,10 +108,10 @@ const MakePayment = (props) => {
 
         };
        
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
 
             message.success("payment done")
-            navigate('/' + props.match.params.userId + '/admin/members')
+            navigate('/' + userId + '/admin/members')
            
         }).catch(err => {
             message.error(err);

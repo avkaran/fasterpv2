@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Radio } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -21,6 +21,7 @@ import toast from 'react-hot-toast';
 
 const RenewalEntry = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ const RenewalEntry = (props) => {
             if (res['data'].status == '1') {
                 document.getElementById("addform").reset();
                 toast.success('Renewal Successfully');
-                navigate('/' + props.match.params.userId + '/admin');
+                navigate('/' + userId + '/admin');
                 processSms();
             }
             else {
@@ -79,7 +80,7 @@ const RenewalEntry = (props) => {
             }
         
 
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
 
             setRenewalTemplate(res[0]);
            

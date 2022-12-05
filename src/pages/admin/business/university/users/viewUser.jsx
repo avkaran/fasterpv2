@@ -8,17 +8,18 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined } from '@ant-design/icons';
 import 'react-phone-input-2/lib/style.css'
 import PsContext from '../../../../../context';
-
+import { useParams } from 'react-router-dom';
 const ViewUser = (props) => {
     const { Content } = Layout;
     const context = useContext(PsContext);
+const {userId}=useParams();
     const [addForm] = Form.useForm();
     const [loader, setLoader] = useState(false);
     const [viewData, setViewData] = useState([]);
-    const [userId] = useState(props.match.params.customerUserId)
+    const [customerUserId] = useState(props.match.params.customerUserId)
     useEffect(() => {
 
-        loadData(userId)
+        loadData(customerUserId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const loadData = (id) => {
@@ -95,7 +96,7 @@ const ViewUser = (props) => {
                     <Breadcrumb.Item>View User</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Card title="View User" extra={<Button href={"#/"+props.match.params.userId+"/admin/users"}><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
+                <Card title="View User" extra={<Button href={"#/"+userId+"/admin/users"}><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
 
                     <Spin spinning={loader} >
                      {

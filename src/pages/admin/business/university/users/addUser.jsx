@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Space, DatePicker } from 'antd';
 import { Form, Input, Select } from 'antd';
@@ -14,6 +14,7 @@ import PsContext from '../../../../../context';
 
 const AddUser = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [addForm] = Form.useForm();
@@ -75,8 +76,8 @@ const AddUser = (props) => {
 
                         setLoader(false);
                         message.success(res['data'].message || 'Success');
-                        navigate('/'+props.match.params.userId+'/admin/users')
-                        //navigate('/'+props.match.params.userId+'/admin/members/make-payment/' + createdId)
+                        navigate('/'+userId+'/admin/users')
+                        //navigate('/'+userId+'/admin/members/make-payment/' + createdId)
                     }
                 });
 
@@ -116,7 +117,7 @@ const AddUser = (props) => {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>Add User</Breadcrumb.Item>
                 </Breadcrumb>
-                <Card title="Add User" extra={<Button href={"#/"+props.match.params.userId+"/admin/users"} ><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
+                <Card title="Add User" extra={<Button href={"#/"+userId+"/admin/users"} ><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
 
                     <Spin spinning={loader} >
                         <Form

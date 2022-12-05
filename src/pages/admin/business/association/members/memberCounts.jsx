@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -19,6 +19,7 @@ import { MyTable } from '../../../../../comp';
 
 const MemberCounts = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ const MemberCounts = (props) => {
             }
         ]
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             var cData=[];
             cData.push({
                 particular : "All Members",

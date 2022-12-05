@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { Row, Col, message, Space } from "antd";
 import { MyButton } from "../../../../../comp";
 import { Breadcrumb, Layout, Card, Tag, Modal, Button } from "antd";
@@ -23,6 +23,7 @@ import {
 import ResellerTransactions from "../reseller/resellerTransactions";
 const FranchiseTransactions = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +48,7 @@ const FranchiseTransactions = (props) => {
                     <Breadcrumb.Item>Transactions</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <ResellerTransactions resellerType="franchise" userId={props.match.params.userId}/>
+                <ResellerTransactions resellerType="franchise" userId={userId}/>
             </Content>
         </>
     )

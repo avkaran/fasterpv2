@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Logout from './Logout';
 import UserProfile from './UserProfile';
@@ -11,10 +11,12 @@ import { businesses } from '../../../../utils';
 import { MyButton } from '../../../../comp';
 import { Dropdown, Menu, Space, message } from 'antd';
 import PsContext from '../../../../context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 const Header = (props) => {
 	const navigate = useNavigate();
 	const context = useContext(PsContext);
+	const { userId } = useParams();
+	const { pathname } = useLocation();
 	const handleSidebarCollapse = () => {
 
 		if (document.body.classList.contains('sidebar-mini')) {
@@ -33,12 +35,12 @@ const Header = (props) => {
 
 		import('../../business/' + currentInstance.name + '/routes').then((module) => {
 			//setCurrentRoutes(module.default);
-			let r = module.default.find(item => item.path === props.location.pathname);
+			let r = module.default.find(item => item.path === pathname);
 			updateTitle(r);
 		})
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.location.pathname]);
+	}, [pathname]);
 
 	const updateTitle = (r) => {
 
@@ -55,11 +57,11 @@ const Header = (props) => {
 	};
 	const onDevMenuClick = ({ key }) => {
 		if (key === 'documentation')
-			navigate('/' + props.match.params.userId + '/admin/docs')
+			navigate('/' + userId + '/admin/docs')
 		else if (key === 'database')
-			navigate('/' + props.match.params.userId + '/admin/database')
+			navigate('/' + userId + '/admin/database')
 		else if (key === 'coder')
-			navigate('/' + props.match.params.userId + '/admin/coder')
+			navigate('/' + userId + '/admin/coder')
 		else
 			message.info(`Click on item ${key}`);
 	};
@@ -124,7 +126,7 @@ const Header = (props) => {
 					</ul>
 
 					<ul className="nav navbar-toolbar">
-						{context.adminUser(props.match.params.userId).mode === "dev" && (<Dropdown overlay={menu}>
+						{context.adminUser(userId).mode === "dev" && (<Dropdown overlay={menu}>
 							{
 								// eslint-disable-next-line jsx-a11y/anchor-is-valid
 								(<a onClick={(e) => e.preventDefault()}>

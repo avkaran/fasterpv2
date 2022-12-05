@@ -10,9 +10,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faClose, faUserTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { MyButton } from '../../../comp'
-
+import { useParams } from 'react-router-dom';
 const Collections = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     //const navigate = useNavigate();
     const { Content } = Layout;
     const [addEditForm] = Form.useForm();
@@ -80,7 +81,7 @@ const Collections = (props) => {
 
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             context.updateGlobal().then((resInnser) => {
                 if (resInnser) {
                     //update local data if required
@@ -124,7 +125,7 @@ const Collections = (props) => {
 
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             context.updateGlobal().then((resInnser) => {
                 if (resInnser) {
                     //update local data if required

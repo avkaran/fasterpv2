@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route,Outlet } from 'react-router-dom';
+import { Navigate, Route,Outlet,useParams,useLocation } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../context';
 import Header from './header';
@@ -19,31 +19,30 @@ import '../../..//assets/font-awesome/css/all.css';
 import 'react-phone-input-2/lib/style.css'
 const Layout = (props) => {
 	const context = useContext(PsContext);
-	const role =  context.adminUser(props.match.params.userId).role && context.adminUser(props.match.params.userId).role.toLowerCase();
+	const { userId } = useParams();
+	const role =  context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
 	const [updateStatus, setUpdateState] = useState(false);
-	const [currentRoutes,setCurrentRoutes]=useState([]);
+	const { pathname } = useLocation();
 	useEffect(() => {
-	//	console.log("admin user",context.adminUser(props.match.params.userId))
+	//	console.log("admin user",context.adminUser(userId))
 		AOS.init(aosInit);
 		AOS.refresh();
-		axios.defaults.headers.common['Api-Token'] = context.adminApi(props.match.params.userId)
+		axios.defaults.headers.common['Api-Token'] = context.adminApi(userId)
 		context.updateGlobal().then((res) => {
 			if (res) setUpdateState(true)
 		}
 		).catch((error) => {
 			message.error(error)
 		});
-		import('../../admin/business/'+currentInstance.name+'/routes').then((module)=>{
-			setCurrentRoutes(module.default);
-		})
+		
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		AOS.refresh();
-	}, [props.location.pathname]);
+	}, [pathname]);
 
-	if (context.adminLogged(props.match.params.userId) !== 'yes') {
+	if (context.adminLogged(userId) !== 'yes') {
 		return (<Navigate to="/a/admin-login" />);
 	}
 	else {
@@ -53,7 +52,7 @@ const Layout = (props) => {
 
 					<Header />
 
-					<Sidebar role={role} user={props.match.params.userId}/>
+					<Sidebar role={role} user={userId}/>
 					
 					<div className="content-wrapper" data-aos="fade-up" >
 						<Outlet />

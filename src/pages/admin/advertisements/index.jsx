@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext,useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button } from 'antd';
@@ -138,7 +138,7 @@ const Advertisement = (props) => {
         <>
            <ResponsiveLayout
          
-         userId={props.match.params.userId}
+         userId={userId}
          customHeader={null}
          bottomMenues={null}
          breadcrumbs={[
@@ -159,9 +159,9 @@ const Advertisement = (props) => {
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewAdvertisement viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditAdvertisement onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditAdvertisement editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewAdvertisement viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditAdvertisement onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditAdvertisement editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -169,9 +169,9 @@ const Advertisement = (props) => {
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List Advertisment</Button>}>
 
-                        {curAction === "view" && (<ViewAdvertisement viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditAdvertisement onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditAdvertisement  editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewAdvertisement viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditAdvertisement onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditAdvertisement  editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

@@ -14,9 +14,10 @@ import { blue, red, cyan, grey } from '@ant-design/colors';
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import moment from 'moment';
-
+import { useParams } from 'react-router-dom';
 const ListUsers = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const [initLoading, setInitLoading] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -206,7 +207,7 @@ const ListUsers = (props) => {
 
                     >{listHeading} ({currentTotalRecords.current})
 
-                        <MyButton style={{ float: 'right' }} href={"#/"+props.match.params.userId+"/admin/users/add-user"}> <i class="fa-solid fa-plus pe-2"></i> Add</MyButton>
+                        <MyButton style={{ float: 'right' }} href={"#/"+userId+"/admin/users/add-user"}> <i class="fa-solid fa-plus pe-2"></i> Add</MyButton>
                     </Card>
                     <div
                         id="scrollableDiv"
@@ -246,9 +247,9 @@ const ListUsers = (props) => {
                                     <List.Item key={item.id}
 
                                         actions={[<Tooltip title="View">
-                                            <MyButton type="outlined" size="large" shape="circle" href={"#/"+props.match.params.userId+"/admin/users/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
+                                            <MyButton type="outlined" size="large" shape="circle" href={"#/"+userId+"/admin/users/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
                                         </Tooltip>, <Tooltip title="Edit">
-                                            <MyButton type="outlined" size="large" shape="circle" color={blue[7]} href={"#/"+props.match.params.userId+"/admin/users/edit/" + item.id} ><i class="fa-solid fa-pencil"></i></MyButton>
+                                            <MyButton type="outlined" size="large" shape="circle" color={blue[7]} href={"#/"+userId+"/admin/users/edit/" + item.id} ><i class="fa-solid fa-pencil"></i></MyButton>
                                         </Tooltip>,
 
                                         <DeleteButton type="outlined" size="large" shape="circle" color={red[7]} onFinish={() => resetResult()}

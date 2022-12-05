@@ -109,7 +109,7 @@ const AddEditDesignation = (props) => {
                 setLoader(false);
                 message.success(heading + ' Saved Successfullly');
                 onSaveFinish();
-                //navigate('/' + props.match.params.userId + '/admin/courses');
+                //navigate('/' + userId + '/admin/courses');
             }).catch(err => {
                 message.error(err);
                 setLoader(false);

@@ -5,6 +5,7 @@ import { Row, Col, message, Badge, Drawer, Spin } from 'antd';
 import { List, Avatar, Skeleton, Card, Image, Space, Tag, Tooltip, Select,Input } from 'antd';
 import { MyButton, DeleteButton } from '../../../../../comp'
 import { Breadcrumb, Layout, Divider, Form } from 'antd';
+import {useParams} from 'react-router-dom';
 import { HomeOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { capitalizeFirst } from '../../../../../utils';
@@ -20,6 +21,7 @@ import moment from 'moment';
 
 const ListMembers = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     const [initLoading, setInitLoading] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -273,7 +275,7 @@ const ListMembers = (props) => {
 
                     >{listHeading} ({currentTotalRecords.current})
 
-                        <MyButton style={{ float: 'right' }} href={"#" + props.match.params.userId + "/admin/members/add-member"}> <i class="fa-solid fa-plus pe-2"></i> Add</MyButton>
+                        <MyButton style={{ float: 'right' }} href={"#" + userId + "/admin/members/add-member"}> <i class="fa-solid fa-plus pe-2"></i> Add</MyButton>
                     </Card>
                     <div
                         id="scrollableDiv"
@@ -313,9 +315,9 @@ const ListMembers = (props) => {
                                     <List.Item key={item.id}
 
                                         actions={[<Tooltip title="View">
-                                            <MyButton type="outlined" size="large" shape="circle" href={"#" + props.match.params.userId + "/admin/members/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
+                                            <MyButton type="outlined" size="large" shape="circle" href={"#" + userId + "/admin/members/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
                                         </Tooltip>, <Tooltip title="Edit">
-                                            <MyButton type="outlined" size="large" shape="circle" color={blue[7]} href={"#" + props.match.params.userId + "/admin/members/edit/" + item.id}><i class="fa-solid fa-pencil"></i></MyButton>
+                                            <MyButton type="outlined" size="large" shape="circle" color={blue[7]} href={"#" + userId + "/admin/members/edit/" + item.id}><i class="fa-solid fa-pencil"></i></MyButton>
                                         </Tooltip>,
 
                                         <DeleteButton type="outlined" size="large" shape="circle" color={red[7]} onFinish={() => resetResult()}
@@ -358,7 +360,7 @@ const ListMembers = (props) => {
                                                         : <Tag color="red" style={{ fontWeight: 'bold', width: '100px' }}><FontAwesomeIcon icon={faMobileAlt} style={{ color: red[6] }} /> &nbsp;Not Verified</Tag>}
                                                     {item.payment_status === 'paid' ?
                                                         <Tag color="green" style={{ fontWeight: 'bold', width: '80px' }}><FontAwesomeIcon icon={faIndianRupeeSign} style={{ color: green[6] }} /> &nbsp;Paid</Tag>
-                                                        : <MyButton type="outlined" className="ant-tag ant-tag-red" size="small" color={red[7]} borderColor={red[5]} style={{ fontWeight: 'bold', width: '80px' }} href={"#/" + props.match.params.userId + "/admin/members/make-payment/" + item.id}><FontAwesomeIcon icon={faIndianRupeeSign} style={{ color: red[6] }} />&nbsp; Unpaid</MyButton>}
+                                                        : <MyButton type="outlined" className="ant-tag ant-tag-red" size="small" color={red[7]} borderColor={red[5]} style={{ fontWeight: 'bold', width: '80px' }} href={"#/" + userId + "/admin/members/make-payment/" + item.id}><FontAwesomeIcon icon={faIndianRupeeSign} style={{ color: red[6] }} />&nbsp; Unpaid</MyButton>}
 
                                                 </Space>
                                             </Row>

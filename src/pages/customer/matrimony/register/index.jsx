@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, withRouter } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, Card, Form, Button, Input, Select, Space, DatePicker } from 'antd';
 import { Spin, message } from 'antd';
 import AOS from "aos";

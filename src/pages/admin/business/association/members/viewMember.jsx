@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Form, Spin, Row, Col, Card, message, Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 //import { Row, Col } from 'react-bootstrap';
 import { CardFixedTop, momentDate } from '../../../../../utils';
 import toast from 'react-hot-toast';
@@ -19,10 +19,11 @@ import { green, blue, red, cyan, grey } from '@ant-design/colors';
 const ViewMember = (props) => {
     const navigate = useNavigate();
     const context = useContext(PsContext);
+    const {userId,memberId}=  useParams();
     const [mobileApproveForm] = Form.useForm()
     const [loader, setLoader] = useState(false);
     const [viewData, setViewData] = useState(null);
-    const [memberId] = useState(props.match.params.memberId);
+   
     const [activateLoading, setActivateLoading] = useState(false);
     const [mobileApproveLoading, setMobileApproveLoading] = useState(false);
     const [visibleApproveMobileNumber, setVisibleApproveMobileNumber] = useState(false);
@@ -68,7 +69,7 @@ const ViewMember = (props) => {
         };
 
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             message.success("Member Activated");
             var mydata = viewData;
             mydata.member_status = "active";
@@ -90,7 +91,7 @@ const ViewMember = (props) => {
         };
 
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             if(res.length>0){
                 message.error("Mobile Number Exist for another member");
                 setMobileApproveLoading(false);
@@ -103,7 +104,7 @@ const ViewMember = (props) => {
                 };
         
         
-                context.psGlobal.apiRequest(reqDataInner, context.adminUser(props.match.params.userId).mode).then((resInner) => {
+                context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then((resInner) => {
                     message.success("Mobile Number Approved");
                     var mydata = viewData;
                     mydata.is_otp_verified = "1";

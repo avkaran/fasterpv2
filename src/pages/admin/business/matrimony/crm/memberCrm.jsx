@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { Row, Col, message, Space } from "antd";
 import { MyButton } from "../../../../../comp";
 import { Breadcrumb, Layout, Card, Tag, Modal, Button } from "antd";
@@ -24,6 +24,7 @@ import CRMList from "../../../crm/crmList";
 
 const MemberCRM = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +48,7 @@ const MemberCRM = (props) => {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>List CRM</Breadcrumb.Item>
                 </Breadcrumb>
-                <CRMList  userId={props.match.params.userId}/>
+                <CRMList  userId={userId}/>
             </Content>
         </>
     )

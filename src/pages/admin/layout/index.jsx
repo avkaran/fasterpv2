@@ -26,7 +26,7 @@ const ResponsiveLayout = (props) => {
     if (context.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile) {
 
         return <HomeContainer
-            role={context.adminUser(props.match.params.userId).role}
+            role={context.adminUser(userId).role}
             userId={userId}
             customHeader={null}
             bottomMenues={null}

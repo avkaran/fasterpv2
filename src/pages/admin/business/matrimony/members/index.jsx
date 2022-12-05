@@ -15,8 +15,10 @@ import ListMemberComponent from './listMemberComponent';
 import AddEditMember from './AddEditMember';
 import moment from 'moment'
 import ViewMember from './viewMember';
+import { useParams } from 'react-router-dom';
 const ListMembers = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Panel } = Collapse;
     const [searchByIdForm] = Form.useForm();
     const [basicSearchForm] = Form.useForm();
@@ -55,7 +57,7 @@ const ListMembers = (props) => {
             query: "select id,caste_name from castes where religion='" + religion + "' and master_caste_id is null"
         }
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
             setCasteList(res);
             setCasteLoader(false);
@@ -221,13 +223,13 @@ const ListMembers = (props) => {
                 </Breadcrumb>
                 {
                     curAction === "view" && (<Card title="View Member" extra={<MyButton onClick={() => setCurAction("list")}>Back</MyButton>}>
-                        <ViewMember viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />
+                        <ViewMember viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />
                     </Card>)
                 }
                 {curAction === "edit" && (<Card title="Edit Member"><AddEditMember
                     editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")}
                     onSaveFinish={() => { setCurAction("list"); setRefreshMemberList(prev => prev + 1); }}
-                    userId={props.match.params.userId}
+                    userId={userId}
                     inputFields={
                         [
                             'members.member_created_for',
@@ -587,7 +589,7 @@ const ListMembers = (props) => {
                         onViewClick={(item) => { setViewOrEditData(item); setCurAction("view") }}
                         filterColumnsRef={filterColumns.current}
                         refreshComponent={refreshMemberList}
-                        userId={props.match.params.userId}
+                        userId={userId}
                     />
                 </div>
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Radio } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -22,6 +22,7 @@ import toast from 'react-hot-toast';
 
 const WaitingEntry = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ const WaitingEntry = (props) => {
                 document.getElementById("addform").reset();
                 processSms()
                 toast.success('Enrollment Made Successfully');
-                navigate('/' + props.match.params.userId + '/admin');
+                navigate('/' + userId + '/admin');
             }
             else {
                 toast.error(res['data'].message);
@@ -85,7 +86,7 @@ const WaitingEntry = (props) => {
             },
         ]
 
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
             console.log(res)
             setApproveTemplate(res[0][0]);
             setCertificateTemplate(res[1][0]);

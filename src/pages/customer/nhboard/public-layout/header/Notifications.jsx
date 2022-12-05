@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { Nav, NavDropdown } from 'react-bootstrap';
 

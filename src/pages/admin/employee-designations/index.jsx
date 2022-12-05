@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space, Switch, Divider } from 'antd';
 import { MyButton } from '../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Radio } from 'antd';
@@ -16,6 +16,7 @@ import { capitalizeFirst } from '../../../utils';
 import moment from 'moment';
 const EmployeeDesignations = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -46,7 +47,7 @@ const EmployeeDesignations = (props) => {
             query: "select * from application_resources"
         }
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var resources = [];
             res.forEach(item => {
                 resources.push(
@@ -152,7 +153,7 @@ const EmployeeDesignations = (props) => {
             query_type: 'query',
             query: "select * from designation_permissions where designation_id='" + viewOrEditData.id + "' and resource like '" + value + ".%' and permission=1"
         }
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
            
             res.forEach(item => {
                 var splitPerm = item.resource.split(".");
@@ -199,7 +200,7 @@ const EmployeeDesignations = (props) => {
 
         }
         ];
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             curPermissions = curPermissions.map(obj => {
                 if (obj.resource_name === item.resource_name && obj.resource === item.resource) {
                     obj.status = checked;
@@ -246,18 +247,18 @@ const EmployeeDesignations = (props) => {
                     onCancel={() => { setVisibleModal(false) }}
                     title={capitalizeFirst(curAction) + " " + heading}
                 >
-                    {curAction === "view" && (<ViewDesignation viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                    {curAction === "add" && (<AddEditDesignation onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                    {curAction === "edit" && (<AddEditDesignation editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false) }} userId={props.match.params.userId} />)}
+                    {curAction === "view" && (<ViewDesignation viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                    {curAction === "add" && (<AddEditDesignation onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                    {curAction === "edit" && (<AddEditDesignation editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false) }} userId={userId} />)}
 
                 </Modal>
 
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List {heading}s</Button>}>
 
-                        {curAction === "view" && (<ViewDesignation viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditDesignation onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditDesignation editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewDesignation viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditDesignation onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditDesignation editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

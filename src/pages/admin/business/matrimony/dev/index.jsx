@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
 import axios from 'axios';
@@ -21,6 +21,7 @@ const DeveloperHome = (props) => {
     const [data, setData] = useState([]);
 
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const [loader, setLoader] = useState(false);
     const currentCompleted = useRef(0);
     const [countData, setCountData] = useState(null);
@@ -108,7 +109,7 @@ const DeveloperHome = (props) => {
 
             };
 
-            context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
                 message.success("updated " + item.asciiname)
 
             }).catch(err => {

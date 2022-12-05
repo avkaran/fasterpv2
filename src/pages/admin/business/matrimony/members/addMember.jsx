@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Tag } from 'antd';
 import { Form, Input, Select, InputNumber, Steps } from 'antd';
@@ -15,6 +15,7 @@ import PhoneInput from 'react-phone-input-2'
 
 const AddMember = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [formSearchDuplicate] = Form.useForm();
@@ -37,7 +38,7 @@ const AddMember = (props) => {
             query: "select id,caste_name from castes where religion='" + religion + "' and master_caste_id is null"
         }
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
             setCasteList(res);
             setCasteLoader(false);
@@ -85,7 +86,7 @@ const AddMember = (props) => {
             encrypt: ['mobile_no']
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             if (res.length === 0) {
                 setPreFilledValues([
                     { table: "members", field: "mobile_no", value: values.mobile_no },
@@ -359,10 +360,10 @@ const AddMember = (props) => {
                 }
 
                 {
-                    allowNewEntry && preFilledValues && (<Card title="Add Member" extra={<Button href={"#/" + props.match.params.userId + "/admin/members"} ><i className="fa-solid fa-list pe-2" ></i>List Members</Button>}>
+                    allowNewEntry && preFilledValues && (<Card title="Add Member" extra={<Button href={"#/" + userId + "/admin/members"} ><i className="fa-solid fa-list pe-2" ></i>List Members</Button>}>
 
                         <AddEditMember
-                            userId={props.match.params.userId}
+                            userId={userId}
                             preFilledValues={preFilledValues}
                             onSaveFinish={() =>{setAllowNewEntry(false);setCurStep(0)}}
                             inputFields={

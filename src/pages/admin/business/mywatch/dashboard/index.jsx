@@ -9,7 +9,7 @@ import {
     Button
 } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PsContext from '../../../../../context';
 import { Breadcrumb, Layout, Form } from 'antd';
 import StatCard from './statcard';
@@ -22,6 +22,7 @@ import HomeContainer from '../../../layout-mobile/homeContainer';
 import ResponsiveLayout from '../../../layout'
 const Dashboard = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const [loader, setLoader] = useState(false);
     const [countData, setCountData] = useState(null);
@@ -42,7 +43,7 @@ const Dashboard = (props) => {
 
     }
     useEffect(() => {
-        //console.log('userdata',context.adminUser(props.match.params.userId))
+        //console.log('userdata',context.adminUser(userId))
         // loadMemberCounts();
         loadCountData();
         loadTableCountData()
@@ -58,25 +59,25 @@ const Dashboard = (props) => {
             title: 'Online',
             // dataIndex: 'online',
             key: 'online',
-            render: (item) => <MyButton type='primary' shape="round" color={red[5]} href={"#/" + props.match.params.userId + "/admin/members/logs-by-action/" + item.action + "/customer"}>{item.online}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={red[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/customer"}>{item.online}</MyButton>,
         },
         {
             title: 'Employee',
             //dataIndex: 'employee',
             key: 'employee',
-            render: (item) => <MyButton type='primary' shape="round" color={green[5]} href={"#/" + props.match.params.userId + "/admin/members/logs-by-action/" + item.action + "/employee"}>{item.employee}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={green[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/employee"}>{item.employee}</MyButton>,
         },
         {
             title: 'Franchise',
             // dataIndex: 'franchise',
             key: 'franchise',
-            render: (item) => <MyButton type='primary' shape="round" color={blue[5]} href={"#/" + props.match.params.userId + "/admin/members/logs-by-action/" + item.action + "/franchise"}>{item.franchise}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={blue[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/franchise"}>{item.franchise}</MyButton>,
         },
         {
             title: 'Broker',
             // dataIndex: 'broker',
             key: 'broker',
-            render: (item) => <MyButton type='primary' shape="round" color={magenta[5]} href={"#/" + props.match.params.userId + "/admin/members/logs-by-action/" + item.action + "/broker"}>{item.broker}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={magenta[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/broker"}>{item.broker}</MyButton>,
         },
         {
             title: 'Total',
@@ -123,7 +124,7 @@ const Dashboard = (props) => {
             },
         ]
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var cData = {
                 members: res[0][0]['count'],
                 employees: res[1][0]['count'],
@@ -149,7 +150,7 @@ const Dashboard = (props) => {
                 query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='" + moment().format("YYYY-MM-DD") + "' GROUP by log_name,logged_type"
             },
         ]
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var tCountData = [
                 { actionLabel: 'New Entry', action: "add-new-member", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
                 { actionLabel: 'Profile Edit', action: "edit-member", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
@@ -200,10 +201,10 @@ const Dashboard = (props) => {
     return (
         <>
         <ResponsiveLayout 
-         userId={props.match.params.userId}
+         userId={userId}
          customHeader={null}
          bottomMenues={null}
-         breadcrumbs={[{name:'Dashboard',link:'#/'+props.match.params.userId+'/admin'}]}
+         breadcrumbs={[{name:'Dashboard',link:'#/'+userId+'/admin'}]}
         >
             <Card title="Dashboard">
 
@@ -216,7 +217,7 @@ const Dashboard = (props) => {
                             value={countData && countData.members}
                             icon={<FontAwesomeIcon icon={faUser} />}
                             color={theme.primaryColor}
-                            link={"/" + props.match.params.userId + "/admin/members"}
+                            link={"/" + userId + "/admin/members"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -226,7 +227,7 @@ const Dashboard = (props) => {
                             value={countData && countData.employees}
                             icon={<FontAwesomeIcon icon={faUserTie} />}
                             color={theme.errorColor}
-                            link={"/" + props.match.params.userId + "/admin/employees"}
+                            link={"/" + userId + "/admin/employees"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -236,7 +237,7 @@ const Dashboard = (props) => {
                             value={countData && countData.franchise}
                             icon={<FontAwesomeIcon icon={faPeopleRoof} />}
                             color={theme.successColor}
-                            link={"/" + props.match.params.userId + "/admin/franchise"}
+                            link={"/" + userId + "/admin/franchise"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -246,7 +247,7 @@ const Dashboard = (props) => {
                             value={countData && countData.brokers}
                             icon={<FontAwesomeIcon icon={faPeopleRobbery} />}
                             color="#fadb14"
-                            link={"/" + props.match.params.userId + "/admin/broker"}
+                            link={"/" + userId + "/admin/broker"}
                         />
                     </Col>
                 </Row>
@@ -258,7 +259,7 @@ const Dashboard = (props) => {
                             value={countData && countData.paid}
                             icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
                             color="#fa8c16"
-                            link={"/" + props.match.params.userId + "/admin/members/orders-by-status/Paid"}
+                            link={"/" + userId + "/admin/members/orders-by-status/Paid"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -268,7 +269,7 @@ const Dashboard = (props) => {
                             value={countData && countData.payment_tried}
                             icon={<FontAwesomeIcon icon={faUserTag} />}
                             color="#006d75"
-                            link={"/" + props.match.params.userId + "/admin/members/orders-by-status/Payment Tried"}
+                            link={"/" + userId + "/admin/members/orders-by-status/Payment Tried"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -278,7 +279,7 @@ const Dashboard = (props) => {
                             value={countData && countData.payment_failed}
                             icon={<FontAwesomeIcon icon={faUserXmark} />}
                             color="#10239e"
-                            link={"/" + props.match.params.userId + "/admin/members/orders-by-status/Payment Failed"}
+                            link={"/" + userId + "/admin/members/orders-by-status/Payment Failed"}
                         />
                     </Col>
                     <Col xs={24} sm={12} md={6}>
@@ -288,7 +289,7 @@ const Dashboard = (props) => {
                             value={countData && countData.complaints}
                             icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
                             color="#d4380d"
-                            link={"/" + props.match.params.userId + "/admin/crm/crm-list"}
+                            link={"/" + userId + "/admin/crm/crm-list"}
                         />
                     </Col>
                 </Row>

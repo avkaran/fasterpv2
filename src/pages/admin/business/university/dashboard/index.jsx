@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import StatCard from './statcard'
 import {
     Card,
@@ -15,6 +15,7 @@ import PsContext from '../../../../../context';
 const Dashboard = (props) => {
 
     const context = useContext(PsContext);
+const {userId}=useParams();
     const [loader, setLoader] = useState(false);
     const [countData, setCountData] = useState([]);
     const theme = {
@@ -41,7 +42,7 @@ const Dashboard = (props) => {
     const loadUserCounts = () => {
 
         setLoader(true);
-        context.psGlobal.apiRequest('v1/admin/user-counts',context.adminUser(props.match.params.userId).mode).then((res,error)=>{
+        context.psGlobal.apiRequest('v1/admin/user-counts',context.adminUser(userId).mode).then((res,error)=>{
             if(res)  setCountData(res);
             else  message.error(error);
             setLoader(false);

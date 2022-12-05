@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { withRouter, useNavigate, Switch, Route } from 'react-router-dom';
+import { useParams, useNavigate, Switch, Route } from 'react-router-dom';
 
 
 import PsContext from '../../context';

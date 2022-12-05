@@ -10,14 +10,14 @@ import { HomeOutlined } from '@ant-design/icons';
 import { contentTypes } from '../../../utils/data';
 import PsContext from '../../../context'
 import ResponsiveLayout from '../layout'
+import { useParams } from 'react-router-dom';
 const ViewContent = (props) => {
     const context = useContext(PsContext);
+const {userId,content_type:contentType,id:contentId}=useParams();
     const { Content } = Layout;
     const [addForm] = Form.useForm();
     const { Panel } = Collapse;
-    const [contentType] = useState(props.match.params.content_type)
-    const [contentId] = useState(props.match.params.id)
-
+   
     const [loader, setLoader] = useState(false);
 
     const [viewData, setViewData] = useState([]);
@@ -89,16 +89,16 @@ const ViewContent = (props) => {
 
             <ResponsiveLayout
 
-                userId={props.match.params.userId}
+                userId={userId}
                 customHeader={null}
                 bottomMenues={null}
                 breadcrumbs={[
-                    { name: capitalizeFirst(props.match.params.content_type) + ' List', link: null },
-                    { name: 'View ' + capitalizeFirst(props.match.params.content_type), link: null },
+                    { name: capitalizeFirst(contentType) + ' List', link: null },
+                    { name: 'View ' + capitalizeFirst(contentType), link: null },
                 ]}
             >
 
-                <Card title={"View " + capitalizeFirst(props.match.params.content_type)} extra={<Button href={"#/" + props.match.params.userId + "/admin/contents/" + props.match.params.content_type + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(props.match.params.content_type)}</Button>}>
+                <Card title={"View " + capitalizeFirst(contentType)} extra={<Button href={"#/" + userId + "/admin/contents/" + contentType + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(contentType)}</Button>}>
                     <Spin spinning={loader} >
                         <Form
                             name="basic"

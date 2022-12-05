@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 
 import PsContext from '../../../../context';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 const Logout=(props)=>{
 	const navigate = useNavigate();
 	const context = useContext(PsContext);
+const {userId}=useParams();
 
 	const log_out=()=>{
 
@@ -24,7 +25,7 @@ const Logout=(props)=>{
 	};
 
 	const executeLogoutCall=(t)=>{
-		context.adminLogout(props.match.params.userId);	
+		context.adminLogout(userId);	
 		toast.dismiss(t.id);	
 		navigate('/a/admin-login')
 	};

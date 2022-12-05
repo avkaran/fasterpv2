@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Radio, Tooltip } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -25,6 +25,7 @@ import CertificateDownload from './certificateDownload';
 
 const MemberViewTab = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -114,7 +115,7 @@ const MemberViewTab = (props) => {
 
                     </Col>
                 </Row>
-                <Card title={collectionData.member_id + ' - ' + collectionData.name} headStyle={{ backgroundColor: '#1F5F54', color: '#ffffff' }}  extra={<Tooltip ><Button type="primary" shape="sqaure" href={"#" + props.match.params.userId + "/admin/namechangeentry/" + props.match.params.id} icon={<FormOutlined />} >Name Change</Button> <Button type="primary" shape="sqaure" href={context.baseUrl + "v1/admin/downloadform?q=" + context.psGlobal.encrypt("userid-" + collectionData.id)} icon={<DownloadOutlined />} target="blank">Download</Button></Tooltip>} >
+                <Card title={collectionData.member_id + ' - ' + collectionData.name} headStyle={{ backgroundColor: '#1F5F54', color: '#ffffff' }}  extra={<Tooltip ><Button type="primary" shape="sqaure" href={"#" + userId + "/admin/namechangeentry/" + props.match.params.id} icon={<FormOutlined />} >Name Change</Button> <Button type="primary" shape="sqaure" href={context.baseUrl + "v1/admin/downloadform?q=" + context.psGlobal.encrypt("userid-" + collectionData.id)} icon={<DownloadOutlined />} target="blank">Download</Button></Tooltip>} >
                     <Tabs
                         defaultActiveKey="1"
                         id="fill-tab-example"

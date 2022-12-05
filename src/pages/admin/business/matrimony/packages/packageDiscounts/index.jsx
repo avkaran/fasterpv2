@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button } from 'antd';
@@ -17,6 +17,7 @@ import moment from 'moment'
 
 const PackageDiscounts = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -148,9 +149,9 @@ const PackageDiscounts = (props) => {
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewPackageDiscount viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditPackageDiscount onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditPackageDiscount editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewPackageDiscount viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditPackageDiscount onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditPackageDiscount editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -158,9 +159,9 @@ const PackageDiscounts = (props) => {
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List {heading}s</Button>}>
 
-                        {curAction === "view" && (<ViewPackageDiscount viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditPackageDiscount onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditPackageDiscount editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewPackageDiscount viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditPackageDiscount onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditPackageDiscount editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

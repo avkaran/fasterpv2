@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, withRouter, useNavigate } from 'react-router-dom';
+import { Navigate, Route, useParams, useNavigate } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../context';
 import Sidebar from './sidebar';

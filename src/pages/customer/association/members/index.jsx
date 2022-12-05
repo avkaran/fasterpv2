@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Row, Col, message, Badge, Drawer, Spin } from 'antd';
 import { List, Avatar, Skeleton, Card, Image, Space, Tag, Tooltip, Select, Input, Modal } from 'antd';
 import { MyButton, DeleteButton } from '../../../../comp'
-import { withRouter, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Layout, Divider, Form, Collapse } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Navigate, withRouter, Link, useNavigate } from 'react-router-dom';
+import { Navigate, useParams, Link, useNavigate } from 'react-router-dom';
 import logo from '../../css/images/logo.png';
 import mobileLogo from '../../assets/images/mobile-logo.png';
 import { Nav, NavDropdown } from 'react-bootstrap';

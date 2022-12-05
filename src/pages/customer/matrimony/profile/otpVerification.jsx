@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { message, Spin } from 'antd';
 import { MyButton } from '../../../../comp'
 import { Modal, Form, Button, InputNumber, Row, Col,Space } from 'antd';
-import { withRouter,useNavigate } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { green, blue, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faMobile } from '@fortawesome/free-solid-svg-icons'

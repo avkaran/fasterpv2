@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Form, DatePicker, Input, Select } from 'antd';
@@ -14,6 +14,7 @@ import { capitalizeFirst } from '../../../utils';
 import moment from 'moment'
 const WhatsappReports = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [searchForm] = Form.useForm();
@@ -217,7 +218,7 @@ const WhatsappReports = (props) => {
                 onCancel={() => { setVisibleModal(false) }}
                 title="View Whatsapp Message"
             >
-                <ViewWhatsapp viewIdOrObject={viewOrEditData} onListClick={() => setVisibleModal(false)} userId={props.match.params.userId} />
+                <ViewWhatsapp viewIdOrObject={viewOrEditData} onListClick={() => setVisibleModal(false)} userId={userId} />
 
 
             </Modal>

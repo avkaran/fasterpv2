@@ -18,10 +18,11 @@ import { faIndianRupeeSign, faUser, faMobileAlt } from '@fortawesome/free-solid-
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import moment from 'moment';
-
+import { useParams } from 'react-router-dom';
 const { Link } = Anchor;
 const RenewalRemainders = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const [initLoading, setInitLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -48,7 +49,7 @@ const RenewalRemainders = (props) => {
             query: "select distinct district from hospital_members"
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
             setDistricts(res);
         }).catch(err => {

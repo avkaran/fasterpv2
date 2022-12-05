@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, AutoComplete } from 'antd';
 import { Button, Card, Upload, Image, Space, Collapse, DatePicker, Radio } from 'antd';
 import { Form, Input, Select } from 'antd';
@@ -17,14 +17,13 @@ import { languages } from '../../../models/core';
 import ResponsiveLayout from '../layout'
 const EditContent = (props) => {
     const context = useContext(PsContext);
+const {userId,content_type:contentType,id:contentId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [addForm] = Form.useForm();
     const { Option } = Select;
     const { Panel } = Collapse;
     const { TextArea } = Input;
-    const [contentType] = useState(props.match.params.content_type)
-    const [contentId] = useState(props.match.params.id)
     const [categoryData, setCategoryData] = useState([]);
     const [loader, setLoader] = useState(false);
     const [imgLoading, setImgLoading] = useState(false);
@@ -148,7 +147,7 @@ const EditContent = (props) => {
             //values:{name:'senthil',age:'13'}
 
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
 
             setCategoryData(res)
 
@@ -316,7 +315,7 @@ const EditContent = (props) => {
 
 
                 setLoader(false);
-                //navigate('/' + props.match.params.userId + '/admin/contents/' + contentType + "/list")
+                //navigate('/' + userId + '/admin/contents/' + contentType + "/list")
             }
             else {
                 message.error(res['data'].message || 'Error');
@@ -402,15 +401,15 @@ const EditContent = (props) => {
 
             <ResponsiveLayout
 
-                userId={props.match.params.userId}
+                userId={userId}
                 customHeader={null}
                 bottomMenues={null}
                 breadcrumbs={[
-                    { name: capitalizeFirst(props.match.params.content_type.replace("-", " ")) + " List", link: "#/" + props.match.params.userId + "/admin/contents" },
-                    { name: 'Edit' + capitalizeFirst(props.match.params.content_type.replace("-", " ")), link: null },
+                    { name: capitalizeFirst(contentType.replace("-", " ")) + " List", link: "#/" + userId + "/admin/contents" },
+                    { name: 'Edit' + capitalizeFirst(contentType.replace("-", " ")), link: null },
                 ]}
             >
-                <Card title={"Edit " + capitalizeFirst(props.match.params.content_type.replace("-", " "))} extra={<Button href={"#" + props.match.params.userId + "/admin/contents/" + props.match.params.content_type + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(props.match.params.content_type.replace("-", " "))}</Button>}>
+                <Card title={"Edit " + capitalizeFirst(contentType.replace("-", " "))} extra={<Button href={"#" + userId + "/admin/contents/" + contentType + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(contentType.replace("-", " "))}</Button>}>
                     <Spin spinning={loader} >
                         {
                             viewData && Object.keys(viewData).length > 0 && (<>

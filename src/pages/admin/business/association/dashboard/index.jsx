@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import PsContext from '../../../../../context'
 import axios from 'axios';
@@ -17,6 +17,7 @@ import { message, Space, Modal,Image } from 'antd';
 import { green, yellow, grey } from '@ant-design/colors';
 const Dashboard = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const [approveLoading, setApproveLoading] = useState(false);
     const [visibleArticleModal, setVisibleArticleModal] = useState(false)
     const [loader, setLoader] = useState(false);
@@ -50,7 +51,7 @@ const Dashboard = (props) => {
             query: "select * from contents where status='1' and content_status='draft' and type='article' order by created_date desc"
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
 
             setArticleData(res);
         }).catch(err => {
@@ -83,7 +84,7 @@ const Dashboard = (props) => {
 
         };
        
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res,error)=>{
+        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res,error)=>{
             loadArticles();
             message.success('Article Approved and published');
             setApproveLoading(false);
@@ -149,7 +150,7 @@ const Dashboard = (props) => {
                                 value={getCount('all_members')}
                                 icon={<FontAwesomeIcon icon={faUser} />}
                                 color={theme.primaryColor}
-                                link={'/' + props.match.params.userId + '/admin/members'}
+                                link={'/' + userId + '/admin/members'}
                             />
                         </Col>
                         <Col xs={24} sm={12} md={6}>
@@ -159,7 +160,7 @@ const Dashboard = (props) => {
                                 value={getCount('waiting')}
                                 icon={<FontAwesomeIcon icon={faUserTimes} />}
                                 color={theme.errorColor}
-                                link={'/' + props.match.params.userId + '/admin/members/filter/waiting'}
+                                link={'/' + userId + '/admin/members/filter/waiting'}
                             />
                         </Col>
                         <Col xs={24} sm={12} md={6}>
@@ -169,7 +170,7 @@ const Dashboard = (props) => {
                                 value={getCount('active')}
                                 icon={<FontAwesomeIcon icon={faUserCheck} />}
                                 color={theme.successColor}
-                                link={'/' + props.match.params.userId + '/admin/members/filter/active'}
+                                link={'/' + userId + '/admin/members/filter/active'}
                             />
                         </Col>
                         <Col xs={24} sm={12} md={6}>
@@ -179,7 +180,7 @@ const Dashboard = (props) => {
                                 value={getCount('today_created')}
                                 icon={<FontAwesomeIcon icon={faUserClock} />}
                                 color={theme.processingColor}
-                                link={'/' + props.match.params.userId + '/admin/members/filter/today'}
+                                link={'/' + userId + '/admin/members/filter/today'}
                             />
                         </Col>
                     </Row>

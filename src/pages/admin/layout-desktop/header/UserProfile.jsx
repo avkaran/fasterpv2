@@ -1,5 +1,5 @@
 import React, {  useContext } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import { Nav, NavDropdown } from 'react-bootstrap';
 import PsContext from '../../../../context';
@@ -8,14 +8,14 @@ import PsContext from '../../../../context';
 const UserProfile = (props) => {
 
 	const context = useContext(PsContext);
-
+	const { userId } = useParams();
 	const getTitle = () => {
 		return <div style={{
 			fontSize: '12px',
 			fontWeight: '600'
 		}}>
-			{context.adminUser(props.match.params.userId).name}
-			{/*<span className='font-12 ms-2'>({capitalizeFirst(context.adminUser(props.match.params.userId).deptype)})</span>*/}
+			{context.adminUser(userId).ref_id2}
+			{/*<span className='font-12 ms-2'>({capitalizeFirst(context.adminUser(userId).deptype)})</span>*/}
 		</div>;
 	}
 

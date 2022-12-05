@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Space, DatePicker } from 'antd';
 import { Form, Input, Select } from 'antd';
@@ -14,6 +14,7 @@ import { ImageUpload } from '../../../../../comp'
 
 const EditUser = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
 
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -21,11 +22,11 @@ const EditUser = (props) => {
 
     const { TextArea } = Input;
     const [loader, setLoader] = useState(false);
-    const [userId] = useState(props.match.params.customerUserId)
+    const [customerUserId] = useState(props.match.params.customerUserId)
     const [viewData, setViewData] = useState([]);
     //const [viewData, setViewData] = useState([]);
     useEffect(() => {
-        loadData(userId)
+        loadData(customerUserId)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -106,9 +107,9 @@ const EditUser = (props) => {
 
                 setLoader(false);
                 message.success(res['data'].message || 'Success');
-                // message.success('/'+props.match.params.userId+'/admin/users')
-                navigate('/' + props.match.params.userId + '/admin/users')
-                //navigate('/'+props.match.params.userId+'/admin/members/make-payment/' + createdId)
+                // message.success('/'+userId+'/admin/users')
+                navigate('/' + userId + '/admin/users')
+                //navigate('/'+userId+'/admin/members/make-payment/' + createdId)
             }
             else {
                 message.error(res['data'].message || 'Error');
@@ -146,7 +147,7 @@ const EditUser = (props) => {
                     <Breadcrumb.Item>Edit User</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Card title="Edit User" extra={<Button href={"#/" + props.match.params.userId + "/admin/users"}><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
+                <Card title="Edit User" extra={<Button href={"#/" + userId + "/admin/users"}><i className="fa-solid fa-list pe-2" ></i>List Users</Button>}>
 
                     <Spin spinning={loader} >
                         {

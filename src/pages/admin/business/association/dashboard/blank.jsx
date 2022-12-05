@@ -13,7 +13,7 @@ const Blank = (props) => {
 
 <ResponsiveLayout
          
-         userId={props.match.params.userId}
+         userId={userId}
          customHeader={null}
          bottomMenues={null}
          breadcrumbs={[

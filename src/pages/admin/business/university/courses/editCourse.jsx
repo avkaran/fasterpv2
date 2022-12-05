@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card } from 'antd';
 import { Form, Input } from 'antd';
@@ -14,6 +14,7 @@ import { languages } from '../../../../../models/core';
 
 const EditCourse = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [editForm] = Form.useForm();
@@ -48,7 +49,7 @@ const EditCourse = (props) => {
             //values:{name:'senthil',age:'13'}
 
         }];
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             let mydata = res[0][0];
             setViewData(mydata)
             //use only required fields
@@ -142,11 +143,11 @@ const EditCourse = (props) => {
             setLangData(curallLangData);
 
         }
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
 
             setLoader(false);
             message.success('Course Updated Successfully');
-            navigate('/' + props.match.params.userId + '/admin/courses')
+            navigate('/' + userId + '/admin/courses')
 
         }).catch(err => {
             message.error(err);
@@ -194,7 +195,7 @@ const EditCourse = (props) => {
                     <Breadcrumb.Item>Edit Course</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Card title="Edit Course" extra={<Button href={"#/"+props.match.params.userId+"/admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
+                <Card title="Edit Course" extra={<Button href={"#/"+userId+"/admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
 
                     <Spin spinning={loader} >
                         {

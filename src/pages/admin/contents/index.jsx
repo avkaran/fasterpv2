@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Row, Col, message, Spin } from 'antd';
 import { List, Avatar, Button, Skeleton, Card, Checkbox, Image, Space, Modal, Tooltip } from 'antd';
@@ -21,6 +21,7 @@ import ResponsiveLayout from '../layout'
 const ListContents = (props) => {
     const { Content } = Layout;
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { contentype } = useParams()
     const [initLoading, setInitLoading] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ const ListContents = (props) => {
 
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             if (res) {
                 setData([...data, ...res]);
                 currentFetchedRecords.current = currentFetchedRecords.current + res.length;
@@ -85,7 +86,7 @@ const ListContents = (props) => {
             query: "select ct.id,ct.category_name,count(*) as count from contents c,content_categories ct where c.category=ct.id and c.type='" + contentype + "' and c.status=1 group by ct.id"
         };
         //if array of queries reqdata should be
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             setListCategories(res);
         }).catch(err => {
             message.error(err);
@@ -161,7 +162,7 @@ const ListContents = (props) => {
         <>
             <ResponsiveLayout
 
-                userId={props.match.params.userId}
+                userId={userId}
                 customHeader={null}
                 bottomMenues={null}
                 breadcrumbs={[
@@ -185,7 +186,7 @@ const ListContents = (props) => {
 
 
                             >{capitalizeFirst(contentype)} List ({currentTotalRecords.current})
-                                <MyButton href={"#/" + props.match.params.userId + "/admin/contents/" + contentype + "/add"} style={{ float: 'right' }}><i className="fa-solid fa-plus pe-2" ></i>Add {contentype}</MyButton>
+                                <Link to={"/" + userId + "/admin/contents/" + contentype + "/add"}><MyButton  style={{ float: 'right' }}><i className="fa-solid fa-plus pe-2" ></i>Add {contentype}</MyButton></Link>
                             </Card>
 
                             <InfiniteScroll
@@ -215,9 +216,9 @@ const ListContents = (props) => {
                                             <List.Item key={item.email}
                                                 style={{ backgroundColor: '#fff' }}
                                                 actions={[<Tooltip title="View">
-                                                    <Button type="primary" shape="circle" href={"#" + props.match.params.userId + "/admin/contents/" + contentype + "/view/" + item.id} icon={<EyeOutlined />} />
+                                                    <Link to={"/" + userId + "/admin/contents/" + contentype + "/view/" + item.id}><Button type="primary" shape="circle"  icon={<EyeOutlined />} /></Link>
                                                 </Tooltip>, <Tooltip title="Edit">
-                                                    <Button type="default" shape="circle" href={"#" + props.match.params.userId + "/admin/contents/" + contentype + "/edit/" + item.id} icon={<EditOutlined />} />
+                                                   <Link to={"/" + userId + "/admin/contents/" + contentype + "/edit/" + item.id} > <Button type="default" shape="circle" icon={<EditOutlined />}/></Link>
                                                 </Tooltip>, <Tooltip title="Delete">
                                                     <Button type="danger" shape="circle" icon={<DeleteOutlined />} onClick={() => { setVisibleDeleteModal(true); setViewData(item); }} />
                                                 </Tooltip>]}>
@@ -280,9 +281,9 @@ const ListContents = (props) => {
                                                 // dataIndex: 'COLUMN_COMMENT',
                                                 // key: 'description',
                                                 render: (item, object, index) => <>
-                                                    <Space><Button type="primary" size="small" shape="circle" href={"#" + props.match.params.userId + "/admin/contents/" + contentype + "/view/" + item.id} icon={<EyeOutlined />} />
+                                                    <Space><Button type="primary" size="small" shape="circle" href={"#" + userId + "/admin/contents/" + contentype + "/view/" + item.id} icon={<EyeOutlined />} />
 
-                                                        <Button type="default" size="small" shape="circle" href={"#" + props.match.params.userId + "/admin/contents/" + contentype + "/edit/" + item.id} icon={<EditOutlined />} />
+                                                        <Button type="default" size="small" shape="circle" href={"#" + userId + "/admin/contents/" + contentype + "/edit/" + item.id} icon={<EditOutlined />} />
 
                                                         <Button type="danger" size="small" shape="circle" icon={<DeleteOutlined />} onClick={() => { setVisibleDeleteModal(true); setViewData(item); }} /></Space>
                                                 </>,

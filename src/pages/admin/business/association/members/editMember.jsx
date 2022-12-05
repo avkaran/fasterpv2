@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Image, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -18,6 +18,7 @@ import { ImageUpload } from '../../../../../comp';
 
 const EditMember = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [addForm] = Form.useForm();
@@ -212,7 +213,7 @@ const EditMember = (props) => {
                 message.success(res['data'].message || "Updated");
                 //console.log(res['data'].data);
                 setLoader(false);
-                navigate('/' + props.match.params.userId + '/admin/members/view/' + memberId)
+                navigate('/' + userId + '/admin/members/view/' + memberId)
             }
             else {
                 message.error(res['data'].message || 'Error');

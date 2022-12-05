@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PsContext from '../../../../context';
 import { message } from 'antd';
 const CustomerCourses = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useContext } from 'react';
 import { Button, Checkbox, Form, Input, Space, Spin, Select, DatePicker, Row, Col, message,Upload } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import moment from 'moment';
 import PsContext from '../../../../../context';
 import { CardFixedTop, momentDate } from '../../../../../utils';
@@ -12,6 +12,8 @@ import { heightList } from '../../../../../models/core'
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 const EditMatrymony = (props) => {
     const context = useContext(PsContext);
+  
+    const {userId}=  useParams();
     const { Option } = Select;
     const { Step } = Steps;
     const { TextArea } = Input;
@@ -69,7 +71,7 @@ const EditMatrymony = (props) => {
         axios.post('v1/admin/update-payment/' + memberId, form).then(res => {
             if (res['data'].status === '1') {
                 toast.success(res['data'].message || 'Success');
-                navigate('/'+props.match.params.userId+'/admin/members')
+                navigate('/'+userId+'/admin/members')
             }
             else {
                 toast.error(res['data'].message || 'Error');

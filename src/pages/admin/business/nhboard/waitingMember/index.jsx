@@ -17,13 +17,14 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { faIndianRupeeSign, faUser, faMobileAlt } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-
+import { useParams } from 'react-router-dom';
 import moment from 'moment';
 
 const { Link } = Anchor;
 
 const ListMembers = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const [initLoading, setInitLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ const ListMembers = (props) => {
             query: "select distinct district from hospital_members"
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
             setDistricts(res);
         }).catch(err => {
@@ -104,10 +105,10 @@ const ListMembers = (props) => {
                 <>
                     <Space>
                         {
-                            item.member_status !== "LIVE" && (<Tooltip title="Pay"><Button type="default" shape="square" href={"#" + props.match.params.userId + "/admin/" + (item.member_status === "waiting" ? 'waiting' : 'renewal') + "/entry/" + item.id} >Pay Now</Button></Tooltip>)
+                            item.member_status !== "LIVE" && (<Tooltip title="Pay"><Button type="default" shape="square" href={"#" + userId + "/admin/" + (item.member_status === "waiting" ? 'waiting' : 'renewal') + "/entry/" + item.id} >Pay Now</Button></Tooltip>)
                         }
-                        <Tooltip title="Edit"><Button type="default" shape="circle" href={"#" + props.match.params.userId + "/admin/members/editpage/" + item.id} icon={<EditOutlined />} /></Tooltip>
-                        <Tooltip title="View"> <Button type="primary" shape="circle" href={"#" + props.match.params.userId + "/admin/members/membertab/" + item.id} icon={<EyeOutlined />} /></Tooltip>
+                        <Tooltip title="Edit"><Button type="default" shape="circle" href={"#" + userId + "/admin/members/editpage/" + item.id} icon={<EditOutlined />} /></Tooltip>
+                        <Tooltip title="View"> <Button type="primary" shape="circle" href={"#" + userId + "/admin/members/membertab/" + item.id} icon={<EyeOutlined />} /></Tooltip>
 
                     </Space>
                 </>

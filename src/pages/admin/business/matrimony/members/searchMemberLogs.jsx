@@ -6,9 +6,10 @@ import { MyButton } from '../../../../../comp'
 import { Breadcrumb, Layout, Form } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import SearchMemberLogsList from './searchMemberLogsList';
-
+import { useParams } from 'react-router-dom';
 const SearchMemberLogs = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
 
     const { Panel } = Collapse;
     const [searchForm] = Form.useForm();
@@ -41,7 +42,7 @@ const SearchMemberLogs = (props) => {
                     <Breadcrumb.Item>List Members</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <SearchMemberLogsList action="add-new-member" actionBy="employee" userId={props.match.params.userId}/>
+                <SearchMemberLogsList action="add-new-member" actionBy="employee" userId={userId}/>
 
             </Content>
         </>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Radio } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -22,6 +22,7 @@ import { Table } from 'react-bootstrap';
 
 const PageSix = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ const PageSix = (props) => {
                 if (res['data'].status == '1') {
                     var d = res['data'].data;
                     var Id = d[0].id;
-                    navigate('/' + props.match.params.userId + '/admin/members');
+                    navigate('/' + userId + '/admin/members');
                 }
                 else {
                     setShowLoader(false);

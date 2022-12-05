@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button } from 'antd';
@@ -15,6 +15,7 @@ import { capitalizeFirst } from '../../../../../../utils';
 
 const Franchise = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -38,7 +39,7 @@ const Franchise = (props) => {
             values:{status:0}
 
         };
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
             setCurAction("list")
             setRefreshTable(prev=>prev+1);
            
@@ -170,9 +171,9 @@ const Franchise = (props) => {
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewFranchise viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditFranchise onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditFranchise editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewFranchise viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditFranchise onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditFranchise editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -180,9 +181,9 @@ const Franchise = (props) => {
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List Franchise</Button>}>
 
-                        {curAction === "view" && (<ViewFranchise viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditFranchise onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditFranchise editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewFranchise viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditFranchise onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditFranchise editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

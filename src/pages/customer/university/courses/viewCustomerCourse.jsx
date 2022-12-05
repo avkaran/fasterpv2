@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import avg from '../../../../assets/images/avatar.jpg';
 import PsContext from '../../../../context';
 import { Form, Input, Select, InputNumber, message, Space, Image, Spin, Row, Col } from 'antd';

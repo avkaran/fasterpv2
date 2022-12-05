@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space,Form } from 'antd';
 import { MyButton,FormItem } from '../../../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Radio,Input } from 'antd';
@@ -16,6 +16,7 @@ import { capitalizeFirst } from '../../../../../../utils';
 
 const CasteList = (props) => {
     const context = useContext(PsContext);
+    const {userId}=  useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -136,7 +137,7 @@ const CasteList = (props) => {
             query_type: 'query', //query_type=insert | update | delete | query
             query: "select id,caste_name from castes where status=1 and master_caste_id=" + caste_id
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             setSubCastes(res);
             setSubCasteLoading(false);
         }).catch(err => {
@@ -160,7 +161,7 @@ const CasteList = (props) => {
             values: processedValues
 
         };
-        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
             setAddSubCasteLoader(false);
             message.success('SubCaste Added Successfullly'); 
             setVisibleSubCasteAddModal(false);
@@ -200,9 +201,9 @@ const CasteList = (props) => {
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewCaste viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditCaste onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditCaste editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewCaste viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditCaste onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditCaste editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -210,9 +211,9 @@ const CasteList = (props) => {
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List {heading}s</Button>}>
 
-                        {curAction === "view" && (<ViewCaste viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditCaste onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditCaste editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewCaste viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditCaste onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditCaste editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

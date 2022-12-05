@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag } from 'antd';
@@ -10,6 +10,7 @@ import { green, blue, red, cyan, grey } from '@ant-design/colors';
 
 const Courses = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -24,7 +25,7 @@ const Courses = (props) => {
             query_type: 'query', //query_type=insert | update | delete | query
             query: "select * from courses where status='1'"
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             setData(res);
             setLoader(false);
         }).catch(err => {
@@ -62,8 +63,8 @@ const Courses = (props) => {
             // dataIndex: 'actions',
             key: 'actions',
             render: (item) => <Space>
-                <MyButton type="outlined" size="small" shape="circle" href={"#"+props.match.params.userId+"/admin/courses/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
-                <MyButton type="outlined" size="small" shape="circle" color={blue[7]} href={"#"+props.match.params.userId+"/admin/courses/edit/" + item.id}><i class="fa-solid fa-pencil"></i></MyButton>
+                <MyButton type="outlined" size="small" shape="circle" href={"#"+userId+"/admin/courses/view/" + item.id} ><i class="fa-solid fa-eye"></i></MyButton>
+                <MyButton type="outlined" size="small" shape="circle" color={blue[7]} href={"#"+userId+"/admin/courses/edit/" + item.id}><i class="fa-solid fa-pencil"></i></MyButton>
                 <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => loadData()}
                     title="Course"
                     table="courses"
@@ -95,7 +96,7 @@ const Courses = (props) => {
                     <Breadcrumb.Item>List Courses</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Card title="Courses" extra={<MyButton href={"#/"+props.match.params.userId+"/admin/courses/add-course"} ><i className="fa-solid fa-plus pe-2" ></i>Add New Course</MyButton>}>
+                <Card title="Courses" extra={<MyButton href={"#/"+userId+"/admin/courses/add-course"} ><i className="fa-solid fa-plus pe-2" ></i>Add New Course</MyButton>}>
                     <Spin spinning={loader}>
                         <MyTable columns={tableColumns} dataSource={data} />
                     </Spin>

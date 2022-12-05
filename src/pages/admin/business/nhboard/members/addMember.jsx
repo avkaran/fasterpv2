@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Radio } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -21,6 +21,7 @@ import toast from 'react-hot-toast';
 
 const AddMember = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Step } = Steps;
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -60,7 +61,7 @@ const AddMember = (props) => {
                 if (res['data'].status == '1') {
                     var d = res['data'].data;
                     var Id = d[0].id;
-                    navigate('/' + props.match.params.userId + '/admin/members/pagetwo/' + Id);
+                    navigate('/' + userId + '/admin/members/pagetwo/' + Id);
                 }
                 else {
                     setShowLoader(false);
@@ -98,7 +99,7 @@ const AddMember = (props) => {
                         <h5><b></b></h5>
                     </Col>
                 </Row>
-                <Card title="General Information" headStyle={{ backgroundColor: '#1F5F54', color: '#ffffff' }} extra={<Button href={'#' + props.match.params.userId + "/admin/members"}><i className="fa-solid fa-list pe-2" ></i>List Members</Button>}>
+                <Card title="General Information" headStyle={{ backgroundColor: '#1F5F54', color: '#ffffff' }} extra={<Button href={'#' + userId + "/admin/members"}><i className="fa-solid fa-list pe-2" ></i>List Members</Button>}>
                     <Spin spinning={loader} >
                         <Form
                             name="basic"

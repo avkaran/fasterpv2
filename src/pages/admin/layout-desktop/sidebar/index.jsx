@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {currentInstance} from '../../../../utils'
 import NavBar from './NavBar';
 const Sidebar=(props)=>{
@@ -21,7 +21,7 @@ const Sidebar=(props)=>{
 							{/*<img src="https://technext.github.io/admincast/assets/img/admin-avatar.png" width="45px" />*/}
 						{/*</div>
 						<div className="admin-info">
-							<div className="font-strong">{context.adminUser(props.match.params.userId).department_name}</div><small>{context.adminUser(props.match.params.userId).deptype}</small></div>
+							<div className="font-strong">{context.adminUser(userId).department_name}</div><small>{context.adminUser(userId).deptype}</small></div>
     </div>*/}
     <hr className='my-1' />
 					<ul className="side-menu metismenu" >

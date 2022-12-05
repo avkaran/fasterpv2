@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, withRouter,Route,Outlet } from 'react-router-dom';
+import { useNavigate, useParams,Route,Outlet } from 'react-router-dom';
 import $ from 'jquery';
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Spin } from 'antd';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
 import axios from 'axios';
@@ -20,6 +20,7 @@ const DailyWhatsapp = (props) => {
     const [data, setData] = useState([]);
 
     const context = useContext(PsContext);
+const {userId}=useParams();
     const [loader, setLoader] = useState(false);
     const currentCompleted = useRef(0);
     const [countData, setCountData] = useState(null);
@@ -46,7 +47,7 @@ const DailyWhatsapp = (props) => {
 
     const SendDailyProfile = (start) => {
         //setLoader(true);
-        context.psGlobal.apiRequest("send-daily-whatsapp/0/1", context.adminUser(props.match.params.userId).mode,null).then((res) => {
+        context.psGlobal.apiRequest("send-daily-whatsapp/0/1", context.adminUser(userId).mode,null).then((res) => {
            
         if(res){
             message.success(res[0].w_status+ "("+start.toString()+") "+ res[0].name)
@@ -85,7 +86,7 @@ const DailyWhatsapp = (props) => {
 
             };
 
-            context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
                 message.success("updated " + item.asciiname)
 
             }).catch(err => {

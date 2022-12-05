@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Upload, Collapse, DatePicker } from 'antd';
 import { Form, Input, Select } from 'antd';
@@ -21,8 +21,9 @@ const AddContent = (props) => {
     const { Option } = Select;
     const { Panel } = Collapse;
     const context = useContext(PsContext);
+const {userId,content_type:contentType}=useParams();
     const { TextArea } = Input;
-    const [contentType] = useState(props.match.params.content_type)
+  
     const [categoryData, setCategoryData] = useState([]);
     const [loader, setLoader] = useState(false);
     const [imgLoading, setImgLoading] = useState(false);
@@ -48,7 +49,7 @@ const AddContent = (props) => {
             //values:{name:'senthil',age:'13'}
 
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             setLoader(false);
             setCategoryData(res)
 
@@ -160,7 +161,7 @@ const AddContent = (props) => {
                 message.success(res['data'].message || 'Success');
                 //console.log(res['data'].data);
                 setLoader(false);
-                navigate("/" + props.match.params.userId + '/admin/contents/' + contentType + '/list')
+                navigate("/" + userId + '/admin/contents/' + contentType + '/list')
             }
             else {
                 message.error(res['data'].message || 'Error');
@@ -241,16 +242,16 @@ const AddContent = (props) => {
 
             <ResponsiveLayout
 
-                userId={props.match.params.userId}
+                userId={userId}
                 customHeader={null}
                 bottomMenues={null}
                 breadcrumbs={[
-                    { name: capitalizeFirst(props.match.params.content_type.replace("-", " ")) + ' List', link: null },
-                    { name: 'Add ' + capitalizeFirst(props.match.params.content_type.replace("-", " ")), link: null },
+                    { name: capitalizeFirst(contentType.replace("-", " ")) + ' List', link: null },
+                    { name: 'Add ' + capitalizeFirst(contentType.replace("-", " ")), link: null },
                 ]}
             >
 
-                <Card title={"Add " + capitalizeFirst(props.match.params.content_type.replace("-", " "))} extra={<Button href={"#" + props.match.params.userId + "/admin/contents/" + props.match.params.content_type + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(props.match.params.content_type.replace("-", " "))}</Button>}>
+                <Card title={"Add " + capitalizeFirst(contentType.replace("-", " "))} extra={<Button href={"#" + userId + "/admin/contents/" + contentType + "/list"} ><i className="fa-solid fa-list pe-2" ></i>List {capitalizeFirst(contentType.replace("-", " "))}</Button>}>
                     <Spin spinning={loader} >
                         <Form
                             name="basic"

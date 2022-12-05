@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card } from 'antd';
 import { Form, Input } from 'antd';
@@ -16,6 +16,7 @@ import { CountryDropdown } from 'react-country-region-selector';
 
 const ViewCourse = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -44,7 +45,7 @@ const ViewCourse = (props) => {
             query: "select * from course_fees where course_id='" + id + "' and status='1'",
         }
         ];
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
             let cData = res[0][0];
             let fData = res[1];
             setViewData(cData);
@@ -124,7 +125,7 @@ const ViewCourse = (props) => {
                 values: processedValues
 
             }
-            context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
                 loadData(viewData.id)
                 setVisibleAddModal(false);
@@ -162,7 +163,7 @@ const ViewCourse = (props) => {
                 values: processedValues
 
             }
-            context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
                 loadData(viewData.id)
                 setVisibleEditModal(false);
@@ -196,7 +197,7 @@ const ViewCourse = (props) => {
                     <Breadcrumb.Item>View Course</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Card title="View Course" extra={<Button href={"#/" + props.match.params.userId + "/admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
+                <Card title="View Course" extra={<Button href={"#/" + userId + "/admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
 
                     <Spin spinning={loader} >
                         {

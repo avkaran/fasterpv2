@@ -1,7 +1,7 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { currentInstance } from '../../../../utils'
 import PsContext from '../../../../context';
 const Sidebar = (props) => {

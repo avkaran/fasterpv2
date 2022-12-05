@@ -32,8 +32,8 @@ const FranchiseProfile = (props) => {
     const [viewId, setViewId] = useState(null);
     const [passwordLoader, setPasswordLoader] = useState(false);
     useEffect(() => {
-        setViewId(context.adminUser(props.match.params.userId).ref_id);
-        loadViewData(context.adminUser(props.match.params.userId).ref_id);
+        setViewId(context.adminUser(userId).ref_id);
+        loadViewData(context.adminUser(userId).ref_id);
     }, []);
     const loadViewData = (id) => {
         setLoader(true);
@@ -63,7 +63,7 @@ const FranchiseProfile = (props) => {
                 values: processedValues
 
             };
-            //context.adminUser(props.match.params.userId).mode
+            //context.adminUser(userId).mode
             context.psGlobal.apiRequest(reqDataInsert, "dev").then((res) => {
                 message.success('Password Changed Successfullly');
                 setPasswordLoader(false);
@@ -101,7 +101,7 @@ const FranchiseProfile = (props) => {
                             editIdOrObject={viewData}
                             onListClick={() => setCurAction("view")}
                             onSaveFinish={() => { setCurAction("view"); loadViewData(viewId) }}
-                            userId={props.match.params.userId}
+                            userId={userId}
 
                         />
                     </Card>)

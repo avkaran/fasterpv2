@@ -1,5 +1,5 @@
 import React ,{useState,useEffect}from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { currentInstance} from '../../../../../utils';
 //import {currentNav} from '../../../../../utils'
 import NavBar from './NavBar';

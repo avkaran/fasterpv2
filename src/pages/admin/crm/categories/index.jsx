@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space, Form } from 'antd';
 import { MyButton, FormItem } from '../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Radio, Input } from 'antd';
@@ -14,6 +14,7 @@ import { faTrash, faUserTimes, faClose } from '@fortawesome/free-solid-svg-icons
 import { capitalizeFirst } from '../../../../utils';
 const CrmCategoryList = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -161,7 +162,7 @@ const CrmCategoryList = (props) => {
                 query_type: 'query', //query_type=insert | update | delete | query
                 query: "select id, labels from case_categories where status=1" + id
             };
-            context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res, error) => {
                 setSelCategory(res);
                 setLabelLoading(false);
             }).catch(err => {
@@ -189,7 +190,7 @@ const CrmCategoryList = (props) => {
             values: {labels:newLabels.join(","),label_colors:new Array(newLabels.length).fill('#fff').join(",")}
 
         };
-        context.psGlobal.apiRequest(reqDataUpdate, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqDataUpdate, context.adminUser(userId).mode).then((res) => {
             setAddLabelLoader(false);
             message.success('Label Added Successfullly');
             setRefreshTable(prev=>prev+1)
@@ -230,9 +231,9 @@ const CrmCategoryList = (props) => {
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewCrmCategory viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditCrmCategory onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditCrmCategory editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewCrmCategory viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditCrmCategory onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditCrmCategory editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -240,9 +241,9 @@ const CrmCategoryList = (props) => {
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List {heading}s</Button>}>
 
-                        {curAction === "view" && (<ViewCrmCategory viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={props.match.params.userId} />)}
-                        {curAction === "add" && (<AddEditCrmCategory onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
-                        {curAction === "edit" && (<AddEditCrmCategory editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={props.match.params.userId} />)}
+                        {curAction === "view" && (<ViewCrmCategory viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditCrmCategory onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditCrmCategory editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }

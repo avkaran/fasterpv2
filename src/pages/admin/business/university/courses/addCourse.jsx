@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
@@ -11,6 +11,7 @@ import { ImageUpload } from '../../../../../comp';
 
 const AddCourse = (props) => {
     const context = useContext(PsContext);
+const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [addForm] = Form.useForm();
@@ -30,11 +31,11 @@ const AddCourse = (props) => {
             values: processedValues
 
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
 
             setLoader(false);
             message.success('Course Successfully');
-            navigate('/'+props.match.params.userId+'/admin/courses');
+            navigate('/'+userId+'/admin/courses');
 
         }).catch(err => {
             message.error(err);
@@ -66,7 +67,7 @@ const AddCourse = (props) => {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>Add Course</Breadcrumb.Item>
                 </Breadcrumb>
-                <Card title="Add Course" extra={<Button href={"#/"+props.match.params.userId+"admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
+                <Card title="Add Course" extra={<Button href={"#/"+userId+"admin/courses"} ><i className="fa-solid fa-list pe-2" ></i>List Courses</Button>}>
 
                     <Spin spinning={loader} >
                         <Form

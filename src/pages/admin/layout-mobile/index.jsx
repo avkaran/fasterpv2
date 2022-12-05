@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, withRouter, useNavigate } from 'react-router-dom';
+import { Navigate, Route, useParams, useNavigate } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../context';
 import Sidebar from './sidebar';
@@ -19,16 +19,17 @@ import toast from 'react-hot-toast';
 import HomeContainer from './homeContainer';
 const Layout = (props) => {
 	const context = useContext(PsContext);
-	const role = context.adminUser(props.match.params.userId).role && context.adminUser(props.match.params.userId).role.toLowerCase();
+const {userId}=useParams();
+	const role = context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
 	const [updateStatus, setUpdateState] = useState(false);
 	const [currentRoutes, setCurrentRoutes] = useState([]);
 	const [visibleSideBar, setVisibleSideBar] = useState(false);
 	const navigate = useNavigate();
 	useEffect(() => {
-		//	console.log("admin user",context.adminUser(props.match.params.userId))
+		//	console.log("admin user",context.adminUser(userId))
 		AOS.init(aosInit);
 		AOS.refresh();
-		axios.defaults.headers.common['Api-Token'] = context.adminApi(props.match.params.userId)
+		axios.defaults.headers.common['Api-Token'] = context.adminApi(userId)
 		context.updateGlobal().then((res) => {
 			if (res) setUpdateState(true)
 		}
@@ -42,7 +43,7 @@ const Layout = (props) => {
 	}, []);
 
 
-	if (context.adminLogged(props.match.params.userId) !== 'yes') {
+	if (context.adminLogged(userId) !== 'yes') {
 		return (<Navigate to="/a/admin-login" />);
 	}
 	else {
