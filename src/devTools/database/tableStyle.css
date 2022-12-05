@@ -1,0 +1,10 @@
+.ant-table-thead .ant-table-cell {
+    background: #e6fffb !important;
+    color:#434343;
+    font-weight: bold;
+}
+.ant-table-cell {
+    background:#fafafa !important;
+    color:#000;
+   
+}

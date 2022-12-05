@@ -1,0 +1,12 @@
+.ant-btn-primary:hover {
+    background-color: #13c2c2 !important;
+    color: #006d75 !important;
+}
+.ant-btn-ghost:hover {
+    background-color: #13c2c2 !important;
+    color: #fff !important;
+  
+}
+.img-crop-modal{
+    z-index: 1100;
+}

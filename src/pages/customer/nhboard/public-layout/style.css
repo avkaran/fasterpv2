@@ -1,0 +1,39 @@
+.logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+  }
+
+  .ant-layout-footer{
+    padding:0;
+  }
+
+  .ant-layout{
+    height: 100vh;
+  }
+
+  .ant-layout-content{
+    margin:0 !important;
+    padding:16px;
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+
+  .page-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+
+  .result-item{
+    justify-content: center;
+  }
+
+  .basic-layout-spinner-container{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    height:100vh;
+  }
