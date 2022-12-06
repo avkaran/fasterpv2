@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, useParams, useNavigate } from 'react-router-dom';
+import { Navigate, Route, useParams, useNavigate,Outlet } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../context';
 import Sidebar from './sidebar';
@@ -36,10 +36,10 @@ const {userId}=useParams();
 		).catch((error) => {
 			message.error(error)
 		});
-		import('../../admin/business/' + currentInstance.name + '/routes').then((module) => {
+		/* import('../../admin/business/' + currentInstance.name + '/routes').then((module) => {
 			setCurrentRoutes(module.default);
 		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps */
 	}, []);
 
 
@@ -50,10 +50,7 @@ const {userId}=useParams();
 		return (
 			<>{updateStatus && (<>
 				
-					{
-						currentRoutes.map(item => item.allowed.indexOf(role) > -1 && (<Route key={item.title}  {...item} />))
-					}
-			
+				<Outlet />
 
 			</>
 
