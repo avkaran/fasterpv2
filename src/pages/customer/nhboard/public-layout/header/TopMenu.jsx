@@ -20,7 +20,7 @@ const TopMenu = (props) => {
 			fontSize: '12px',
 			fontWeight: '600'
 		}}>
-			{context.adminUser(props.match.params.userId).employee_name}
+			{''}
 			{/*<span className='font-12 ms-2'>({capitalizeFirst(context.adminUser(props.match.params.userId).deptype)})</span>*/}
 		</div>;
 	}
@@ -63,11 +63,11 @@ const TopMenu = (props) => {
 							<ul class="dropdown">
 								<li class="active"><a href="https://imanhb.org/index.php">Home</a></li>
 								<li><a href="https://imanhb.org/about.php">About Us</a> </li>
-								<li><a href={"#/public/register"}>Registration</a></li>
+								<li><a href={"/public/register"}>Registration</a></li>
 								<li><a href="https://imanhb.org/events-blog.php">Events</a></li>
 								<li><a href="https://imanhb.org/forms.php">Norms & Forms</a></li>
 								<li><a href="#">Notifications</a></li>
-								<li> <a href={"#/public/login"}>Login</a></li>
+								<li> <a href={"/public/login"}>Login</a></li>
 							</ul>
 							:
 							<ul class="dropdown">
@@ -77,9 +77,9 @@ const TopMenu = (props) => {
 									<ul class="dropdown" id="nav-dropdown">
 										<li><Link to={"/0/customer/dashboard"} className='dropdown-item'>Dashboard</Link></li>
 										{/*<li><Link to={"/"+context.customerUser.id+"/customer/register-wizard"} className='dropdown-item'>View Profie</Link></li>
-												<li><Link to={"/#"+props.match.params.userId+"/customer/gallery"} className='dropdown-item'>Gallery</Link></li>
-												<li><Link to={"/#"+props.match.params.userId+"/customer/profile"} className='dropdown-item'>Profile</Link></li>
-												<li><Link to={"/#"+props.match.params.userId+"/customer/members"} className='dropdown-item'>Members</Link></li>
+												<li><Link to={"/0/customer/gallery"} className='dropdown-item'>Gallery</Link></li>
+												<li><Link to={"/0/customer/profile"} className='dropdown-item'>Profile</Link></li>
+												<li><Link to={"/0/customer/members"} className='dropdown-item'>Members</Link></li>
 	<li><Link to="/admin" className='dropdown-item'>Support</Link></li>*/}
 										<li><a className='dropdown-item' onClick={() => { if (window.confirm('Are you sure to logout?')) onLogoutClick() }}>Logout</a></li></ul>
 								</li>

@@ -99,7 +99,7 @@ const CustomerResetPassword = (props) => {
 
         };
        
-        apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res,error)=>{
+        apiRequest(reqData,"prod").then((res,error)=>{
             message.success("password Changed");
             navigate('/member-login')
         }).catch(err => {

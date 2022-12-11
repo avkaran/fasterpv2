@@ -13,6 +13,7 @@ import { faUserCheck, faUser, faUserTimes, faUserClock, faEye, faCheck, faClose 
 import { MyButton, MyTable } from '../../../../comp'
 import { green, yellow, grey,cyan } from '@ant-design/colors';
 import { heightList } from '../../../../models/core';
+
 const SearchListComponent = (props) => {
     const { Panel } = Collapse;
     const context = useContext(PsContext);
@@ -30,9 +31,7 @@ const SearchListComponent = (props) => {
         loadFilterMenu();
         setRefreshList(prev => prev + 1);
     }, [filterColumnsRef, refreshComponent])
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+
     const onListPageChange = (page, allData) => {
 
        
@@ -324,7 +323,7 @@ const SearchListComponent = (props) => {
                             onPageChange={onListPageChange}
                             renderItem={(item, index) => {
                                 return <>
-                                    <div className="d-none d-md-block">
+                                   <div className="d-md-block">
                                     <div className="mb-15 card">
                                         <div className="p-0 hover  card-body">
                                             <div className="row">
@@ -417,7 +416,8 @@ const SearchListComponent = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br/>
+                                
                                 </>
                             }}
                         />)

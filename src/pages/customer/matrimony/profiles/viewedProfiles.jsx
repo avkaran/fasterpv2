@@ -20,14 +20,15 @@ const ViewedProfiles = (props) => {
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [refreshMemberList, setRefreshMemberList] = useState(0);
-    const [viewedBy,setViewedBy] = useState(props.match.params.viewedBy)
+    const {viewedBy}=useParams();
+    //const [viewedBy,setViewedBy] = useState(props.match.params.viewedBy)
     const filterColumns = useRef(null);
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        setViewedBy(props.match.params.viewedBy)
+        //setViewedBy(props.match.params.viewedBy)
         var filter_clauses = [];
         filter_clauses.push(" m.gender<>'" + context.customerUser.gender + "'");
-        if (props.match.params.viewedBy === "other")
+        if (viewedBy === "other")
             filter_clauses.push(" m.id in(select member_auto_id from member_actions where action='contact-view' and to_member_auto_id='" + context.customerUser.id + "')");
         else
             filter_clauses.push(" m.id in(select to_member_auto_id from member_actions where action='contact-view' and member_auto_id='" + context.customerUser.id + "')");
@@ -35,7 +36,7 @@ const ViewedProfiles = (props) => {
         filterColumns.current = filter_clauses;
         setRefreshMemberList(prev => prev + 1);
 
-    }, [props.match.params.viewedBy]);
+    }, [viewedBy]);
     const onViewClick = (item) => {
         setViewOrEditData(item);
         setCurAction("view")

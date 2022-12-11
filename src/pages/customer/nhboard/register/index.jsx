@@ -247,7 +247,7 @@ const Register = (props) => {
 
 
                                                 <Form.Item wrapperCol={{ offset: 8, span: 24 }}>
-                                                    <Button type="text" href="#/login">Already Member? Login</Button>
+                                                    <Button type="text" href="/login">Already Member? Login</Button>
                                                 </Form.Item>
 
                                             </Form>

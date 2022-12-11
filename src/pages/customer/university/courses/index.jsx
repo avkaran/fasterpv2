@@ -39,7 +39,7 @@ const CustomerCourses = () => {
                                         return <div class="col-lg-4 col-md-6">
                                         <div class="card w-100 border-0 mt-4">
                                             <div class="card-image w-100 p-0 text-center bg-greylight rounded-3 mb-2">
-                                                <a href={"#/0/customer/courses/view/" + item.id}><img src={item.course_image?context.baseUrl+item.course_image:context.noImg} alt="product" class="w-100 mt-0 mb-0 p-5"/></a>
+                                                <a href={"/0/customer/courses/view/" + item.id}><img src={item.course_image?context.baseUrl+item.course_image:context.noImg} alt="product" class="w-100 mt-0 mb-0 p-5"/></a>
                                             </div>
                                             <div class="card-body w-100 p-0 text-center">
                                                 <h2 class="mt-2 mb-1"><a href="single-product.html" class="text-black fw-700 font-xsss lh-26">{item.course_name}</a></h2>

@@ -16,6 +16,7 @@ import ProfileSearch from './profileSearch';
 const HomeSearch = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
+    const {phrase}=useParams()
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -23,7 +24,7 @@ const HomeSearch = (props) => {
 
     return (
         <>
-            <ProfileSearch isPublicSearch={true} homeSearchPhrase={props.match.params.phrase}/>
+            <ProfileSearch isPublicSearch={true} homeSearchPhrase={phrase}/>
 
         </>
     );

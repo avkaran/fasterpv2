@@ -87,7 +87,7 @@ const CustomerDashboard = (props) => {
                     }
 
                     {/* <Nav.Item>
-              <Nav.Link href={"#/0/customer/register-wizard"} >View Profile</Nav.Link>
+              <Nav.Link href={"/0/customer/register-wizard"} >View Profile</Nav.Link>
             </Nav.Item> */}
                     {
                       context.customerUser.member_status === 'LIVE' && (<><Nav.Item>

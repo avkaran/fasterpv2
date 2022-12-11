@@ -63,7 +63,7 @@ const Layout = (props) => {
                 <div class="main-wrapper">
                     <div class="nav-header bg-white shadow-xs border-0">
                         <div class="nav-top" style={{width:'20%'}}>
-                            <a href="#/customer"><img src={logo} alt="MTC-24" /> </a>
+                            <a href="/customer"><img src={logo} alt="MTC-24" /> </a>
                             {/*  //mobile menu
                             <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                             <a href="default-video.html" class="mob-menu me-2"><i class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
@@ -71,10 +71,10 @@ const Layout = (props) => {
                             <button class="nav-menu me-0 ms-2"></button> */}
                         </div>
                         
-                        <a href="#/0/customer" class="p-2 text-center ms-3 menu-icon center-menu-icon"><FontAwesomeIcon icon={faHome} /></a>
-                        <a href="#/0/customer/editprofile" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faNewspaper} /></a>
-                        <a href="#/0/customer/courses" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faImages} /></a>
-                        <a href="#/0/customer/profile" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUser} /></a>
+                        <a href="/0/customer" class="p-2 text-center ms-3 menu-icon center-menu-icon"><FontAwesomeIcon icon={faHome} /></a>
+                        <a href="/0/customer/editprofile" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faNewspaper} /></a>
+                        <a href="/0/customer/courses" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faImages} /></a>
+                        <a href="/0/customer/profile" class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUser} /></a>
                         
                         <Input.Search placeholder="Search" //onSearch={onSearch} 
 
@@ -107,33 +107,33 @@ const Layout = (props) => {
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={red[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href="#/0/customer/editprofile" class="nav-content-bttn open-font" >My Profile</a>
+                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href="/0/customer/editprofile" class="nav-content-bttn open-font" >My Profile</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={blue[8]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faNewspaper} /></MyButton><a href="#/0/customer/courses" class="nav-content-bttn open-font" >Courses</a>
+                                                    <FontAwesomeIcon icon={faNewspaper} /></MyButton><a href="/0/customer/courses" class="nav-content-bttn open-font" >Courses</a>
                                             </Space>
                                         </li>
                                        <li>
                                             <Space>
                                                 <MyButton type="primary" color={cyan[6]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faCircleInfo} /></MyButton><a href="#/0/customer/mydocuments" class="nav-content-bttn open-font" >My Documents</a>
+                                                    <FontAwesomeIcon icon={faCircleInfo} /></MyButton><a href="/0/customer/mydocuments" class="nav-content-bttn open-font" >My Documents</a>
                                             </Space>
                                         </li>
                                          {/* 
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={gold[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faCalendarDays} /></MyButton><a href="#/customer/events" class="nav-content-bttn open-font" >Events</a>
+                                                    <FontAwesomeIcon icon={faCalendarDays} /></MyButton><a href="/customer/events" class="nav-content-bttn open-font" >Events</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
 
                                                 <MyButton type="primary" color={green[6]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faImages} /></MyButton><a href="#/customer/gallery" class="nav-content-bttn open-font" >Gallery</a>
+                                                    <FontAwesomeIcon icon={faImages} /></MyButton><a href="/customer/gallery" class="nav-content-bttn open-font" >Gallery</a>
                                             </Space>
                                         </li> */}
 

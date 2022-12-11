@@ -28,7 +28,7 @@ const NewArticle = (props) => {
             query: "select * from content_categories where content_type='article'"
         };
 
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, "prod").then((res, error) => {
             setCategories(res);
         }).catch(err => {
             message.error(err);
@@ -48,7 +48,7 @@ const NewArticle = (props) => {
             values: processedValues
 
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, "prod").then((res) => {
 
             message.success("your content posted and waiting for approval");
             setLoader(false);

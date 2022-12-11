@@ -65,7 +65,7 @@ const ExpressInterest = (props) => {
             title: 'Action',
             // dataIndex: 'Document',
            // key: 'couse_image',
-            render: (item) => <MyButton type="primary" href={"#/0/customer/view-member/" +item.id}>View</MyButton>,
+            render: (item) => <MyButton type="primary" href={"/0/customer/view-member/" +item.id}>View</MyButton>,
         },
     ]
     return (

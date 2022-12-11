@@ -64,7 +64,7 @@ const CustomerDashboard = (props) => {
     },
   ]
 
-  context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res,error)=>{
+  context.psGlobal.apiRequest(reqData,"prod").then((res,error)=>{
       var cData={
         express_interest:res[0][0]['count'],
         viewed:res[1][0]['count'],
@@ -153,7 +153,7 @@ const CustomerDashboard = (props) => {
                    [{paymentInfo.status}, Available Credits:{paymentInfo.availableCredits}] Upgrade your plan to get more benefits.
                     <a
                       className="ms-2"
-                      href="#/0/customer/membership"
+                      href="/0/customer/membership"
                       style={{ textDecoration: "underline" }}
                     >
                       Buy a Plan
@@ -177,7 +177,7 @@ const CustomerDashboard = (props) => {
                                         value={countData && countData.mymatches}
                                         icon={<FontAwesomeIcon icon={faPeoplePulling} />}
                                         color={theme.primaryColor}
-                                        link={'/' + props.match.params.userId + '/customer/mymatches'}
+                                        link={'/0/customer/mymatches'}
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={8}>
@@ -187,7 +187,7 @@ const CustomerDashboard = (props) => {
                                         value={countData && countData.express_interest}
                                         icon={<FontAwesomeIcon icon={faHeart} />}
                                         color={theme.errorColor}
-                                        link={'/' + props.match.params.userId + '/customer/express-interest/me'}
+                                        link={'/0/customer/express-interest/me'}
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={8}>
@@ -197,7 +197,7 @@ const CustomerDashboard = (props) => {
                                         value={countData && countData.viewed}
                                         icon={<FontAwesomeIcon icon={faUserCheck} />}
                                         color={theme.successColor}
-                                        link={'/' + props.match.params.userId + '/customer/profile-views/me'}
+                                        link={'/0/customer/profile-views/me'}
                                     />
                                 </Col>
                               

@@ -20,7 +20,8 @@ const MyMatches = (props) => {
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [refreshMemberList, setRefreshMemberList] = useState(0);
-    const [sendBy,setSendBy] = useState(props.match.params.sendBy)
+    //const {sendBy}=useParams()
+    //const [sendBy,setSendBy] = useState(props.match.params.sendBy)
     const filterColumns = useRef(null);
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps

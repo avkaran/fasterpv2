@@ -20,22 +20,23 @@ const ExpressInterestProfiles = (props) => {
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [refreshMemberList, setRefreshMemberList] = useState(0);
-    const [sendBy,setSendBy] = useState(props.match.params.sendBy)
+    //  const [sendBy,setSendBy] = useState(props.match.params.sendBy)
+    const { sendBy } = useParams()
     const filterColumns = useRef(null);
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        setSendBy(props.match.params.sendBy)
+        // setSendBy(props.match.params.sendBy)
         var filter_clauses = [];
         filter_clauses.push(" m.gender<>'" + context.customerUser.gender + "'");
-        if (props.match.params.sendBy === "other")
+        if (sendBy === "other")
             filter_clauses.push(" m.id in(select member_auto_id from member_actions where action='express-interest' and to_member_auto_id='" + context.customerUser.id + "')");
         else
             filter_clauses.push(" m.id in(select to_member_auto_id from member_actions where action='express-interest' and member_auto_id='" + context.customerUser.id + "')");
-       
+
         filterColumns.current = filter_clauses;
         setRefreshMemberList(prev => prev + 1);
 
-    }, [props.match.params.sendBy]);
+    }, [sendBy]);
     const onViewClick = (item) => {
         setViewOrEditData(item);
         setCurAction("view")
@@ -50,21 +51,21 @@ const ExpressInterestProfiles = (props) => {
     return (
         <><div>
             <div className="container">
-                <div className="row" style={{margin: '2px 2px 2px 2px'}}>
-                    
-                        <div className="col-md-1" style={{ background: '#fff',paddingTop:'10px',paddingBottom:'10px',color:green[7] }}>
+                <div className="row" style={{ margin: '2px 2px 2px 2px' }}>
 
-                            {sendBy === "me" && (<><FontAwesomeIcon icon={faHeart}/> <FontAwesomeIcon icon={faCircleArrowRight} /></>)}
-                            {sendBy === "other" && (<><FontAwesomeIcon icon={faHeart}/> <FontAwesomeIcon icon={faCircleArrowLeft} /></>)}
+                    <div className="col-md-1" style={{ background: '#fff', paddingTop: '10px', paddingBottom: '10px', color: green[7] }}>
 
-                        </div>
-                        <div className="col-md-11" style={{ background: '#fff',paddingTop:'10px',paddingBottom:'10px' }}>
+                        {sendBy === "me" && (<><FontAwesomeIcon icon={faHeart} /> <FontAwesomeIcon icon={faCircleArrowRight} /></>)}
+                        {sendBy === "other" && (<><FontAwesomeIcon icon={faHeart} /> <FontAwesomeIcon icon={faCircleArrowLeft} /></>)}
 
-                            {sendBy === "me" && (<>Express Interest has been sent to following Members</>)}
-                            {sendBy === "other" && (<>Express Interest Received from following Members</>)}
+                    </div>
+                    <div className="col-md-11" style={{ background: '#fff', paddingTop: '10px', paddingBottom: '10px' }}>
 
-                        </div>
-                    
+                        {sendBy === "me" && (<>Express Interest has been sent to following Members</>)}
+                        {sendBy === "other" && (<>Express Interest Received from following Members</>)}
+
+                    </div>
+
                 </div>
             </div>
         </div>

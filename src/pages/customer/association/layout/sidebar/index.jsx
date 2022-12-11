@@ -14,7 +14,7 @@ const Sidebar=(props)=>{
 							{/*<img src="https://technext.github.io/admincast/assets/img/admin-avatar.png" width="45px" />*/}
 						{/*</div>
 						<div className="admin-info">
-							<div className="font-strong">{context.adminUser(props.match.params.userId).department_name}</div><small>{context.adminUser(props.match.params.userId).deptype}</small></div>
+							<div className="font-strong">{context.adminUser('').department_name}</div><small>{context.adminUser(props.match.params.userId).deptype}</small></div>
     </div>*/}
     <hr className='my-1' />
 					<ul className="side-menu metismenu" >

@@ -116,7 +116,7 @@ const AddMember = (props) => {
             where:{id: context.customerUser.id},
             values:{member_status:'waiting'}
         };
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData,"prod").then((res)=>{
             var user = context.customerUser;
             user.member_status = 'waiting';
             context.updateCustomerUser(user);

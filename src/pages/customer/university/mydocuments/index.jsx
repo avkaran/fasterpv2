@@ -85,7 +85,7 @@ const MyDocuments = (props) => {
             values: processedValues
 
         }
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, "prod").then((res) => {
 
             loadData();
             setVisibleAddModal(false);

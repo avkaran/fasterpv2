@@ -14,7 +14,7 @@ const UserProfile = (props) => {
 			fontSize: '12px',
 			fontWeight: '600'
 		}}>
-			{context.adminUser(props.match.params.userId).employee_name}
+			{''}
 			{/*<span className='font-12 ms-2'>({capitalizeFirst(context.adminUser(props.match.params.userId).deptype)})</span>*/}
 		</div>;
 	}

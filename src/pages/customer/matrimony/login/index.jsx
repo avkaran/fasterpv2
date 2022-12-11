@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams,Link } from 'react-router-dom';
 //import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Row, Col, Card, Form, Button, Input, Select, Space, DatePicker } from 'antd';
 import { Spin, message } from 'antd';
@@ -122,7 +122,7 @@ const Login = (props) => {
 
                                 <Row gutter={16}>
                                     <Col className="gutter-row" xs={24} xl={12}>
-                                        <Button type="text" href="#/public/register">New User? Register</Button>
+                                        <Link to='/public/register'><Button type="text">New User? Register</Button></Link>
                                     </Col>
                                     <Col className="gutter-row" xs={24} xl={12}>
                                         {<Button type="text"

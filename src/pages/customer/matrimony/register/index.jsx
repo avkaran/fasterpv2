@@ -123,7 +123,7 @@ const Register = (props) => {
 
                 <Col className='gutter-row' xs={24} xl={12}>
                     <Spin spinning={registerLoader}>
-                        <Card title="Register"  extra={<Button type="text" href="#/public/login">Already Member? Login</Button>}>
+                        <Card title="Register"  extra={<Button type="text" href="/public/login">Already Member? Login</Button>}>
 
                             <Form
                                 name="basic"
@@ -310,7 +310,7 @@ const Register = (props) => {
 
 
                                 <Form.Item wrapperCol={{ offset: 8, span: 24 }}>
-                                    <Button type="text" href="#/public/login">Already Member? Login</Button>
+                                    <Button type="text" href="/public/login">Already Member? Login</Button>
                                 </Form.Item>
 
                             </Form>

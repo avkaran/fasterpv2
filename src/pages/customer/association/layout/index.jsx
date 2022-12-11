@@ -77,18 +77,18 @@ const Layout = (props) => {
                 <div class="main-wrapper">
                     <div class="nav-header bg-white shadow-xs border-0">
                         <div class="">
-                            <a href="#/customer"><img src={context.isMobile?mobileLogo:logo} alt="MTC-24"/> </a>
+                            <a href="/customer"><img src={context.isMobile?mobileLogo:logo} alt="MTC-24"/> </a>
                             {/*  //mobile menu
                             <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                             <a href="default-video.html" class="mob-menu me-2"><i class="feather-video text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                             <a href="#" class="me-2 menu-search-icon mob-menu"><i class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                             <button class="nav-menu me-0 ms-2"></button> */}
                         </div>
-                        <a href={"#"+props.match.params.userId+"/customer"} class="p-2 text-center ms-3 menu-icon center-menu-icon"><FontAwesomeIcon icon={faHome} /></a>
-                        <a href={"#"+props.match.params.userId+"/customer/editprofile"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faNewspaper} /></a>
-                        <a href={"#"+props.match.params.userId+"/customer/gallery"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faImages} /></a>
-                        <a href={"#"+props.match.params.userId+"/customer/profile"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUser} /></a>
-                        <a href={"#"+props.match.params.userId+"/customer/members"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUsers} /></a>
+                        <a href={"0/customer"} class="p-2 text-center ms-3 menu-icon center-menu-icon"><FontAwesomeIcon icon={faHome} /></a>
+                        <a href={"0/customer/editprofile"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faNewspaper} /></a>
+                        <a href={"0/customer/gallery"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faImages} /></a>
+                        <a href={"0/customer/profile"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUser} /></a>
+                        <a href={"0/customer/members"} class="p-2 text-center ms-0 menu-icon center-menu-icon"><FontAwesomeIcon icon={faUsers} /></a>
                         <Input.Search placeholder="Search" className='top_search_header'//onSearch={onSearch} 
 
                             enterButton />
@@ -122,61 +122,61 @@ const Layout = (props) => {
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={green[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href={"#"+props.match.params.userId+"/customer/dashboard"} class="nav-content-bttn open-font" >Dashboard</a>
+                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href={"0/customer/dashboard"} class="nav-content-bttn open-font" >Dashboard</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={red[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href={"#"+props.match.params.userId+"/customer/editprofile"} class="nav-content-bttn open-font" >My Profile</a>
+                                                    <FontAwesomeIcon icon={faUser} /></MyButton><a href={"0/customer/editprofile"} class="nav-content-bttn open-font" >My Profile</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={magenta[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faUsers} /></MyButton><a href={"#"+props.match.params.userId+"/customer/members"} class="nav-content-bttn open-font" >Members</a>
+                                                    <FontAwesomeIcon icon={faUsers} /></MyButton><a href={"0/customer/members"} class="nav-content-bttn open-font" >Members</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={blue[8]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faHeart} /></MyButton><a href={"#"+props.match.params.userId+"/customer/matrimony"} class="nav-content-bttn open-font" >Matrimony</a>
+                                                    <FontAwesomeIcon icon={faHeart} /></MyButton><a href={"0/customer/matrimony"} class="nav-content-bttn open-font" >Matrimony</a>
                                             </Space>
                                         </li><li>
                                             <Space>
                                                 <MyButton type="primary" color={volcano[8]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></MyButton><a href={"#"+props.match.params.userId+"/customer/express-interest/sent"} class="nav-content-bttn open-font" >Interest Sent</a>
+                                                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></MyButton><a href={"0/customer/express-interest/sent"} class="nav-content-bttn open-font" >Interest Sent</a>
                                             </Space>
                                         </li><li>
                                             <Space>
                                                 <MyButton type="primary" color={lime[8]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faArrowsDownToLine} /></MyButton><a href={"#"+props.match.params.userId+"/customer/express-interest/received"} class="nav-content-bttn open-font" >Interest Received</a>
+                                                    <FontAwesomeIcon icon={faArrowsDownToLine} /></MyButton><a href={"0/customer/express-interest/received"} class="nav-content-bttn open-font" >Interest Received</a>
                                             </Space>
                                         </li>
                                         
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={blue[8]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faNewspaper} /></MyButton><a href={"#"+props.match.params.userId+"/customer"} class="nav-content-bttn open-font" >Articles</a>
+                                                    <FontAwesomeIcon icon={faNewspaper} /></MyButton><a href={"0/customer"} class="nav-content-bttn open-font" >Articles</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={cyan[6]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faCircleInfo} /></MyButton><a href={"#"+props.match.params.userId+"/customer/announcements"} class="nav-content-bttn open-font" >Announcements</a>
+                                                    <FontAwesomeIcon icon={faCircleInfo} /></MyButton><a href={"0/customer/announcements"} class="nav-content-bttn open-font" >Announcements</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
                                                 <MyButton type="primary" color={gold[5]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faCalendarDays} /></MyButton><a href={"#"+props.match.params.userId+"/customer/events"} class="nav-content-bttn open-font" >Events</a>
+                                                    <FontAwesomeIcon icon={faCalendarDays} /></MyButton><a href={"0/customer/events"} class="nav-content-bttn open-font" >Events</a>
                                             </Space>
                                         </li>
                                         <li>
                                             <Space>
 
                                                 <MyButton type="primary" color={green[6]} shape="circle" size="large">
-                                                    <FontAwesomeIcon icon={faImages} /></MyButton><a href={"#"+props.match.params.userId+"/customer/gallery"} class="nav-content-bttn open-font" >Gallery</a>
+                                                    <FontAwesomeIcon icon={faImages} /></MyButton><a href={"0/customer/gallery"} class="nav-content-bttn open-font" >Gallery</a>
                                             </Space>
                                         </li>
 

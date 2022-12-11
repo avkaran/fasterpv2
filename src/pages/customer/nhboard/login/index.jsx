@@ -145,7 +145,7 @@ const Login = (props) => {
 
                                                 <Row gutter={16}>
                                                     <Col className="gutter-row" xs={24} xl={12}>
-                                                        <Button type="text" href="#/public/register">New User? Register</Button>
+                                                        <Button type="text" href="/public/register">New User? Register</Button>
                                                     </Col>
                                                     <Col className="gutter-row" xs={24} xl={12}>
                                                         { <Button type="text"

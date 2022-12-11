@@ -34,7 +34,7 @@ const CustomerForgetPassword = (props) => {
                     subject: '[Reset Password] Reset password for your account', //query_type=insert | update | delete | query
                     msg_body: `<h1>You raised reset password. if not, ignore this email</h1><br/>
                         If Yes,Click the below link to reset your WTMU account password
-                        <br/>Reset Link : `+ 'https://worldtamilmusicuniversity.com/apps/#/member-reset-password?q=' + context.psGlobal.encrypt(moment().add(1, 'hours').unix().toString()+"$"+res[0].id.toString()),
+                        <br/>Reset Link : `+ 'https://worldtamilmusicuniversity.com/apps//member-reset-password?q=' + context.psGlobal.encrypt(moment().add(1, 'hours').unix().toString()+"$"+res[0].id.toString()),
                     to_emails: [res[0].email]
                 };
                 sendEmail(emailData).then((resInner) => {

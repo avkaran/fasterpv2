@@ -41,8 +41,8 @@ const ListMemberComponent = (props) => {
     const [addeditFormWhatsapp] = Form.useForm();
     const [printingForMemberData, setPrintingForMemberData] = useState(null);
     const [printForm] = Form.useForm();
-    const [isPrintContact,setIsPrintContact]=useState(false);
-    const [isPrintPhoto,setIsPrintPhoto]=useState(false);
+    const [isPrintContact, setIsPrintContact] = useState(false);
+    const [isPrintPhoto, setIsPrintPhoto] = useState(false);
 
     useEffect(() => {
 
@@ -65,7 +65,7 @@ const ListMemberComponent = (props) => {
             message.error(err);
         })
     }
-  
+
     const loadFilterMenu = () => {
         setFilterLoader(true);
 
@@ -223,7 +223,7 @@ const ListMemberComponent = (props) => {
         menuItems.forEach((item) => {
             var childlist = [];
             item.children.forEach(child => {
-                childlist.push(<><Checkbox value={child.value}>{child.label}</Checkbox><br /></>)
+                childlist.push(<><Checkbox value={child.value} noStyle>{child.label}</Checkbox><br /></>)
             });
             panelList.push(<Panel header={item.label} key={item.key}>
                 <Form
@@ -242,7 +242,11 @@ const ListMemberComponent = (props) => {
                     //rules={[{ required: true, message: 'Please input password' }]}
 
                     >
-                        <Checkbox.Group>{childlist}</Checkbox.Group>
+                        <Checkbox.Group>
+                            <Space direction="vertical" style={{ width: '100%' }}>
+                                {childlist}
+                            </Space>
+                        </Checkbox.Group>
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 24 }}>
 
@@ -375,16 +379,15 @@ const ListMemberComponent = (props) => {
         );
         setSelBusiness(business);
 
-       
-        if(values.print_contact) setIsPrintContact(true);
-        if(values.print_photo) setIsPrintPhoto(true);
 
-        if(values.print_contact){
-            if(!values.member_id)
-                {
-                    message.error("Provide for Member Id for Printing");
-                    return;
-                }
+        if (values.print_contact) setIsPrintContact(true);
+        if (values.print_photo) setIsPrintPhoto(true);
+
+        if (values.print_contact) {
+            if (!values.member_id) {
+                message.error("Provide for Member Id for Printing");
+                return;
+            }
         }
         printDocument(values.print_type);
 
@@ -392,17 +395,17 @@ const ListMemberComponent = (props) => {
         //  printDocument('postal')
         // printDocument("print-photo");
 
-        if(values.print_contact){
-          
-                context.psGlobal.addLog({
-                    log_name:'print-profile',
-                    logged_type:context.adminUser(userId).role,
-                    logged_by:context.adminUser(userId).id,
-                    ref_table_column:'members.id',
-                    ref_id:printingForMemberData.id,
-                    ref_id2:values.member_id,
-                    description: selMembers.length.toString() +" Profiles printed for "+ values.member_id
-                })
+        if (values.print_contact) {
+
+            context.psGlobal.addLog({
+                log_name: 'print-profile',
+                logged_type: context.adminUser(userId).role,
+                logged_by: context.adminUser(userId).id,
+                ref_table_column: 'members.id',
+                ref_id: printingForMemberData.id,
+                ref_id2: values.member_id,
+                description: selMembers.length.toString() + " Profiles printed for " + values.member_id
+            })
         }
     };
     const onMemberIdChange = (e) => {
@@ -532,18 +535,18 @@ const ListMemberComponent = (props) => {
                                     selMembers.length > 0 && (<><MyButton type="outlined" shape="round" onClick={onWhatsappClick}><FontAwesomeIcon icon={faMessage} /> Whatsapp </MyButton>
                                         <MyButton type="outlined" shape="round" onClick={onPrintClick}><FontAwesomeIcon icon={faPrint} /> Print</MyButton>
                                         {
-                                           /*  excelData && excelData.members && (
-                                            <ExcelDownloder
-                                                data={excelData}
-                                                filename={`member_list`}
-                                                type={"button"} // or type={'button'}
-                                                className="ant-btn"
-                                                style={{ borderRadius: '25px', borderColor: cyan[7], color: cyan[7] }}
-                                            >
-
-                                                <i className="fa-regular fa-file-excel fs-5"></i> Excel
-                                            </ExcelDownloder>
-                                            ) */
+                                            /*  excelData && excelData.members && (
+                                             <ExcelDownloder
+                                                 data={excelData}
+                                                 filename={`member_list`}
+                                                 type={"button"} // or type={'button'}
+                                                 className="ant-btn"
+                                                 style={{ borderRadius: '25px', borderColor: cyan[7], color: cyan[7] }}
+                                             >
+ 
+                                                 <i className="fa-regular fa-file-excel fs-5"></i> Excel
+                                             </ExcelDownloder>
+                                             ) */
                                         }
                                     </>)
                                 }
@@ -670,19 +673,19 @@ const ListMemberComponent = (props) => {
                 isContact={isPrintContact}
                 isPhoto={isPrintPhoto}
             />
-             <PostalPrint
+            <PostalPrint
                 memberData={printData}
                 business={selBusiness}
                 language={printLanguage}
                 isContact={isPrintContact}
             />
-             <PhotoPrint
+            <PhotoPrint
                 memberData={printData}
                 business={selBusiness}
                 language={printLanguage}
                 isContact={isPrintContact}
             />
-             <ShortLinePrint
+            <ShortLinePrint
                 memberData={printData}
                 business={selBusiness}
                 language={printLanguage}
@@ -754,23 +757,23 @@ const ListMemberComponent = (props) => {
                             }
                         </Select>
                     </FormItem>
-                    <FormItem 
-                    label="Print Contact"
-                    name="print_contact"
-                    onChange={(e)=>printForm.setFieldsValue({print_contact:e.target.checked})}
-                    
+                    <FormItem
+                        label="Print Contact"
+                        name="print_contact"
+                        onChange={(e) => printForm.setFieldsValue({ print_contact: e.target.checked })}
+
                     >
                         <Checkbox />
-                       
+
                     </FormItem>
-                    <FormItem 
-                    label="Print Photo"
-                    name="print_photo"
-                    onChange={(e)=>printForm.setFieldsValue({print_photo:e.target.checked})}
-                    
+                    <FormItem
+                        label="Print Photo"
+                        name="print_photo"
+                        onChange={(e) => printForm.setFieldsValue({ print_photo: e.target.checked })}
+
                     >
                         <Checkbox />
-                       
+
                     </FormItem>
 
                     <FormItem

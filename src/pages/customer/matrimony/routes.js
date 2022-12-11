@@ -1,5 +1,8 @@
+import React, { useState, useContext, useEffect } from 'react';
+import { Navigate, Route, Routes, Outlet, useParams, useLocation } from 'react-router-dom';
 // FOR ADMIN
 import { CustomerROLES } from "../../../utils/data";
+
 import Home from "./home";
 import CustomerDashboard from "./dashboard";
 
@@ -10,72 +13,70 @@ import MyMatches from "./profiles/myMatches";
 import ExpressInterestProfiles from "./profiles/expressInterestProfiles";
 import ViewedProfiles from "./profiles/viewedProfiles";
 import MyPlan from "./membership/myPlan";
+const UserLayout = React.lazy(() => import('./layout'));
+const CustomerRoutes = (props) => {
+    return (<>
+        <Route path="/:userId/customer" element={<UserLayout />} >
+           
+            <Route
+                path='/:userId/customer/dashboard'
+                element={<CustomerDashboard />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/membership'
+                element={<LoggedInMembership />}
+                title='Membership'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/search'
+                element={<LoggedInSearch />}
+                title='Membership'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/profile'
+                element={<MyProfile />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/mymatches'
+                element={<MyMatches />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/express-interest/:sendBy'
+                element={<ExpressInterestProfiles />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/profile-views/:viewedBy'
+                element={<ViewedProfiles />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+            <Route
+                path='/:userId/customer/myplan'
+                element={<MyPlan />}
+                title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+        </Route>
+    </>
+    );
 
-
-
-const myroutes=  [
-    {
-        path: '/:userId/customer',
-        component: Home,
-        title: 'My Home',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/dashboard',
-        component: CustomerDashboard,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/membership',
-        component: LoggedInMembership,
-        title: 'Membership',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/search',
-        component: LoggedInSearch,
-        title: 'Membership',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/profile',
-        component: MyProfile,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/mymatches',
-        component: MyMatches,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/express-interest/:sendBy',
-        component: ExpressInterestProfiles,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/profile-views/:viewedBy',
-        component: ViewedProfiles,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-    {
-        path: '/:userId/customer/myplan',
-        component: MyPlan,
-        title: 'Dashboard',
-        allowed: CustomerROLES.CUSTOMER,
-        exact: true
-    },
-];
-export default myroutes;
+};
+export default CustomerRoutes;

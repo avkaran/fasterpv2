@@ -80,7 +80,7 @@ const CustomerPayment = (props) => {
         })
 
 
-        context.psGlobal.shortenUrl('https://24stardoctors.com/manage/#/activate-member/' + context.psGlobal.encrypt(context.customerUser.id.toString())).then((tinyUrl) => {
+        context.psGlobal.shortenUrl('https://24stardoctors.com/manage//activate-member/' + context.psGlobal.encrypt(context.customerUser.id.toString())).then((tinyUrl) => {
             var messages=[];
             adminUsers.forEach(item=>{
                 messages.push(

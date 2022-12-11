@@ -40,6 +40,7 @@ const Layout = (props) => {
 
 	useEffect(() => {
 		AOS.refresh();
+		window.scrollTo(0, 0)
 	}, [pathname]);
 
 	if (context.adminLogged(userId) !== 'yes') {

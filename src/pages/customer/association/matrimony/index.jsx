@@ -113,7 +113,7 @@ const Matrimony = (props) => {
             //values:{name:'senthil',age:'13'}
 
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(props.match.params.userId).mode).then((res, error) => {
+        context.psGlobal.apiRequest(reqData, "prod").then((res, error) => {
             setLoggedUserData(res[0])
         }).catch(err => {
             message.error(err);

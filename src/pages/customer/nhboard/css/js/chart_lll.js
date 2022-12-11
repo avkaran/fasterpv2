@@ -12973,12 +12973,12 @@ var defaultConfig$4 = {
 
 	adapters: {},
 	time: {
-		parser: false, // false == a pattern string from https://momentjs.com/docs/#/parsing/string-format/ or a custom callback that converts its argument to a moment
-		format: false, // DEPRECATED false == date objects, moment object, callback or a pattern string from https://momentjs.com/docs/#/parsing/string-format/
+		parser: false, // false == a pattern string from https://momentjs.com/docs//parsing/string-format/ or a custom callback that converts its argument to a moment
+		format: false, // DEPRECATED false == date objects, moment object, callback or a pattern string from https://momentjs.com/docs//parsing/string-format/
 		unit: false, // false == automatic or override with week, month, year, etc.
 		round: false, // none, or override with week, month, year, etc.
 		displayFormat: false, // DEPRECATED
-		isoWeekday: false, // override week start day - see https://momentjs.com/docs/#/get-set/iso-weekday/
+		isoWeekday: false, // override week start day - see https://momentjs.com/docs//get-set/iso-weekday/
 		minUnit: 'millisecond',
 		displayFormats: {}
 	},

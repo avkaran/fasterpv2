@@ -35,7 +35,7 @@ const EmailVerification = (props) => {
             subject: '[Activate] your WTMU account created please activate now', //query_type=insert | update | delete | query
             msg_body: `<h1>Your WTMU Account Created Successfully</h1><br/>
             Click the below link to Activate the account
-            <br/>Activate Link : `+ 'https://worldtamilmusicuniversity.com/apps/#/member-verify-email?q='+ context.psGlobal.encrypt(context.customerUser.id.toString()),
+            <br/>Activate Link : `+ 'https://worldtamilmusicuniversity.com/apps//member-verify-email?q='+ context.psGlobal.encrypt(context.customerUser.id.toString()),
             to_emails: [context.customerUser.email]
         };
         context.psGlobal.sendEmail(emailData).then((res) => {

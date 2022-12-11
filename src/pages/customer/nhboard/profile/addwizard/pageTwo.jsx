@@ -77,7 +77,7 @@ const PageTwo = (props) => {
                 if (res['data'].status == '1') {
                     var d = res['data'].data;
                     var Id = d[0].id;
-                    navigate('/' + props.match.params.userId + '/admin/members/pagethree/' + Id);
+                    navigate('/0/admin/members/pagethree/' + Id);
                 }
                 else {
                     setShowLoader(false);

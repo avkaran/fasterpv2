@@ -1,5 +1,5 @@
 import React, { Suspense, useContext, useEffect, useState } from 'react';
-import { Routes, Route, BrowserRouter, useParams } from 'react-router-dom';
+import { Routes, Route, HashRouter, useParams } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { businesses, currentInstance } from '../utils';
 import PsContext from '../context';
@@ -17,32 +17,43 @@ const userRegister = React.lazy(() => import('../pages/customer/' + currentInsta
 const userActivate = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/activate'));
 const userVerifyEmail = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/verify-email'));
 const userPasswordReset = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/reset-password')); */
+
+
 const userLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/layout'));
 const userPublicLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/public-layout'));
 
-
 const MyRoutes = (props) => {
-  const context = useContext(PsContext);
-  const { userId } = useParams();
-  const role = context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
-  const [currentRoutes, setCurrentRoutes] = useState([]);
-
+  const [adminRoutes, setAdminRoutes] = useState([]);
+  const [customerPublicRoutes, setCustomerPublicRoutes] = useState([])
+  const [customerRoutes, setCustomerRoutes] = useState([])
   useEffect(() => {
     import('../pages/admin/business/' + currentInstance.name + '/routes').then((module) => {
-      setCurrentRoutes(module.default);
+      setAdminRoutes(module.default);
+    })
+    import('../pages/customer/' + currentInstance.name + '/public-routes').then((module) => {
+      setCustomerPublicRoutes(module.default);
+
+    })
+    import('../pages/customer/' + currentInstance.name + '/routes').then((module) => {
+      setCustomerRoutes(module.default);
+
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return (<BrowserRouter >
+  return (<HashRouter >
     <Suspense fallback={<div className="text-center" style={{ marginTop: 'calc(30vh)' }} ><Spinner animation="border" /></div>}>
-      <Routes >
-        {currentRoutes}
-        
+      <Routes>
+       
+        {customerPublicRoutes}
+        {customerRoutes}
+        {adminRoutes}
+
         <Route path="/a" element={props.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminPublicLayoutMobile /> : <AdminPublicLayout />} >
           <Route path="/a/admin-login" element={<AdminLogin />} />
         </Route>
-        <Route path="/:userId/customer" element={userLayout} />
-        <Route path="/public" element={userPublicLayout} />
+
+        {/*  <Route path="/:userId/customer" element={userLayout} />
+        <Route path="/public" element={userPublicLayout} /> */}
 
         {/*   
   //only for old univeristy association projects(start)
@@ -56,7 +67,7 @@ const MyRoutes = (props) => {
         */}
       </Routes >
     </Suspense>
-  </BrowserRouter >
+  </HashRouter >
   )
 }
 export default MyRoutes;

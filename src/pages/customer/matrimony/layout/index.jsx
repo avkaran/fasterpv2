@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, useParams } from 'react-router-dom';
+import { Navigate, Route, useParams,useLocation, Outlet,Link} from 'react-router-dom';
 import $ from 'jquery';
 import AOS from "aos";
 import PsContext from '../../../../context';
@@ -18,17 +18,19 @@ import '../assets/css/bootstrap.min.css';
 import '../assets/css/custom.css';
 import logo from '../assets/images/logo_600.png'
 import OtpVerification from '../profile/otpVerification';
+import { Spinner } from 'react-bootstrap';
 const Layouts = (props) => {
     const context = useContext(PsContext);
-    const role = context.customerUser.role && context.customerUser.role.toLowerCase();
     const [updateStatus, setUpdateState] = useState(false)
     const [show, setShow] = useState(false);
+    const { pathname } = useLocation();
     useEffect(() => {
-        if (context.customerLogged !== 'yes') {
+        
+       /*  if (context.customerLogged !== 'yes') {
             return (<Navigate to="/public/login" />);
-        }
-        AOS.init(aosInit);
-        AOS.refresh();
+        } */
+       // AOS.init(aosInit);
+       // AOS.refresh();
         context.updateGlobal().then((res) => {
             if (res) setUpdateState(true)
         }
@@ -38,8 +40,9 @@ const Layouts = (props) => {
     }, []);
 
     useEffect(() => {
-        AOS.refresh();
-    }, [props.location.pathname]);
+        $("#sidebar").css("visibility", "hidden");
+        window.scrollTo(0, 0)
+    }, [pathname]); 
     const onLogoutClick = () => {
         context.customerLogout();
     }
@@ -55,7 +58,9 @@ const Layouts = (props) => {
     }
     else {
         return (
-            <> {updateStatus && (
+            <>
+             {!updateStatus && (<div className="text-center" style={{ marginTop: 'calc(30vh)' }} ><Spinner animation="border" /></div>)}
+             {updateStatus && (
                 <><OtpVerification isOtpVerified={parseInt(context.customerUser.is_otp_verified) === 1} dataItem={context.customerUser} />
                     <div>
                         <div className="fixed-top" style={{ zIndex: '999' }}>
@@ -80,24 +85,26 @@ const Layouts = (props) => {
                                         <div className="d-flex justify-content-end ">
                                             <nav className="nav-menu">
                                                 <ul>
-                                                    <li className="nav-item"><a className="nav-link" href="#/0/customer/dashboard">Dashboard</a></li>
-                                                    <li className="nav-item"><a className="nav-link" href="#/0/customer/profile">My Profile</a></li>
+                                                    <li className="nav-item">
+                                                        <Link to="/0/customer/dashboard" ><a className="nav-link" >Dashboard</a></Link>
+                                                    </li>
+                                                    <li className="nav-item"><Link to="/0/customer/profile" ><a className="nav-link" >My Profile</a></Link></li>
                                                     <li class="drop-down">
                                                         <a className="nav-link">Views</a>
                                                         <ul>
-                                                            <li><a href="/#/0/customer/profile-views/me"> I Viewed Profiles </a></li>
-                                                            <li><a href="/#/0/customer/profile-views/other"> Members Viewed My Profile </a></li>
-                                                            <li><a href="/#/0/customer/express-interest/me"> Interest Sent </a></li>
-                                                            <li><a href="/#/0/customer/express-interest/other"> Interest Received </a></li>
-                                                            <li><a href="/#/0/customer/mymatches"> My Matches </a></li>
+                                                            <li><Link to="/0/customer/profile-views/me"><a> I Viewed Profiles </a></Link></li>
+                                                            <li><Link to="/0/customer/profile-views/other"><a> Members Viewed My Profile </a></Link></li>
+                                                            <li><Link to="/0/customer/express-interest/me"><a> Interest Sent </a></Link></li>
+                                                            <li><Link to="/0/customer/express-interest/other"><a> Interest Received </a></Link></li>
+                                                            <li><Link to="/0/customer/mymatches"><a > My Matches </a></Link></li>
                                                         </ul>
                                                     </li>
-                                                    <li className="nav-item"><a className="nav-link" href="/#/0/customer/search">Search</a></li>
+                                                    <li className="nav-item"><Link to="/0/customer/search" ><a className="nav-link" >Search</a></Link></li>
                                                     <li class="drop-down">
                                                         <a className="nav-link">Membership</a>
                                                         <ul>
-                                                            <li><a href="/#/0/customer/myplan">My Plan </a></li>
-                                                            <li><a href="/#/0/customer/membership"> Membership Plans </a></li>
+                                                            <li><Link to="/0/customer/myplan"><a>My Plan </a></Link></li>
+                                                            <li><Link to="/0/customer/membership"><a > Membership Plans </a></Link></li>
                                                         </ul>
                                                     </li>
                                                     <li className="nav-item"><a className="nav-link" onClick={onLogoutClick}>Logout</a></li>
@@ -112,8 +119,7 @@ const Layouts = (props) => {
                         <div className="content">
                             <section>
                                 <div className="container">
-
-                                    {role ? routes.map(item => item.allowed.indexOf(role) > -1 && (<Route key={item.title}  {...item} />)) : routes.map(item => (<Route key={item.title}  {...item} />))}
+                                 <Outlet />
                                 </div>
                             </section>
                         </div>
@@ -239,15 +245,19 @@ const Layouts = (props) => {
                         <div className="offcanvas-header">
                             <div className="offcanvas-title h5"><a onClick={onSideBarBackClick} className="text-white font-22" style={{ "-webkit-text-decoration": "none", "text-decoration": "none" }}><i className="icofont-arrow-right " /></a></div>
                         </div>
-                        <div className="offcanvas-body"><a className="btn btn-block font-weight-600 border text-white rounded-20">LOGIN</a><a className="btn btn-block bg-white font-weight-600 border text-theme rounded-20 mt-2" href="/">REGISTER FREE</a>
+                        <div className="offcanvas-body"><Link to="/0/customer/dashboard"><a className="btn btn-block font-weight-600 border text-white rounded-20">Dashboard</a></Link><Link to="/0/customer/profile"><a className="btn btn-block bg-white font-weight-600 border text-theme rounded-20 mt-2" href="/">My Profile</a></Link>
                             <ul className="menu-link">
-                                <li><a href="/"> Home </a></li>
+                                <li><Link to="/0/customer/search"><a > Search </a></Link></li>
                                 <li><a href="/about-us"> About Us </a></li>
-                                <li><a href="/membership-plans"> Membership Plans </a></li>
-                                <li><a href="/help-and-support"> Help </a></li>
-                                <li><a href="/contact-us"> Contact Us </a></li>
-                                <li><a href="/blog"> Blog </a></li>
-                                <li><a href="/download-app"> Download App </a></li>
+                                <li><Link to="/0/customer/myplan"><a > My Plan </a></Link></li>
+                                <li><Link to="/0/customer/membership"><a href="/membership-plans"> Membership Plans </a></Link></li>
+                               
+                                <li><Link to="/0/customer/profile-views/me"><a> I Viewed Profiles </a></Link></li>
+                                <li><Link to="/0/customer/profile-views/other"><a > Members Viewed My Profile  </a></Link></li>
+                                <li><Link to="/0/customer/express-interest/me"><a > Interest Sent </a></Link></li>
+                                <li><Link to="/0/customer/express-interest/other"><a > Interest Received </a></Link></li>
+                                <li><Link to="/0/customer/mymatches"><a> My Matches </a></Link></li>
+                                <li><a onClick={onLogoutClick}> Logout </a></li>
                             </ul>
                             <hr />
                             <ul className="social-link">

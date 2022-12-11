@@ -117,7 +117,7 @@ const CustomerDashboard = (props) => {
             where:{id:context.customerUser.id},
             values:{is_matrimony_member:selOption}
         };
-        context.psGlobal.apiRequest(reqData,context.adminUser(props.match.params.userId).mode).then((res,error)=>{
+        context.psGlobal.apiRequest(reqData,"prod").then((res,error)=>{
             var user = context.customerUser;
             user.is_matrimony_member = selOption;
             context.updateCustomerUser(user);
@@ -150,7 +150,7 @@ const CustomerDashboard = (props) => {
                                         value={getCount('all_members')}
                                         icon={<FontAwesomeIcon icon={faUser} />}
                                         color={theme.primaryColor}
-                                        link={'/' + props.match.params.userId + '/admin/members'}
+                                        link={'/0/admin/members'}
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={6}>
@@ -160,7 +160,7 @@ const CustomerDashboard = (props) => {
                                         value={getCount('waiting')}
                                         icon={<FontAwesomeIcon icon={faUserTimes} />}
                                         color={theme.errorColor}
-                                        link={'/' + props.match.params.userId + '/admin/members/filter/waiting'}
+                                        link={'/0/admin/members/filter/waiting'}
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={6}>
@@ -170,7 +170,7 @@ const CustomerDashboard = (props) => {
                                         value={getCount('active')}
                                         icon={<FontAwesomeIcon icon={faUserCheck} />}
                                         color={theme.successColor}
-                                        link={'/' + props.match.params.userId + '/admin/members/filter/active'}
+                                        link={'/0/admin/members/filter/active'}
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={6}>
@@ -180,7 +180,7 @@ const CustomerDashboard = (props) => {
                                         value={getCount('today_created')}
                                         icon={<FontAwesomeIcon icon={faUserClock} />}
                                         color={theme.processingColor}
-                                        link={'/' + props.match.params.userId + '/admin/members/filter/today'}
+                                        link={'/0/admin/members/filter/today'}
                                     />
                                 </Col>
                             </Row>

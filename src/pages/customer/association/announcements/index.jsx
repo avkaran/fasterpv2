@@ -50,8 +50,8 @@ const CustomerAnnouncements = (props) => {
                         <div class="card w-100 shadow-xss rounded-xxl border-0 ps-4 pt-4 pe-4 pb-3 mb-3">
                             <div class="card-body p-0">
                                 <Space>
-                                    <MyButton type="primary" shape="circle"><FontAwesomeIcon icon={faNewspaper} href={"#" + props.match.params.userId + "/customer/new-article"} /></MyButton>
-                                    <a href={"#" + props.match.params.userId + "/customer/new-article"} class=" font-xssss fw-600 text-grey-500 card-body p-0 d-flex align-items-center">Create Article</a>
+                                    <MyButton type="primary" shape="circle"><FontAwesomeIcon icon={faNewspaper} href={"0/customer/new-article"} /></MyButton>
+                                    <a href={"0/customer/new-article"} class=" font-xssss fw-600 text-grey-500 card-body p-0 d-flex align-items-center">Create Article</a>
                                 </Space>
                             </div>
 
@@ -150,7 +150,7 @@ const CustomerAnnouncements = (props) => {
                                     <h4 class="fw-700 text-grey-900 font-xssss mt-1">{member.name} <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">{member.qualification}</span></h4>
                                 </div>
                                     <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-                                        <a href={"#/0/customer/view-member/" + member.id} className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl">View</a>
+                                        <a href={"/0/customer/view-member/" + member.id} className="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl">View</a>
                                         {/* <a href="#" class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl">Delete</a> */}
                                     </div></>
 
