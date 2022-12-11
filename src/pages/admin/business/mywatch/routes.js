@@ -27,7 +27,8 @@ import MemberCRM from "./crm/memberCrm";
 import Translations from "../../translations";
 import Advertisement from "../../advertisements";
 import WhatsappReports from "../../whatsapp";
-
+import SoftwareProjects from './projects';
+import CodeGenerator from './coder';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
 const AdminLayout = React.lazy(() => import('../../../../pages/admin/layout-desktop'));
@@ -192,6 +193,20 @@ const AuthRoutes = (props) => {
                 <Route
                     path='/:userId/admin/translations'
                     element={<Translations />}
+                    title='Translations'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                 <Route
+                    path='/:userId/admin/projects'
+                    element={<SoftwareProjects />}
+                    title='Translations'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    path='/:userId/admin/code-generator'
+                    element={<CodeGenerator />}
                     title='Translations'
                     allowed={ROLES.ALL}
                     exact={true}

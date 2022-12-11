@@ -9,7 +9,7 @@ import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
-const AddEditPackage = (props) => {
+const AddEditProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const AddEditPackage = (props) => {
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
-    const [heading] = useState('Package');
+    const [heading] = useState('Project');
     const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
     const [editId, setEditId] = useState(null);
     useEffect(() => {
@@ -38,7 +38,7 @@ const AddEditPackage = (props) => {
 
         } else {
             setCurAction("add");
-            addForm.setFieldsValue({ category: 'Plan', package_for: 'Customer(Online)', package_status: 'Active' })
+            addForm.setFieldsValue({ category: 'Plan', project_for: 'Customer(Online)', project_status: 'Active' })
         }
 
     }, []);
@@ -46,7 +46,7 @@ const AddEditPackage = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from packages where status=1 and id=" + id
+            query: "select * from projects where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setEditData(res[0]);
@@ -70,13 +70,13 @@ const AddEditPackage = (props) => {
             monthly_limit: mydata.monthly_limit,
             validity_months: mydata.validity_months,
             category: mydata.category,
-            package_price: mydata.package_price,
+            project_price: mydata.project_price,
             consume_credits: mydata.consume_credits,
-            package_for: mydata.package_for,
+            project_for: mydata.project_for,
             is_send_sms: mydata.is_send_sms,
             is_send_whatsapp: mydata.is_send_whatsapp,
             is_vip: mydata.is_vip,
-            package_status: mydata.package_status
+            project_status: mydata.project_status
         })
     }
     const onFinish = (values) => {
@@ -94,7 +94,7 @@ const AddEditPackage = (props) => {
         if (curAction === "add") {
             var reqDataInsert = {
                 query_type: 'insert',
-                table: 'packages',
+                table: 'projects',
                 values: processedValues
 
             };
@@ -110,7 +110,7 @@ const AddEditPackage = (props) => {
         } else if (curAction === "edit") {
             var reqDataUpdate = {
                 query_type: 'update',
-                table: 'packages',
+                table: 'projects',
                 where: { id: editId },
                 values: processedValues
 
@@ -200,7 +200,7 @@ const AddEditPackage = (props) => {
                                 >
                                     <Radio.Group defaultValue="Plan" optionType="default" >
 
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'package-category', 'radio')}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'project-category', 'radio')}
                                     </Radio.Group>
                                 </FormItem>
 
@@ -208,11 +208,11 @@ const AddEditPackage = (props) => {
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
-                                    label="Package Price"
-                                    name="package_price"
-                                    rules={[{ required: true, message: 'Please Enter Package Price' }]}
+                                    label="Project Price"
+                                    name="project_price"
+                                    rules={[{ required: true, message: 'Please Enter Project Price' }]}
                                 >
-                                    <InputNumber placeholder="Package Price" type="number" style={{ width: '100%' }} />
+                                    <InputNumber placeholder="Project Price" type="number" style={{ width: '100%' }} />
                                 </FormItem>
 
                             </Col>
@@ -232,13 +232,13 @@ const AddEditPackage = (props) => {
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
-                                    label="Package For"
-                                    name="package_for"
-                                    rules={[{ required: true, message: 'Please Enter Package For' }]}
+                                    label="Project For"
+                                    name="project_for"
+                                    rules={[{ required: true, message: 'Please Enter Project For' }]}
                                 >
 
                                     <Radio.Group defaultValue="Customer(Online)" optionType="default" >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'packages-for', 'radio')}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'projects-for', 'radio')}
                                     </Radio.Group>
                                 </FormItem>
 
@@ -286,9 +286,9 @@ const AddEditPackage = (props) => {
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
-                                    label="Package Status"
-                                    name="package_status"
-                                    rules={[{ required: true, message: 'Please Enter Package Status' }]}
+                                    label="Project Status"
+                                    name="project_status"
+                                    rules={[{ required: true, message: 'Please Enter Project Status' }]}
                                 >
 
                                     <Radio.Group defaultValue="Active" optionType="default" >
@@ -322,4 +322,4 @@ const AddEditPackage = (props) => {
     );
 
 }
-export default AddEditPackage;
+export default AddEditProject;

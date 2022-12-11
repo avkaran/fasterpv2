@@ -7,16 +7,16 @@ import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { MyTable, DeleteButton, PaginatedTable } from '../../../../../comp';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
-import AddPackage from './addEditProject';
-import AddEditPackage from './addEditProject';
-import ViewPackage from './viewProject';
+import AddProject from './addEditProject';
+import AddEditProject from './addEditProject';
+import ViewProject from './viewProject';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../../../utils';
 
 const SoftwareProjects = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
+    const {userId}=useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -25,7 +25,7 @@ const {userId}=useParams();
     const [isModal] = useState(false);
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [visibleModal, setVisibleModal] = useState(false);
-    const [heading] = useState('Package');
+    const [heading] = useState('Project');
     const [refreshTable, setRefreshTable] = useState(0);
     useEffect(() => {
       //  loadData();
@@ -40,46 +40,22 @@ const {userId}=useParams();
             //render: (item) => <strong>{item}</strong>,
         },
         {
-            title: 'Plan Name',
-            dataIndex: 'plan_name',
-            key: 'plan_name',
+            title: 'Project Name',
+            dataIndex: 'project_name',
+            key: 'project_name',
             //render: (item) => <strong>{item}</strong>,
-        },
-        {
-            title: 'Price',
-            dataIndex: 'package_price',
-            key: 'package_price',
-            //render: (text) => <a>{text}</a>,
         },
         {
             title: 'Category',
             dataIndex: 'category',
             key: 'category',
+            //render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Api Url',
+            dataIndex: 'api_url',
+            key: 'api_url',
             // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
-        },
-        {
-            title: 'Package for',
-            dataIndex: 'package_for',
-            key: 'package_for',
-            // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
-        },
-        {
-            title: 'Contact Credits',
-            dataIndex: 'consume_credits',
-            key: 'consume_credits',
-            // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
-        },
-        {
-            title: 'Benefits',
-            //dataIndex: 'COLUMN_COMMENT',
-           // key: 'package_status',
-            render: (item) => <Space><Tag color={parseInt(item.is_send_sms) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>SMS</Tag><Tag color={parseInt(item.is_send_whatsapp) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>WAPP</Tag><Tag color={parseInt(item.is_vip) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>VIP</Tag></Space>,
-        },
-        {
-            title: 'Status',
-            //dataIndex: 'COLUMN_COMMENT',
-            key: 'package_status',
-            render: (item) => <Tag color={item.package_status === 'Active' ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{item.package_status}</Tag>,
         },
         {
             title: 'Actions',
@@ -92,10 +68,10 @@ const {userId}=useParams();
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>
                 <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => {setCurAction("list");setRefreshTable(prev=>prev+1);}}
-                    title="Package"
-                    table="packages"
+                    title="Project"
+                    table="projects"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id, plan_name: item.plan_name, package_price: item.package_price, package_for: item.package_for }}
+                    dataItem={{ id: item.id, plan_name: item.plan_name, project_price: item.project_price, project_for: item.project_for }}
                     avatar={context.baseUrl + item.course_image}
                 />
 
@@ -138,9 +114,9 @@ const {userId}=useParams();
                         <HomeOutlined />
                     </Breadcrumb.Item>
                     <Breadcrumb.Item >
-                        <span>Packages</span>
+                        <span>Projects</span>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>List Packages</Breadcrumb.Item>
+                    <Breadcrumb.Item>List Projects</Breadcrumb.Item>
                 </Breadcrumb>
                 {
                     isModal && (<Modal
@@ -154,9 +130,9 @@ const {userId}=useParams();
                         onCancel={() => { setVisibleModal(false) }}
                         title={capitalizeFirst(curAction) + " " + heading}
                     >
-                        {curAction === "view" && (<ViewPackage viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
-                        {curAction === "add" && (<AddEditPackage onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
-                        {curAction === "edit" && (<AddEditPackage editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "view" && (<ViewProject viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditProject onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditProject editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />)}
 
                     </Modal>)
                 }
@@ -164,19 +140,19 @@ const {userId}=useParams();
                 {
                     !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List {heading}s</Button>}>
 
-                        {curAction === "view" && (<ViewPackage viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
-                        {curAction === "add" && (<AddEditPackage onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
-                        {curAction === "edit" && (<AddEditPackage editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "view" && (<ViewProject viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
+                        {curAction === "add" && (<AddEditProject onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
+                        {curAction === "edit" && (<AddEditProject editIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}
 
                     </Card>)
                 }
-                <Card title="Packages" extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Package</MyButton>} style={{display:(curAction === "list" || isModal)?'block':'none'}}>
+                <Card title="Projects" extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Project</MyButton>} style={{display:(curAction === "list" || isModal)?'block':'none'}}>
                    
                         <PaginatedTable
                          columns={tableColumns} 
                          refresh={refreshTable}
-                         countQuery="select count(*) as count from packages where status=1 "
-                         listQuery="select *,@rownum:=@rownum+1 as row_number from packages CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
+                         countQuery="select count(*) as count from projects where status=1 "
+                         listQuery="select *,@rownum:=@rownum+1 as row_number from projects CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
                          itemsPerPage={20}
                         />
                     

@@ -9,7 +9,7 @@ import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
-const ViewPackage = (props) => {
+const ViewProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const ViewPackage = (props) => {
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [viewData, setviewData] = useState(null);
-    const [heading] = useState('Package');
+    const [heading] = useState('Project');
     const { viewIdOrObject, onListClick, userId, ...other } = props;
     const [viewId, setViewId] = useState(null);
     useEffect(() => {
@@ -35,7 +35,7 @@ const ViewPackage = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from packages where status=1 and id=" + id
+            query: "select * from projects where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setviewData(res[0]);
@@ -88,7 +88,7 @@ const ViewPackage = (props) => {
 
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Package Price">{'INR '+ viewData.package_price.toString()}</FormViewItem>
+                                    <FormViewItem label="Project Price">{'INR '+ viewData.project_price.toString()}</FormViewItem>
                                 </Col>
                             </Row>
                             <Row gutter={16}>
@@ -96,7 +96,7 @@ const ViewPackage = (props) => {
                                     <FormViewItem label="Consume Credits">{viewData.consume_credits +' Contacts'}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Package For">{viewData.package_for}</FormViewItem>
+                                    <FormViewItem label="Project For">{viewData.project_for}</FormViewItem>
                                 </Col>
                             </Row>
                             <Row gutter={16}>
@@ -113,7 +113,7 @@ const ViewPackage = (props) => {
                                     <FormViewItem label="VIP">{parseInt(viewData.is_vip) === 1 ? 'Yes' : 'No'}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Status">{viewData.package_status}</FormViewItem>
+                                    <FormViewItem label="Status">{viewData.project_status}</FormViewItem>
                                 </Col>
                             </Row>
                         </Form>)
@@ -124,4 +124,4 @@ const ViewPackage = (props) => {
     );
 
 }
-export default ViewPackage;
+export default ViewProject;
