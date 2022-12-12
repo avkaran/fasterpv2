@@ -20,8 +20,10 @@ export const getPaymentInfo = async (id) => {
             }
             if (res.length > 0) {
                 var expiryDate = moment(res[0].expiry_date);
-                if (moment() > expiryDate)
+                if (moment() > expiryDate){
                     paymentInfo.status = 'Expired';
+                    paymentInfo.id = res[0].id;
+                }  
                 else {
                     paymentInfo.id = res[0].id;
                     paymentInfo.status = 'Paid';

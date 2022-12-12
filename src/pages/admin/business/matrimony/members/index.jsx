@@ -236,6 +236,11 @@ const {userId}=useParams();
                             'members.name',
                             'members.gender',
                             'members.dob',
+                            'members.religion',
+                            'members.caste',
+                            'members.sub_caste',
+                            'members.caste_detail',
+                            
                             'members.password',
                             'members.marital_status',
                             'members.childrens',
@@ -254,10 +259,7 @@ const {userId}=useParams();
                             'members.mobile_alt_no_2',
                             'members.whatsapp_no',
                             'members.email',
-                            'members.religion',
-                            'members.caste',
-                            'members.sub_caste',
-                            'members.caste_detail',
+                          
                             'members.mother_tongue',
                             'members.gothra',
                             'members.kuladeivam',

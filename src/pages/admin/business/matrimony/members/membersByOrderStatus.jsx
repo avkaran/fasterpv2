@@ -19,8 +19,7 @@ import { FormItem } from '../../../../../comp';
 import { useParams } from 'react-router-dom';
 const MembersByOrderStatus = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
-
+    const {userId}=useParams();
     const { Panel } = Collapse;
     const [searchForm] = Form.useForm();
     const { Option } = Select;
@@ -30,10 +29,10 @@ const {userId}=useParams();
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
 
-    const [orderStatus] = useState(props.match.params.orderStatus)
+    const {orderStatus} =useParams()
     useEffect(() => {
         searchForm.setFieldsValue({ order_status: orderStatus })
-        loadStatusMembers(props.match.params.orderStatus)
+        loadStatusMembers(orderStatus)
     }, []);
     const loadStatusMembers = (order_status) => {
         var filter_clauses = [];

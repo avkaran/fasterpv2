@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
-import { Button, Card } from 'antd';
-import { Form, Input, Select, InputNumber, Radio, Checkbox, DatePicker } from 'antd';
-import { Breadcrumb, Layout, Spin } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import { Form, Input, Select, InputNumber, Radio } from 'antd';
+import { Spin } from 'antd';
 import PsContext from '../../../../../../context';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../../comp';
-import { capitalizeFirst } from '../../../../../../utils';
 import PhoneInput from 'react-phone-input-2'
 
 import moment from 'moment'

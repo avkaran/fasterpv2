@@ -883,7 +883,8 @@ const AddEditMember = (props) => {
                     cropRatio="1/1"
                     //  name={name}
                     // defaultImage={defaultValue}
-                    storeFileName={editData && editData.photo ? editData.photo : 'public/uploads/' + new Date().valueOf() + '.jpg'}
+                   // storeFileName={editData && editData.photo ? editData.photo : 'public/uploads/' + new Date().valueOf() + '.jpg'}
+                    storeFileName={ 'public/uploads/' + new Date().valueOf() + '.jpg'}
                     onFinish={(fileName) => { addeditFormMember.setFieldsValue({ members: { photo: fileName } }) }}
                 />
             </FormItem>
@@ -1098,7 +1099,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Pincode"
                 name={['members', 'pincode']}
-                rules={[{ required: true, message: 'Please Enter Pincode' }]}
+              //  rules={[{ required: true, message: 'Please Enter Pincode' }]}
             >
                 <InputNumber placeholder="Pincode" type="number" style={{ width: '100%' }} />
             </FormItem>,
@@ -1398,7 +1399,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Residence Type"
                 name={['members', 'residence_type']}
-                rules={[{ required: true, message: 'Please Enter Residence Type' }]}
+                //rules={[{ required: true, message: 'Please Enter Residence Type' }]}
             >
 
                 <Select
@@ -1872,7 +1873,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Height"
                 name={['member_physical_attributes', 'height']}
-                rules={[{ required: true, message: 'Please Enter Height' }]}
+                //rules={[{ required: true, message: 'Please Enter Height' }]}
             >
                 <Select
                     showSearch
@@ -1894,7 +1895,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Weight"
                 name={['member_physical_attributes', 'weight']}
-                rules={[{ required: true, message: 'Please Enter Weight' }]}
+                //rules={[{ required: true, message: 'Please Enter Weight' }]}
             >
                 <Select
                     showSearch
@@ -2013,7 +2014,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Patham"
                 name={['member_horoscope', 'patham']}
-                rules={[{ required: true, message: 'Please Enter Patham' }]}
+               // rules={[{ required: true, message: 'Please Enter Patham' }]}
             >
 
                 <Select
@@ -2084,7 +2085,7 @@ const AddEditMember = (props) => {
 
                 <Space direction="vertical">
                     <TimePicker
-                        format='h:m a'
+                        format='hh:mm a'
                     //  onChange={onChange}
                     />
 

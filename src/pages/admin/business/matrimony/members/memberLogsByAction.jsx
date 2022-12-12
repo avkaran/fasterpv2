@@ -10,19 +10,14 @@ import { useParams } from 'react-router-dom';
 const MemberLogsByAction = (props) => {
     const context = useContext(PsContext);
 const {userId}=useParams();
-
     const { Panel } = Collapse;
     const [searchForm] = Form.useForm();
     const { Option } = Select;
     const { Content } = Layout;
-    const [action]=useState(props.match.params.action);
-    const [actionBy]=useState(props.match.params.actionBy)
-
+    const {action,actionBy}=useParams()
     useEffect(() => {
 
     }, []);
-
-
     return (
         <>
             <Content

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Row, Col, message, Space } from "antd";
 import { Button, Card } from "antd";
 import {
@@ -33,6 +33,7 @@ import moment from "moment";
 import EditEmployee from "./editEmployee";
 const EmployeeProfile = (props) => {
   const context = useContext(PsContext);
+  const {userId}=useParams()
   const { Content } = Layout;
   const navigate = useNavigate();
   const [addForm] = Form.useForm();
@@ -43,7 +44,6 @@ const EmployeeProfile = (props) => {
   const [viewData, setviewData] = useState(null);
   const [visiblePasswordModal, setVisiblePasswordModal] = useState(false);
   const [heading] = useState("My Accounts");
-  const { viewIdOrObject, onListClick, userId, ...other } = props;
   const [viewId, setViewId] = useState(null);
   const [isModal] = useState(false);
   const [passwordLoader, setPasswordLoader] = useState(false);
@@ -143,11 +143,11 @@ const EmployeeProfile = (props) => {
         {curAction === "view" && (
           <Card
             title="My Account"
-            extra={
+          /*   extra={
                <MyButton onClick={() => setCurAction("edit")}>
                  <i className="fa-solid fa-pencil pe-2"></i>Employees Profile
                </MyButton>
-            }
+            } */
           >
             <Spin spinning={loader}>
               {viewData && (
