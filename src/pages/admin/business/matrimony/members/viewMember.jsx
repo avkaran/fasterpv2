@@ -283,9 +283,9 @@ const ViewMember = (props) => {
         },
         {
             title: 'Plan Status',
-           // dataIndex: 'order_status',
+            // dataIndex: 'order_status',
             key: 'is_current_plan',
-            render: (item) => <strong>{parseInt(item.is_current_plan)===2?'Waiting':parseInt(item.is_current_plan)===1?'Active':'-'
+            render: (item) => <strong>{parseInt(item.is_current_plan) === 2 ? 'Waiting' : parseInt(item.is_current_plan) === 1 ? 'Active' : '-'
             }</strong>,
         },
         {
@@ -315,7 +315,7 @@ const ViewMember = (props) => {
         receiptData['distric'] = viewData.distric;
         receiptData['state'] = viewData.state;
         receiptData['pincode'] = viewData.pincode;
-       
+
 
 
         setPrintReceiptData(receiptData);
@@ -349,26 +349,26 @@ const ViewMember = (props) => {
         processedValues['package_for'] = selPlanData.package_for;
         processedValues['is_current_plan'] = 1;
         //check previous plan exist
-        if(paymentInfo){
-            if(paymentInfo.status==='Expired' || paymentInfo.availableCredits<=0){
+        if (paymentInfo) {
+            if (paymentInfo.status === 'Expired' || paymentInfo.availableCredits <= 0) {
                 //update current plan 0 for previous
                 var reqDataCurrentPlan = {
                     query_type: 'update',
                     table: 'orders',
-                    where: { member_auto_id: viewData.id,id:paymentInfo.id },
+                    where: { member_auto_id: viewData.id, id: paymentInfo.id },
                     values: { is_current_plan: 0 }
-        
+
                 }
                 context.psGlobal.apiRequest(reqDataCurrentPlan, context.adminUser(userId).mode).then((resCurrentPlan) => {
-                    
+
                 });
 
             }
-            if(paymentInfo.status==='Paid' && paymentInfo.availableCredits>0){
+            if (paymentInfo.status === 'Paid' && paymentInfo.availableCredits > 0) {
                 processedValues['is_current_plan'] = 2;
             }
         }
-        
+
 
         processedValues['package_price'] = getDiscountInfo('final-amount');
         processedValues['order_date'] = moment(values.paid_date).format("YYYY-MM-DD");
@@ -381,34 +381,34 @@ const ViewMember = (props) => {
 
 
         var reqDataInsert = [
-        {
-            query_type: 'insert',
-            table: 'orders',
-            values: processedValues
+            {
+                query_type: 'insert',
+                table: 'orders',
+                values: processedValues
 
-        }
+            }
         ];
         context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
             var createdId = res[0];
-            var padOrderId='RMO' + createdId.padStart(5, '0')
+            var padOrderId = 'RMO' + createdId.padStart(5, '0')
             var reqDataInner = {
                 query_type: 'update',
                 table: 'orders',
                 where: { id: createdId },
-                values: { order_id:  padOrderId}
+                values: { order_id: padOrderId }
 
             };
             context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then(resInner => {
 
                 context.psGlobal.addLog({
-                    log_name:'make-payment',
-                    logged_type:context.adminUser(userId).role,
-                    logged_by:context.adminUser(userId).id,
-                    ref_table_column:'orders.id',
-                    ref_id:createdId,
-                    ref_id2:padOrderId,
-                    description: "New Payment for order "+ padOrderId
-                }).then(logRes=>{
+                    log_name: 'make-payment',
+                    logged_type: context.adminUser(userId).role,
+                    logged_by: context.adminUser(userId).id,
+                    ref_table_column: 'orders.id',
+                    ref_id: createdId,
+                    ref_id2: padOrderId,
+                    description: "New Payment for order " + padOrderId
+                }).then(logRes => {
                     setPaymentLoader(false);
                     setVisiblePaymentModal(false);
                     loadViewData(viewData.id)
@@ -416,7 +416,7 @@ const ViewMember = (props) => {
                     setRefreshPaymentHistory(prev => prev + 1)
                     message.success('Payment Made Successfullly');
                 })
-                
+
 
             }).catch(err => {
                 message.error(err);
@@ -512,18 +512,18 @@ const ViewMember = (props) => {
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             context.psGlobal.addLog({
-                log_name:'upload-photo',
-                logged_type:context.adminUser(userId).role,
-                logged_by:context.adminUser(userId).id,
-                ref_table_column:'members.id',
-                ref_id:viewId,
-                ref_id2:viewData.member_id,
-                description:'Additional Photo updated for ' + viewData.member_id
-            }).then(logRes=>{
+                log_name: 'upload-photo',
+                logged_type: context.adminUser(userId).role,
+                logged_by: context.adminUser(userId).id,
+                ref_table_column: 'members.id',
+                ref_id: viewId,
+                ref_id2: viewData.member_id,
+                description: 'Additional Photo updated for ' + viewData.member_id
+            }).then(logRes => {
                 message.success("New Image Added");
                 loadPhotos(viewId);
             })
-          
+
         }).catch(err => {
             message.error(err);
             setLoader(false);
@@ -535,6 +535,21 @@ const ViewMember = (props) => {
         })
 
     };
+    const onDeleteFinish=()=>{
+        context.psGlobal.addLog({
+            log_name:'delete-member',
+            logged_type:context.adminUser(userId).role,
+            logged_by:context.adminUser(userId).id,
+            ref_table_column:'members.id',
+            ref_id:viewData.id,
+            ref_id2:viewData.member_id,
+            description:'Member Deleted ' + viewData.member_id
+        }).then(logRes=>{
+           
+            message.success('Member Deleted Successfullly');
+            onListClick();
+        })
+    }
     return (
         <>
             <Spin spinning={loader}>
@@ -578,8 +593,20 @@ const ViewMember = (props) => {
 
                                     <Space>
                                         {/* <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faEdit} /> Quick Edit</MyButton>
-                                        <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMinusCircle} /> Close Profile</MyButton> */}
-                                      <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick(setVisiblePaymentModal(true)) }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
+                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMinusCircle} /> Delete Profile</MyButton>
+                                         */}
+                                         {
+                                            context.isAdminResourcePermit(userId, 'matrimony-members.de;ete-member') && ( <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
+                                            title="Delete Member"
+                                            table="members"
+                                            //id must,+ give first three colums to display
+                                            dataItem={{ id: viewData.id, member_id: viewData.member_id, name: viewData.name, mobile_no: context.psGlobal.decrypt(viewData.mobile_no) }}
+                                            avatar={context.baseUrl + viewData.photo}
+                                        />)
+                                         }
+                                       
+                                       
+                                        <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick(setVisiblePaymentModal(true)) }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
                                     </Space>
                                     {/* <Space style={{ marginTop: '10px' }}>
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMessage} /> Send SMS</MyButton>

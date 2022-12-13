@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 2, name: 'matrimony' };
+export const currentInstance = { index: 5, name: 'esboss' };
 export const businesses = [
   { //0
     key: 'association',
@@ -52,6 +52,22 @@ export const businesses = [
     shortName: 'AV Karan',
     apiUrl: 'https://rajmatrimony.com/mywatch/api/v3_0/',
     dbName: 'rajmatrimony_watch',
+    multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    responsive: { isMobile: true, }
+  },
+  { //5
+    key: 'esboss',
+    name: 'ES Boss',
+    shortName: 'ES Boss',
+    apiUrl: 'https://www.esboss.in/api/v3_0/',
+    dbName: 'esboss',
     multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
     //cmsContentListType:'table',

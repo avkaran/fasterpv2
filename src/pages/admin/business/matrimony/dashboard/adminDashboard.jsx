@@ -148,7 +148,7 @@ const AdminDashboard = (props) => {
             var tCountData = [
                 {actionLabel:'New Entry',action:"add-new-member",online:0,employee:0,franchise:0,broker:0,total:0},
                 {actionLabel:'Profile Edit',action:"edit-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Close',action:"close-member",online:0,employee:0,franchise:0,broker:0,total:0},
+                {actionLabel:'Profile Delete',action:"delete-member",online:0,employee:0,franchise:0,broker:0,total:0},
                 {actionLabel:'Photo Upload',action:"upload-photo",online:0,employee:0,franchise:0,broker:0,total:0},
                 {actionLabel:'Profile Print',action:"print-profile",online:0,employee:0,franchise:0,broker:0,total:0},
                 {actionLabel:'Paid',action:"make-payment",online:0,employee:0,franchise:0,broker:0,total:0},

@@ -50,36 +50,12 @@ const EmployeeDashboard = (props) => {
             //render: (item) => <strong>{item}</strong>,
         },
         {
-            title: 'Online',
-           // dataIndex: 'online',
-            key: 'online',
-            render: (item) => <MyButton type='primary' shape="round" color={red[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/customer"}>{item.online}</MyButton>,
-        },
-        {
-            title: 'Employee',
+            title: 'My Count',
             //dataIndex: 'employee',
             key: 'employee',
             render: (item) => <MyButton type='primary' shape="round" color={green[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/employee"}>{item.employee}</MyButton>,
         },
-        {
-            title: 'Franchise',
-           // dataIndex: 'franchise',
-            key: 'franchise',
-            render: (item) => <MyButton type='primary' shape="round" color={blue[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/franchise"}>{item.franchise}</MyButton>,
-        },
-        {
-            title: 'Broker',
-           // dataIndex: 'broker',
-            key: 'broker',
-            render: (item) => <MyButton type='primary' shape="round" color={magenta[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/broker"}>{item.broker}</MyButton>,
-        },
-        {
-            title: 'Total',
-            //dataIndex: 'total',
-            key: 'total',
-            render: (item) => <MyButton type='primary' shape="round" color={cyan[5]}>{item.total}</MyButton>,
-        },
-
+       
     ]
     const loadCountData=()=>{
         
@@ -141,49 +117,30 @@ const EmployeeDashboard = (props) => {
         var reqData = [
             { 
             query_type: 'query', 
-            query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='"+moment().format("YYYY-MM-DD")+"' GROUP by log_name,logged_type"
+            query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='"+moment().format("YYYY-MM-DD")+"' and logged_type='employee' and logged_by='"+context.adminUser(userId).id+"' GROUP by log_name"
             },
         ]
         context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
             var tCountData = [
-                {actionLabel:'New Entry',action:"add-new-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Edit',action:"edit-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Close',action:"close-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Photo Upload',action:"upload-photo",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Print',action:"print-profile",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Paid',action:"make-payment",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Visit/Login',action:"login",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Payment Tried',action:"payment-tried",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Payment Failed',action:"payment-failed",online:0,employee:0,franchise:0,broker:0,total:0},
+                {actionLabel:'New Entry',action:"add-new-member",employee:0},
+                {actionLabel:'Profile Edit',action:"edit-member",employee:0},
+                {actionLabel:'Profile Delete',action:"delete-member",employee:0},
+                {actionLabel:'Photo Upload',action:"upload-photo",employee:0},
+                {actionLabel:'Profile Print',action:"print-profile",employee:0},
+                {actionLabel:'Paid',action:"make-payment",employee:0},
             ];
             tCountData.forEach((item, index) => {
                 var total = 0;
-                var fOnline = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "customer");
+               
                 var fEmployee = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "employee");
-                var fFranchise = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "franchise");
-                var fBroker = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "broker");
                
 
-                if (fOnline) {
-                    tCountData[index].online = fOnline.count;
-                    total = total + parseInt(fOnline.count);
-                }
+              
                 if (fEmployee) {
                     tCountData[index].employee = fEmployee.count;
-                    total = total + parseInt(fEmployee.count);
-                   // console.log('test',item.actionLabel,fEmployee.count,index,tCountData[index].employee)
                 }
-                if (fFranchise) {
-                    tCountData[index].franchise = fFranchise.count;
-                    total = total + parseInt(fFranchise.count);
-                }
-                if (fBroker) {
-                    tCountData[index].broker = fBroker.count;
-                    total = total + parseInt(fBroker.count);
-                }
-                tCountData[index].total = total;
+    
             })
-            console.log(tCountData)
             setTableCountData(tCountData);
            
         }).catch(err => {

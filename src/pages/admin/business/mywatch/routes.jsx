@@ -31,8 +31,8 @@ import SoftwareProjects from './projects';
 import CodeGenerator from './coder';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
-const AdminLayout = React.lazy(() => import('../../../../pages/admin/layout-desktop'));
-const AdminLayoutMobile = React.lazy(() => import('../../../../pages/admin/layout-mobile'));
+const AdminLayout = React.lazy(() => import('../../layout-desktop'));
+const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 
 
 const AuthRoutes = (props) => {
@@ -41,7 +41,7 @@ const AuthRoutes = (props) => {
     const role = context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
     return (
         <>
-            <Route path="/:userId/admin" element={props.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
+            <Route path="/:userId/admin" element={context.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
                 <Route
                     path='/:userId/admin'
                     element={<Dashboard />}

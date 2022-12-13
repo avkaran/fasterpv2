@@ -11,9 +11,6 @@ import ListContents from "../../contents"
 import EditContent from "../../contents/editContent";
 import ViewContent from "../../contents/viewContent";
 import Collections from "../../collections";
-import Docs from "../../../../docs";
-import Database from "../../../../devTools/database";
-import Coder from "../../../../devTools/coder";
 import EmployeeDesignations from "../../employee-designations";
 import Branches from "../../branches";
 import Employees from "../../employees";
@@ -22,16 +19,11 @@ import EmployeeProfile from "../../my-accounts/employee/employeeProfile";
 import SmsTemplate from "../../sms-templates";
 import Logs from "../../logs";
 import PermissionError from "../../error-pages/permissionError";
-import CrmCategoryList from "../../crm/categories";
-import MemberCRM from "./crm/memberCrm";
-import Translations from "../../translations";
-import Advertisement from "../../advertisements";
-import WhatsappReports from "../../whatsapp";
 
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
-const AdminLayout = React.lazy(() => import('../../../../pages/admin/layout-desktop'));
-const AdminLayoutMobile = React.lazy(() => import('../../../../pages/admin/layout-mobile'));
+const AdminLayout = React.lazy(() => import('../../layout-desktop'));
+const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 
 
 const AuthRoutes = (props) => {
@@ -40,7 +32,7 @@ const AuthRoutes = (props) => {
     const role = context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
     return (
         <>
-            <Route path="/:userId/admin" element={props.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
+            <Route path="/:userId/admin" element={context.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
                 <Route
                     path='/:userId/admin'
                     element={<Dashboard />}
@@ -134,65 +126,9 @@ const AuthRoutes = (props) => {
                     exact={true}
                 />
                 <Route
-                    path='/:userId/admin/advertisements'
-                    element={<Advertisement/>}
-                    title='Advertisements'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/whatsapp/wapp-reports'
-                    element={<WhatsappReports />}
-                    title='Whatsapp Reports'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/crm/crm-list'
-                    element={<MemberCRM />}
-                    title='Franchise Transactions'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/crm/categories'
-                    element={<CrmCategoryList />}
-                    title='Franchise Transactions'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
                     title='Permission Error'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/docs'
-                    element={<Docs />}
-                    title='Documentation'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/database'
-                    element={<Database />}
-                    title='Database'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/coder'
-                    element={<Coder />}
-                    title='Coder'
-                    allowed={ ROLES.ALL }
-                    exact={ true}
-                />
-                <Route
-                    path='/:userId/admin/translations'
-                    element={<Translations />}
-                    title='Translations'
                     allowed={ROLES.ALL}
                     exact={true}
                 />

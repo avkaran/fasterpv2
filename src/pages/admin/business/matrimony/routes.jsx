@@ -49,14 +49,14 @@ import MemberLogsByAction from "./members/memberLogsByAction";
 import MembersByOrderStatus from "./members/membersByOrderStatus";
 
 import { ROLES } from "../../../../utils/data";
-const AdminLayout = React.lazy(() => import('../../../../pages/admin/layout-desktop'));
-const AdminLayoutMobile = React.lazy(() => import('../../../../pages/admin/layout-mobile'));
+const AdminLayout = React.lazy(() => import('../../layout-desktop'));
+const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 const AuthRoutes = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
     const role = context.adminUser(userId).role && context.adminUser(userId).role.toLowerCase();
     return (<>
-        <Route path="/:userId/admin" element={props.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
+        <Route path="/:userId/admin" element={context.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminLayoutMobile /> : <AdminLayout />} >
             <Route
                 path='/:userId/admin'
                 element={< Dashboard />}

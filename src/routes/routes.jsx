@@ -37,7 +37,7 @@ const MyRoutes = (props) => {
     import('../pages/customer/' + currentInstance.name + '/routes').then((module) => {
       setCustomerRoutes(module.default);
 
-    })
+    }) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (<HashRouter >

@@ -32,7 +32,7 @@ const SearchMemberLogsList = (props) => {
     const [actions] = useState([
         { actionLabel: 'New Entry', action: "add-new-member", ref_table_column: 'members.id' },
         { actionLabel: 'Profile Edit', action: "edit-member", ref_table_column: 'members.id' },
-        { actionLabel: 'Profile Close', action: "close-member", ref_table_column: 'members.id' },
+        { actionLabel: 'Profile Delete', action: "delete-member", ref_table_column: 'members.id' },
         { actionLabel: 'Photo Upload', action: "upload-photo", ref_table_column: 'members.id' },
         { actionLabel: 'Profile Print', action: "print-profile", ref_table_column: 'members.id' },
         { actionLabel: 'Paid', action: "make-payment", ref_table_column: 'orders.id' },
@@ -78,13 +78,13 @@ const SearchMemberLogsList = (props) => {
             var query = "";
             if (value.toString() === "employee")
                 query =
-                    "select id,name from employees where status=1 and employee_status='Active' and employee_code<>'admin'";
+                    "select u.id,e.name from employees e,vi_users u where e.status=1 and e.id=u.ref_id and e.employee_status='Active' and e.employee_code<>'admin'";
             else if (value.toString() === "broker")
                 query =
-                    "select id,name from brokers where status=1 and broker_status='Active'";
+                    "select u.id,b.name from brokers b,vi_users u where b.status=1 and b.id=u.ref_id and b.broker_status='Active'";
             else if (value.toString() === "franchise")
                 query =
-                    "select id,name from franchise where status=1 and franchise_status='Active'";
+                    "select u.id,f.name from franchise f,vi_users u where f.status=1 and f.id=u.ref_id and f.franchise_status='Active'";
             var reqData = {
                 query_type: "query", //query_type=insert | update | delete | query
                 query: query,

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navigate, Route, useParams, useNavigate } from 'react-router-dom';
+import { Navigate, Route, useParams, useNavigate,useLocation } from 'react-router-dom';
 import AOS from "aos";
 import PsContext from '../../../context';
 import Sidebar from './sidebar';
@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 const HomeContainer = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
+	const { pathname } = useLocation();
     const {role,userId,...other } = props;
     const [visibleSideBar, setVisibleSideBar] = useState(false);
     useEffect(() => {
@@ -21,7 +22,7 @@ const HomeContainer = (props) => {
     }, []);
     useEffect(() => {
 		setVisibleSideBar(false)
-	}, [props.location.pathname]);
+	}, [pathname]);
     const log_out=()=>{
 		toast((t) => (
 			<span>
