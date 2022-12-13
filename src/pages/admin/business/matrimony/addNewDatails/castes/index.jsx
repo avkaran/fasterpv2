@@ -41,8 +41,8 @@ const CasteList = (props) => {
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -92,8 +92,8 @@ const CasteList = (props) => {
     const tableColumnsSubCaste = [
         {
             title: 'S.No',
-            // dataIndex: 'row_number',
-            //  key: 'row_number',
+            // dataIndex: 'row_num',
+            //  key: 'row_num',
             render: (item, object, index) => <strong>{index + 1}</strong>,
         },
 
@@ -232,7 +232,7 @@ const CasteList = (props) => {
                                 columns={tableColumns}
                                 refresh={refreshTable}
                                 countQuery={"select count(*) as count from castes where status=1 and master_caste_id is null and religion='" + selReligion + "'"}
-                                listQuery={"select *,@rownum:=@rownum+1 as row_number from castes CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and master_caste_id is null and religion='" + selReligion + "'"}
+                                listQuery={"select *,@rownum:=@rownum+1 as row_num from castes CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and master_caste_id is null and religion='" + selReligion + "'"}
                                 itemsPerPage={10}
                             />
 

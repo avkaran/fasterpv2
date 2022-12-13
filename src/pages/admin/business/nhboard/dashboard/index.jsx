@@ -131,7 +131,7 @@ const Dashboard = () => {
                     columns={columns}
                     refresh={refreshTable}
                     countQuery={"select count(*) as count FROM `hospital_members` where district is not null and district<>'' group by district,member_status"}
-                    listQuery={"select district,member_status,count(*) as count,@rownum:=@rownum+1 as row_number FROM `hospital_members`   CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where district is not null and district<>'' group by district,member_status order by district"}
+                    listQuery={"select district,member_status,count(*) as count,@rownum:=@rownum+1 as row_num FROM `hospital_members`   CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where district is not null and district<>'' group by district,member_status order by district"}
                     itemsPerPage={100}
                 />
             </Card>

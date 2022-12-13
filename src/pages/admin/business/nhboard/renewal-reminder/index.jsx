@@ -82,8 +82,8 @@ const {userId}=useParams();
 
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -195,7 +195,7 @@ const {userId}=useParams();
                             columns={columns}
                             refresh={refreshTable}
                             countQuery={"select count(*) as count from hospital_members where status=1" + context.psGlobal.getWhereClause(filterColumns.current, false)}
-                            listQuery={"select *,@rownum:=@rownum+1 as row_number from hospital_members CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1" + context.psGlobal.getWhereClause(filterColumns.current, false) + " order by expiry_date"}
+                            listQuery={"select *,@rownum:=@rownum+1 as row_num from hospital_members CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1" + context.psGlobal.getWhereClause(filterColumns.current, false) + " order by expiry_date"}
                             itemsPerPage={10}
                         />
                     </Card>

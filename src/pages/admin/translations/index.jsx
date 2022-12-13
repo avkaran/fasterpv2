@@ -47,8 +47,8 @@ const {userId}=useParams();
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -172,7 +172,7 @@ const {userId}=useParams();
                         columns={tableColumns}
                         refresh={refreshTable}
                         countQuery={"select count(*) as count from translations where status=1 and source_type='phrase' and language='"+lang+"'"}
-                        listQuery={"select *,@rownum:=@rownum+1 as row_number from translations CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and source_type='phrase' and language='"+lang+"'"}
+                        listQuery={"select *,@rownum:=@rownum+1 as row_num from translations CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and source_type='phrase' and language='"+lang+"'"}
                         itemsPerPage={20}
                     />
 

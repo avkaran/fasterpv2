@@ -52,8 +52,8 @@ const {userId}=useParams();
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -175,7 +175,7 @@ const {userId}=useParams();
                          columns={tableColumns} 
                          refresh={refreshTable}
                          countQuery="select count(*) as count from employees e,vi_users u where e.status=1 and u.status=1 and  e.employee_code not in('admin','dev') and u.ref_table_column='employees.id' and e.id=u.ref_id"
-                         listQuery="select e.*,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),e.dob)), '%Y')) AS age,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),e.doj)), '%Y')) AS maturity,u.username,u.password,u.active_status,b.branch_name,d.designation,@rownum:=@rownum+1 as row_number from employees e,vi_users u,branches b,designations d CROSS JOIN (SELECT @rownum:={rowNumberVar}) crj where e.status=1 and u.status=1 and e.employee_code not in('admin','dev') and u.ref_table_column='employees.id' and e.id=u.ref_id and e.branch_id=b.id and e.designation_id=d.id"
+                         listQuery="select e.*,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),e.dob)), '%Y')) AS age,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),e.doj)), '%Y')) AS maturity,u.username,u.password,u.active_status,b.branch_name,d.designation,@rownum:=@rownum+1 as row_num from employees e,vi_users u,branches b,designations d CROSS JOIN (SELECT @rownum:={rowNumberVar}) crj where e.status=1 and u.status=1 and e.employee_code not in('admin','dev') and u.ref_table_column='employees.id' and e.id=u.ref_id and e.branch_id=b.id and e.designation_id=d.id"
                          itemsPerPage={20}
                         />
                     

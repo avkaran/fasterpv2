@@ -35,8 +35,8 @@ const BusinessNames = (props) => {
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -158,7 +158,7 @@ const BusinessNames = (props) => {
                          columns={tableColumns} 
                          refresh={refreshTable}
                          countQuery="select count(*) as count from business_names where status=1 "
-                         listQuery="select *,@rownum:=@rownum+1 as row_number from business_names CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
+                         listQuery="select *,@rownum:=@rownum+1 as row_num from business_names CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
                          itemsPerPage={20}
                         />
                     

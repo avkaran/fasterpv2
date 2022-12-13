@@ -53,8 +53,8 @@ const Brokers = (props) => {
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -182,7 +182,7 @@ const Brokers = (props) => {
                          columns={tableColumns} 
                          refresh={refreshTable}
                          countQuery="select count(*) as count from brokers e,vi_users u where e.status=1 and u.status=1 and u.ref_table_column='brokers.id' and e.id=u.ref_id"
-                         listQuery="select e.*,u.username,u.password,u.active_status,@rownum:=@rownum+1 as row_number from brokers e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) crj where e.status=1 and u.status=1 and u.ref_table_column='brokers.id' and e.id=u.ref_id"
+                         listQuery="select e.*,u.username,u.password,u.active_status,@rownum:=@rownum+1 as row_num from brokers e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) crj where e.status=1 and u.status=1 and u.ref_table_column='brokers.id' and e.id=u.ref_id"
                          itemsPerPage={20}
                         />
                     

@@ -247,8 +247,8 @@ const ViewMember = (props) => {
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -1027,7 +1027,7 @@ const ViewMember = (props) => {
                                             <PaginatedTable
                                                 columns={tableColumns}
                                                 countQuery={"select count(*) as count from orders where status=1 and member_auto_id =" + viewData.id}
-                                                listQuery={"select *,@rownum:=@rownum+1 as row_number from orders CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and member_auto_id =" + viewData.id}
+                                                listQuery={"select *,@rownum:=@rownum+1 as row_num from orders CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and member_auto_id =" + viewData.id}
                                                 itemsPerPage={20}
                                                 refresh={refreshPaymentHistory}
                                             />

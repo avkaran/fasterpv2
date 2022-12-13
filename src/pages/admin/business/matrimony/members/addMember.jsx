@@ -112,8 +112,8 @@ const AddMember = (props) => {
     const tableColumns = [
         {
             title: 'S.No',
-            //  dataIndex: 'row_number',
-            //  key: 'row_number',
+            //  dataIndex: 'row_num',
+            //  key: 'row_num',
             render: (item, object, index) => <strong>{index + 1}</strong>,
         },
         {

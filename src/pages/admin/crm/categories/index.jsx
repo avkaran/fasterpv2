@@ -39,8 +39,8 @@ const {userId}=useParams();
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -90,8 +90,8 @@ const {userId}=useParams();
     const tableColumnsLabel = [
         {
             title: 'S.No',
-            // dataIndex: 'row_number',
-            //  key: 'row_number',
+            // dataIndex: 'row_num',
+            //  key: 'row_num',
             render: (item, object, index) => <strong>{index + 1}</strong>,
         },
         {
@@ -262,7 +262,7 @@ const {userId}=useParams();
                                 columns={tableColumns}
                                 refresh={refreshTable}
                                 countQuery={"select count(*) as count from case_categories where status=1  and case_type='" + selType + "'"}
-                                listQuery={"select *,@rownum:=@rownum+1 as row_number from case_categories CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and case_type='" + selType + "'"}
+                                listQuery={"select *,@rownum:=@rownum+1 as row_num from case_categories CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and case_type='" + selType + "'"}
                                 itemsPerPage={10}
                             />
 

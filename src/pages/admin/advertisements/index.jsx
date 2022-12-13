@@ -40,8 +40,8 @@ const Advertisement = (props) => {
    const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -247,7 +247,7 @@ const Advertisement = (props) => {
                             "select count(*) as count from ads where status=1" +
                             context.psGlobal.getWhereClause(filterColumns.current, false)
                           }
-                         listQuery= {"select a.*,l.location,@rownum:=@rownum+1 as row_number from ads a,ad_locations l CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where a.status=1 and a.location_id=l.id" + 
+                         listQuery= {"select a.*,l.location,@rownum:=@rownum+1 as row_num from ads a,ad_locations l CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where a.status=1 and a.location_id=l.id" + 
                          context.psGlobal.getWhereClause(filterColumns.current, false) }
                          itemsPerPage={20}
                         />

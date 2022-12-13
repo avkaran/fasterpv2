@@ -36,8 +36,8 @@ const {userId}=useParams();
     const tableColumns = [
         {
             title: 'S.No',
-            dataIndex: 'row_number',
-            key: 'row_number',
+            dataIndex: 'row_num',
+            key: 'row_num',
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -171,7 +171,7 @@ const {userId}=useParams();
                          columns={tableColumns} 
                          refresh={refreshTable}
                          countQuery="select count(*) as count from package_discounts where status=1 "
-                         listQuery="select pd.*,p.plan_name,@rownum:=@rownum+1 as row_number from package_discounts pd,packages p  CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where pd.discount_for=p.id and pd.status=1 "
+                         listQuery="select pd.*,p.plan_name,@rownum:=@rownum+1 as row_num from package_discounts pd,packages p  CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where pd.discount_for=p.id and pd.status=1 "
                          itemsPerPage={20}
                         />
                     

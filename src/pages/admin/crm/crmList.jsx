@@ -100,8 +100,8 @@ const CRMList = (props) => {
   const tableColumns = [
     {
       title: "S.No",
-      dataIndex: "row_number",
-      key: "row_number",
+      dataIndex: "row_num",
+      key: "row_num",
       //render: (item) => <strong>{item}</strong>,
     },
     {
@@ -431,7 +431,7 @@ const CRMList = (props) => {
             }
 
             listQuery={
-              "select *,@rownum:=@rownum+1 as row_number from case_tasks CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and type='"+selType+"'" +
+              "select *,@rownum:=@rownum+1 as row_num from case_tasks CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and type='"+selType+"'" +
               context.psGlobal.getWhereClause(filterColumns.current, false)
             }
             itemsPerPage={20}

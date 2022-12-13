@@ -53,8 +53,8 @@ const {userId}=useParams();
   const tableColumns = [
     {
       title: "S.No",
-      dataIndex: "row_number",
-      key: "row_number",
+      dataIndex: "row_num",
+      key: "row_num",
       //render: (item) => <strong>{item}</strong>,
     },
     {
@@ -340,7 +340,7 @@ const {userId}=useParams();
               context.psGlobal.getWhereClause(filterColumns.current, true)
             }
             listQuery={
-              "select *,@rownum:=@rownum+1 as row_number from logs CROSS JOIN (SELECT @rownum:={rowNumberVar}) c " +
+              "select *,@rownum:=@rownum+1 as row_num from logs CROSS JOIN (SELECT @rownum:={rowNumberVar}) c " +
               context.psGlobal.getWhereClause(filterColumns.current, true)
             }
             itemsPerPage={20}
