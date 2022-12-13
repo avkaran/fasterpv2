@@ -33,11 +33,11 @@ const Header = (props) => {
 
 	useEffect(() => {
 
-		import('../../business/' + currentInstance.name + '/routes').then((module) => {
+		/* import('../../business/' + currentInstance.name + '/routes').then((module) => {
 			//setCurrentRoutes(module.default);
 			let r = module.default.find(item => item.path === pathname);
 			updateTitle(r);
-		})
+		}) */
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pathname]);

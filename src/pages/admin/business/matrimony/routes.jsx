@@ -49,6 +49,7 @@ import MemberLogsByAction from "./members/memberLogsByAction";
 import MembersByOrderStatus from "./members/membersByOrderStatus";
 
 import { ROLES } from "../../../../utils/data";
+import EditMember from './members/editMember';
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 const AuthRoutes = (props) => {
@@ -102,6 +103,13 @@ const AuthRoutes = (props) => {
             <Route
                 path='/:userId/admin/members/add-member'
                 element={< AddMember />}
+                title='Add Member'
+                allowed={ROLES.ALL}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/members/edit/:memberId'
+                element={< EditMember />}
                 title='Add Member'
                 allowed={ROLES.ALL}
                 exact={true}

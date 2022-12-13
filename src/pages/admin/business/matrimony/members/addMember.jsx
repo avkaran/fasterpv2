@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams,Link } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { Button, Card, Checkbox, Upload, Space, DatePicker, Tag } from 'antd';
 import { Form, Input, Select, InputNumber, Steps } from 'antd';
@@ -15,7 +15,7 @@ import PhoneInput from 'react-phone-input-2'
 
 const AddMember = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
+    const { userId } = useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [formSearchDuplicate] = Form.useForm();
@@ -27,7 +27,7 @@ const {userId}=useParams();
     const [duplicateListLoader, setDuplicateListLoader] = useState(false);
     const [allowNewEntry, setAllowNewEntry] = useState(false);
     const [preFilledValues, setPreFilledValues] = useState(null);
-    const [curStep,setCurStep]=useState(0)
+    const [curStep, setCurStep] = useState(0)
     useEffect(() => {
     }, []);
     const loadCastes = (religion) => {
@@ -139,6 +139,12 @@ const {userId}=useParams();
             dataIndex: 'caste_name',
             key: 'caste_name',
             // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
+        },
+        {
+            title: 'Edit',
+           // dataIndex: 'caste_name',
+           // key: 'caste_name',
+            render: (item) => <span><Link to={"/"+userId+"/admin/members/edit/"+ item.id}><MyButton type="primary" shape="circle"><i class="fa-solid fa-pencil"></i></MyButton></Link></span>,
         },
         {
             title: 'Status',
@@ -365,35 +371,42 @@ const {userId}=useParams();
                         <AddEditMember
                             userId={userId}
                             preFilledValues={preFilledValues}
-                            onSaveFinish={() =>{setAllowNewEntry(false);setCurStep(0)}}
+                            onSaveFinish={() => { setAllowNewEntry(false); setCurStep(0) }}
                             inputFields={
                                 [
                                     'members.member_created_for',
                                     'members.name',
                                     'members.gender',
                                     'members.dob',
+                                    'members.religion',
+                                    'members.caste',
+                                    'members.sub_caste',
+                                    'members.caste_detail',
+
+
                                     'members.password',
                                     'members.marital_status',
                                     'members.childrens',
                                     'members.children_living_status',
-                                    'members.country',
-                                    'members.state',
-                                    'members.district',
+
+                                    'members.mobile_no',
+                                    'members.mobile_alt_no_1',
+                                    'members.mobile_alt_no_2',
+                                    'members.whatsapp_no',
+
                                     'members.door_no',
                                     'members.street',
                                     'members.area',
                                     'members.taluk',
                                     'members.landmark',
                                     'members.pincode',
-                                    'members.mobile_no',
-                                    'members.mobile_alt_no_1',
-                                    'members.mobile_alt_no_2',
-                                    'members.whatsapp_no',
+                                    'members.country',
+                                    'members.state',
+                                    'members.district',
+
+
                                     'members.email',
-                                    'members.religion',
-                                    'members.caste',
-                                    'members.sub_caste',
-                                    'members.caste_detail',
+
                                     'members.mother_tongue',
                                     'members.gothra',
                                     'members.kuladeivam',

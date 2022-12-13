@@ -166,78 +166,37 @@ const EmployeeDashboard = (props) => {
                             />
                         </Col>
                         <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            {/* <StatCard
 
                                 title="Employees"
                                 value={countData && countData.employees}
                                 icon={<FontAwesomeIcon icon={faUserTie} />}
                                 color={theme.errorColor}
                                 link={"/"+userId+"/admin/employees"}
-                            />
+                            /> */}
                         </Col>
                         <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            {/* <StatCard
 
                                 title="Franchise"
                                 value={countData && countData.franchise}
                                 icon={<FontAwesomeIcon icon={faPeopleRoof} />}
                                 color={theme.successColor}
                                 link={"/"+userId+"/admin/franchise"}
-                            />
+                            /> */}
                         </Col>
                         <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                           {/*  <StatCard
 
                                 title="Brokers"
                                 value={countData && countData.brokers}
                                 icon={<FontAwesomeIcon icon={faPeopleRobbery} />}
                                 color="#fadb14"
                                 link={"/"+userId+"/admin/broker"}
-                            />
+                            /> */}
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
 
-                                title="Paid Members"
-                                value={countData && countData.paid}
-                                icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
-                                color="#fa8c16"
-                                link={"/"+userId+"/admin/members/orders-by-status/Paid"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
-
-                                title="Payment Tried"
-                                value={countData && countData.payment_tried}
-                                icon={<FontAwesomeIcon icon={faUserTag} />}
-                                color="#006d75"
-                                link={"/"+userId+"/admin/members/orders-by-status/Payment Tried"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
-
-                                title="Payment Failed"
-                                value={countData && countData.payment_failed}
-                                icon={<FontAwesomeIcon icon={faUserXmark} />}
-                                color="#10239e"
-                                link={"/"+userId+"/admin/members/orders-by-status/Payment Failed"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
-
-                                title="Complaints"
-                                value={countData && countData.complaints}
-                                icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
-                                color="#d4380d"
-                                link={"/"+userId+"/admin/crm/crm-list"}
-                            />
-                        </Col>
-                    </Row>
                     {
                         tableCountData && (<MyTable columns={tableColumns} dataSource={tableCountData} />)
                     }

@@ -596,7 +596,7 @@ const ViewMember = (props) => {
                                          <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMinusCircle} /> Delete Profile</MyButton>
                                          */}
                                          {
-                                            context.isAdminResourcePermit(userId, 'matrimony-members.de;ete-member') && ( <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
+                                            context.isAdminResourcePermit(userId, 'matrimony-members.delete-member') && ( <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
                                             title="Delete Member"
                                             table="members"
                                             //id must,+ give first three colums to display
