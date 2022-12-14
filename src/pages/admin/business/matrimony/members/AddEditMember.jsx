@@ -1075,7 +1075,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Taluk"
                 name={['members', 'taluk']}
-                rules={[{ required: true, message: 'Please Enter Taluk' }]}
+               // rules={[{ required: true, message: 'Please Enter Taluk' }]}
             >
                 <Input placeholder="Taluk" />
             </FormItem>,
@@ -2036,7 +2036,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Raasi"
                 name={['member_horoscope', 'raasi']}
-                rules={[{ required: true, message: 'Please Enter Raasi' }]}
+              //  rules={[{ required: true, message: 'Please Enter Raasi' }]}
             >
 
                 <Select

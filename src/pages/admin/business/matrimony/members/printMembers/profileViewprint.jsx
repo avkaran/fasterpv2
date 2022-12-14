@@ -23,25 +23,25 @@ const ProfileViewPrint = (props) => {
                 if(obj)obj=obj.substring(0,2);
                 return obj;
             })
-        return <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        return <table border="1" style={{ width: '80%', borderCollapse: 'collapse',marginLeft:'30px' }}>
             <tr>
-                <td style={{ width: '25%', height: '70px' }}>{viewValuesRaasi[12 - 1]}</td>
+                <td style={{ width: '25%', height: '50px' }}>{viewValuesRaasi[12 - 1]}</td>
                 <td style={{ width: '25%' }}>{viewValuesRaasi[1 - 1]}</td>
                 <td style={{width:'25%'}}>{viewValuesRaasi[2 - 1]}</td>
                 <td style={{width:'25%'}}>{viewValuesRaasi[3 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesRaasi[11 - 1]}</td>
-                <td colspan="2" rowspan="2" style={{textAlign:'center'}}><h2>ராசி</h2></td>
+                <td style={{height:'50px'}}>{viewValuesRaasi[11 - 1]}</td>
+                <td colspan="2" rowspan="2" style={{textAlign:'center'}}><h4>ராசி</h4></td>
                 <td>{viewValuesRaasi[4 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesRaasi[10 - 1]}</td>
+                <td style={{height:'50px'}}>{viewValuesRaasi[10 - 1]}</td>
 
                 <td>{viewValuesRaasi[5 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesRaasi[9 - 1]}</td>
+                <td style={{height:'50px'}}>{viewValuesRaasi[9 - 1]}</td>
                 <td>{viewValuesRaasi[8 - 1]}</td>
                 <td>{viewValuesRaasi[7 - 1]}</td>
                 <td>{viewValuesRaasi[6 - 1]}</td>
@@ -57,25 +57,25 @@ const ProfileViewPrint = (props) => {
             if(obj)obj=obj.substring(0,2);
             return obj;
         })
-        return <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        return <table border="1" style={{ width: '80%', borderCollapse: 'collapse' }}>
             <tr>
-                <td style={{width:'25%',height:'70px'}}>{viewValuesAmsam[12 - 1]}</td>
+                <td style={{width:'25%',height:'50px'}}>{viewValuesAmsam[12 - 1]}</td>
                 <td style={{width:'25%'}}>{viewValuesAmsam[1 - 1]}</td>
                 <td style={{width:'25%'}}>{viewValuesAmsam[2 - 1]}</td>
                 <td style={{width:'25%'}}>{viewValuesAmsam[3 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesAmsam[11 - 1]}</td>
-                <td colspan="2" rowspan="2" style={{textAlign:'center'}}><h2>அம்சம்</h2></td>
+                <td style={{height:'50px'}}>{viewValuesAmsam[11 - 1]}</td>
+                <td colspan="2" rowspan="2" style={{textAlign:'center'}}><h4>அம்சம்</h4></td>
                 <td>{viewValuesAmsam[4 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesAmsam[10 - 1]}</td>
+                <td style={{height:'50px'}}>{viewValuesAmsam[10 - 1]}</td>
 
                 <td>{viewValuesAmsam[5 - 1]}</td>
             </tr>
             <tr>
-                <td style={{height:'70px'}}>{viewValuesAmsam[9 - 1]}</td>
+                <td style={{height:'50px'}}>{viewValuesAmsam[9 - 1]}</td>
                 <td>{viewValuesAmsam[8 - 1]}</td>
                 <td>{viewValuesAmsam[7 - 1]}</td>
                 <td>{viewValuesAmsam[6 - 1]}</td>
@@ -84,17 +84,23 @@ const ProfileViewPrint = (props) => {
     }
     return (
         <> <div style={{ display: 'none' }}>
-            <div id="profile-view" style={{ fontSize: '9pt !important' }}>
+            <div id="profile-view" style={{ fontSize: '8pt !important' }}>
                 {
                     business && memberData && memberData.length > 0 && memberData.map(item => {
                         return <>
-                            <div style={{ borderStyle: 'solid', borderWdth: '1px', height: '1020px', fontSize: '9pt !important' }}>
+                        { 
+                        //height: '1020px', 
+                        }
+                            <div style={{ borderStyle: 'solid', borderWdth: '1px', height:'97%', fontSize: '8pt !important' }}>
                                 <table width="100%" border="0" cellpadding="0">
                                     <tr>
                                         <td colspan="3" style={{ color: '#C00', fontWeight: 'bold', textAlign: 'center' }}><span style={{ fontSize: '20pt' }}>{business.business_name}</span></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" style={{ color: '#063', fontWeight: 'bold', textAlign: 'center' }}><span style={{ fontSize: '14pt' }}>Phone:{business.phone}&nbsp;&nbsp;,&nbsp;{business.alternative_phone_1} &nbsp;&nbsp;&nbsp;Email:{business.email_id}</span><hr /></td>
+                                        <td colspan="3" style={{ color: '#063', fontWeight: 'bold', textAlign: 'center' }}><span style={{ fontSize: '14pt' }}>Phone:{business.phone}&nbsp;&nbsp;,&nbsp;{business.alternative_phone_1} &nbsp;&nbsp;&nbsp;Email:{business.email_id}</span></td>
+                                    </tr>
+                                    <tr>
+                                    <td colspan="3" style={{ color: '#000', fontWeight: 'bold', textAlign: 'center' }}><span style={{ fontSize: '10pt' }}>{business.business_address}</span></td>
                                     </tr>
                                     <tr>
                                         <td colspan="3"><strong>பதிவு எண் :  {item.member_id} &nbsp;EMP : {item.member_created_ref_id} &nbsp;Amount : {item.paid_amount} <span style={{ float: 'right' }}>பதிவு தேதி : {moment(item.created_date).format("DD/MM/YYYY h:mm a")} </span></strong><hr /></td>
@@ -102,7 +108,7 @@ const ProfileViewPrint = (props) => {
                                     </tr>
                                     <tr>
                                         <td style={{ width: '20%' }}>பெயர்&nbsp;({item.gender === "Male" ? 'ஆண்' : 'பெண்'})</td>
-                                        <td style={{ width: '40%' }}>: {item.name}   ({item.marital_status==='Never married'?'முதல்மணம்':'மறுமணம்'})</td>
+                                        <td style={{ width: '40%' }}>: {item.name}   ({item.marital_status==='Never Married'?'முதல்மணம்':'மறுமணம்'})</td>
                                         <td rowspan="9" style={{ verticalAlign: 'top' }}>
                                             Print Date: {moment().format("DD/MM/YYYY h:mm:ss a")}<br />
                                             <img src={item.photo?context.baseUrl + item.photo:item.gender==='Male'?context.noMale:context.noFemale} alt={item.member_id} style={{ maxHeight: '270px' }} />
@@ -141,7 +147,7 @@ const ProfileViewPrint = (props) => {
                                     <tr>
                                         <td>வருமானம்</td>
                                         <td>:
-                                            மாதம் : ரூ. {parseFloat(item.annual_income) > 0 ? (parseFloat(item.annual_income) / 12).toFixed(2) : 'NA'}/-&nbsp;
+                                            மாதம் : ரூ. {parseFloat(item.job_annual_income) > 0 ? (parseFloat(item.job_annual_income) / 12).toFixed(2) : 'NA'}/-&nbsp;
                                         </td>
                                     </tr>
                                     <tr>
@@ -233,14 +239,14 @@ const ProfileViewPrint = (props) => {
                                     </tr>
                                     <tr>
                                         <td colspan="3">
-                                            <table width="100%" border="0" >
+                                            <table width="100%" border="0"  style={{fontSize:'6pt !important'}}>
                                                 <tr>
-                                                    <td style={{ width: '50%', padding: '10px' }}>
+                                                    <td style={{ width: '50%', padding: '5px',textAlign:'center' }}>
 
                                                         {getRaasiChart(item)}
 
                                                     </td>
-                                                    <td style={{ width: '50%', padding: '10px' }}>
+                                                    <td style={{ width: '50%', padding: '5px',textAlign:'center' }}>
                                                         {getAmsamChart(item)}
                                                     </td>
                                                 </tr>
