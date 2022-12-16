@@ -21,13 +21,13 @@ const ShortLinePrint = (props) => {
               <th >S.No</th>
               <th>Profile Id</th>
               <th>Amount</th>
-              {isContact &&( <th>Photo</th>)}
+              <th>Photo</th>
               <th>Name/Father Name</th>
               <th>Education/Age</th>
-              <th>Job/Income</th>
+              <th>Job/Income(PM)</th>
               <th>Star/Rassi</th>
-              {isAddress && (<th>Taluk/District</th>)}
-              {isContact && (<th>Mobile Number</th>)}
+             <th>Taluk/District</th>
+              {isContact && (<th>Mobile</th>)}
             </tr>
             {business &&
               memberData &&
@@ -39,7 +39,7 @@ const ShortLinePrint = (props) => {
                       <td>{index + 1}</td>
                       <td> {item.member_id}</td>
                       <td> {item.paid_amount}</td>
-                      {isPhoto && (  <td>  <img src={item.photo?context.baseUrl + item.photo:item.gender==='Male'?context.noMale:context.noFemale} alt={item.member_id} style={{ maxHeight: '270px' }} /></td>)}
+                     <td> {parseInt(item.is_photo_updated)===1?'Yes':'No'}</td>
                       <td>{item.name} / {item.father_name}
                       </td>
                       <td>
@@ -52,7 +52,7 @@ const ShortLinePrint = (props) => {
                           : "NA"}
                         /-&nbsp;
                       </td>
-                      <td>{item.raasi}</td>
+                      <td>{item.star}/{item.raasi}</td>
                       {isAddress && ( <td>
                         {item.taluk},{item.district}
                       </td>)}
