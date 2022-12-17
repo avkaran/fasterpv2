@@ -10,8 +10,6 @@ const ShortLinePrint = (props) => {
     //load photos of
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
- 
   return (
     <>
       <div style={{ display: "none" }}>
@@ -53,9 +51,9 @@ const ShortLinePrint = (props) => {
                         /-&nbsp;
                       </td>
                       <td>{item.star}/{item.raasi}</td>
-                      {isAddress && ( <td>
+                    <td>
                         {item.taluk},{item.district}
-                      </td>)}
+                      </td>
                     {isContact && ( <td>{context.psGlobal.decrypt(item.mobile_no)}</td>)} 
                     </tr>
                   </>
