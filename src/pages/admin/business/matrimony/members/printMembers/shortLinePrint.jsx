@@ -45,13 +45,17 @@ const ShortLinePrint = (props) => {
                       </td>
                      
                       <td>{item.job_name},
-                        {parseFloat(item.annual_income) > 0
-                          ? (parseFloat(item.annual_income) / 12).toFixed(2)
+                        {parseFloat(item.job_annual_income) > 0
+                          ? (parseFloat(item.job_annual_income) / 12).toFixed(2)
                           : "NA"}
                         /-&nbsp;
                       </td>
                       <td>{item.star}/{item.raasi}</td>
+<<<<<<< HEAD
                     <td>
+=======
+                      <td>
+>>>>>>> 87f5ccdc505291a9a965e54f0276567076eb2b9f
                         {item.taluk},{item.district}
                       </td>
                     {isContact && ( <td>{context.psGlobal.decrypt(item.mobile_no)}</td>)} 
