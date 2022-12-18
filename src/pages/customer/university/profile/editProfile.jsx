@@ -5,7 +5,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 const EditProfile = (props) => {
@@ -57,7 +57,7 @@ const EditProfile = (props) => {
             });
             if (viewData.eligibility)
                 setSelEligibility(viewData.eligibility.split(","))
-            var d = moment(mydata.dob, 'YYYY-MM-DD')
+            var d = dayjs(mydata.dob, 'YYYY-MM-DD')
             if (d instanceof Date) {
                 editForm.setFieldsValue({ dob: mydata.dob })
             }
@@ -73,13 +73,13 @@ const EditProfile = (props) => {
     const dobOnChange = (date) => {
 
         editForm.setFieldsValue({
-            dob: moment(date).format('YYYY-MM-DD')
+            dob: dayjs(date).format('YYYY-MM-DD')
         })
 
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const onFinish = (values) => {
 
@@ -212,7 +212,7 @@ const EditProfile = (props) => {
 
                                                 <Space direction="vertical">
                                                     <DatePicker onChange={dobOnChange} format='DD/MM/YYYY'
-                                                        defaultValue={viewData && moment(viewData.dob, 'YYYY-MM-DD')}
+                                                        defaultValue={viewData && dayjs(viewData.dob, 'YYYY-MM-DD')}
                                                         disabledDate={disabledDate}
                                                         allowClear={false}
                                                     />

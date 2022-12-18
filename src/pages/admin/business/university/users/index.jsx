@@ -13,7 +13,7 @@ import noImg from '../../../../../assets/images/no-img.jpg';
 import { blue, red, cyan, grey } from '@ant-design/colors';
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 const ListUsers = (props) => {
     const context = useContext(PsContext);
@@ -110,7 +110,7 @@ const {userId}=useParams();
             else if (value === 'female')
                 finalColumns.gender = 'Female'
             else if (value === 'today')
-                finalColumns.created_date = moment().format("YYYY-MM-DD");
+                finalColumns.created_date = dayjs().format("YYYY-MM-DD");
             filterColumns.current = finalColumns;
 
             resetResult();

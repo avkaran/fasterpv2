@@ -13,7 +13,7 @@ import ViewPackageDiscount from './viewPackageDiscount';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../../../../utils';
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 const PackageDiscounts = (props) => {
     const context = useContext(PsContext);
@@ -62,13 +62,13 @@ const {userId}=useParams();
             title: 'Valid From',
           //  dataIndex: 'valid_from',
            // key: 'valid_from',
-             render: (item) => <span>{moment(item.valid_from).format("DD/MM/YYYY")} </span>,
+             render: (item) => <span>{dayjs(item.valid_from).format("DD/MM/YYYY")} </span>,
         },
         {
             title: 'Valid To',
            // dataIndex: 'valid_to',
             //key: 'valid_to',
-             render: (item) => <span>{moment(item.valid_to).format("DD/MM/YYYY")} </span>,
+             render: (item) => <span>{dayjs(item.valid_to).format("DD/MM/YYYY")} </span>,
         },
         {
             title: 'Status',

@@ -5,12 +5,12 @@
  * Released under the MIT License
  */
 (function (global, factory) {
-typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(function() { try { return require('moment'); } catch(e) { } }()) :
-typeof define === 'function' && define.amd ? define(['require'], function(require) { return factory(function() { try { return require('moment'); } catch(e) { } }()); }) :
-(global.Chart = factory(global.moment));
-}(this, (function (moment) { 'use strict';
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(function() { try { return require('dayjs'); } catch(e) { } }()) :
+typeof define === 'function' && define.amd ? define(['require'], function(require) { return factory(function() { try { return require('dayjs'); } catch(e) { } }()); }) :
+(global.Chart = factory(global.dayjs));
+}(this, (function (dayjs) { 'use strict';
 
-moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
+dayjs = dayjs && dayjs.hasOwnProperty('default') ? dayjs['default'] : dayjs;
 
 /* MIT license */
 
@@ -10036,7 +10036,7 @@ helpers$1.extend(DateAdapter.prototype, /** @lends DateAdapter */ {
 
 	/**
 	 * Provided for backward compatibility for scale.getValueForPixel(),
-	 * this method should be overridden only by the moment adapter.
+	 * this method should be overridden only by the dayjs adapter.
 	 * @deprecated since version 2.8.0
 	 * @todo remove at version 3
 	 * @private
@@ -12973,12 +12973,12 @@ var defaultConfig$4 = {
 
 	adapters: {},
 	time: {
-		parser: false, // false == a pattern string from https://momentjs.com/docs//parsing/string-format/ or a custom callback that converts its argument to a moment
-		format: false, // DEPRECATED false == date objects, moment object, callback or a pattern string from https://momentjs.com/docs//parsing/string-format/
+		parser: false, // false == a pattern string from https://dayjsjs.com/docs//parsing/string-format/ or a custom callback that converts its argument to a dayjs
+		format: false, // DEPRECATED false == date objects, dayjs object, callback or a pattern string from https://dayjsjs.com/docs//parsing/string-format/
 		unit: false, // false == automatic or override with week, month, year, etc.
 		round: false, // none, or override with week, month, year, etc.
 		displayFormat: false, // DEPRECATED
-		isoWeekday: false, // override week start day - see https://momentjs.com/docs//get-set/iso-weekday/
+		isoWeekday: false, // override week start day - see https://dayjsjs.com/docs//get-set/iso-weekday/
 		minUnit: 'millisecond',
 		displayFormats: {}
 	},
@@ -13330,8 +13330,8 @@ var FORMATS = {
 	year: 'YYYY'
 };
 
-core_adapters._date.override(typeof moment === 'function' ? {
-	_id: 'moment', // DEBUG ONLY
+core_adapters._date.override(typeof dayjs === 'function' ? {
+	_id: 'dayjs', // DEBUG ONLY
 
 	formats: function() {
 		return FORMATS;
@@ -13339,27 +13339,27 @@ core_adapters._date.override(typeof moment === 'function' ? {
 
 	parse: function(value, format) {
 		if (typeof value === 'string' && typeof format === 'string') {
-			value = moment(value, format);
-		} else if (!(value instanceof moment)) {
-			value = moment(value);
+			value = dayjs(value, format);
+		} else if (!(value instanceof dayjs)) {
+			value = dayjs(value);
 		}
 		return value.isValid() ? value.valueOf() : null;
 	},
 
 	format: function(time, format) {
-		return moment(time).format(format);
+		return dayjs(time).format(format);
 	},
 
 	add: function(time, amount, unit) {
-		return moment(time).add(amount, unit).valueOf();
+		return dayjs(time).add(amount, unit).valueOf();
 	},
 
 	diff: function(max, min, unit) {
-		return moment.duration(moment(max).diff(moment(min))).as(unit);
+		return dayjs.duration(dayjs(max).diff(dayjs(min))).as(unit);
 	},
 
 	startOf: function(time, unit, weekday) {
-		time = moment(time);
+		time = dayjs(time);
 		if (unit === 'isoWeek') {
 			return time.isoWeekday(weekday).valueOf();
 		}
@@ -13367,7 +13367,7 @@ core_adapters._date.override(typeof moment === 'function' ? {
 	},
 
 	endOf: function(time, unit) {
-		return moment(time).endOf(unit).valueOf();
+		return dayjs(time).endOf(unit).valueOf();
 	},
 
 	// DEPRECATIONS
@@ -13379,7 +13379,7 @@ core_adapters._date.override(typeof moment === 'function' ? {
 	 * @private
 	 */
 	_create: function(time) {
-		return moment(time);
+		return dayjs(time);
 	},
 } : {});
 

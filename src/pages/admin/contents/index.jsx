@@ -16,7 +16,7 @@ import { faUserTimes } from '@fortawesome/free-solid-svg-icons'
 import { getWhereClause } from '../../../models/core'
 import PsContext from '../../../context'
 import { MyButton, MyTable } from '../../../comp';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import ResponsiveLayout from '../layout'
 const ListContents = (props) => {
     const { Content } = Layout;
@@ -274,7 +274,7 @@ const {userId}=useParams();
                                                 title: 'Created Date',
                                                 //dataIndex: 'creat',
                                                 // key: 'seo_slug',
-                                                render: (item) => <span>{moment(item.created_date, 'YYYY-MM-DD').format('DD/MM/YYYY')} </span>,
+                                                render: (item) => <span>{dayjs(item.created_date, 'YYYY-MM-DD').format('DD/MM/YYYY')} </span>,
                                             },
                                             {
                                                 title: 'Action',

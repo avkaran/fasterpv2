@@ -19,6 +19,7 @@ import EmployeeProfile from "../../my-accounts/employee/employeeProfile";
 import SmsTemplate from "../../sms-templates";
 import Logs from "../../logs";
 import PermissionError from "../../error-pages/permissionError";
+import ProductService from './products';
 
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
@@ -128,6 +129,13 @@ const AuthRoutes = (props) => {
                 <Route
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
+                    title='Permission Error'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                  <Route
+                    path='/:userId/admin/productservice/:businessType'
+                    element={<ProductService />}
                     title='Permission Error'
                     allowed={ROLES.ALL}
                     exact={true}

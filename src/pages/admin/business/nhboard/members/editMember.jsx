@@ -9,13 +9,13 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { listCollections } from '../../../../../models/core'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import bcrypt from 'bcryptjs'
 import { Steps } from 'antd';
 import PsContext from '../../../../../context';
-import { lettersOnly, integerIndMobile, momentDate, pincode } from '../utilFunctions'
+import { lettersOnly, integerIndMobile, dayjsDate, pincode } from '../utilFunctions'
 import $ from 'jquery';
 import toast from 'react-hot-toast';
 

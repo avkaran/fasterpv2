@@ -13,7 +13,7 @@ import { heightList } from '../../../../../models/core'
 import { LoadingOutlined } from '@ant-design/icons';
 import ListMemberComponent from './listMemberComponent';
 import AddEditMember from './AddEditMember';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import ViewMember from './viewMember';
 import { FormItem } from '../../../../../comp';
 const SearchMemberLogsList = (props) => {
@@ -41,9 +41,9 @@ const SearchMemberLogsList = (props) => {
         { actionLabel: 'Payment Failed', action: "payment-failed", ref_table_column: 'orders.id' },
     ])
     useEffect(() => {
-        searchForm.setFieldsValue({ log_dates: [moment(), moment()], action: action, action_by: actionBy })
+        searchForm.setFieldsValue({ log_dates: [dayjs(), dayjs()], action: action, action_by: actionBy })
         onactionChange(actionBy)
-        resetLogList([moment(), moment()], action, actionBy)
+        resetLogList([dayjs(), dayjs()], action, actionBy)
     }, []);
     const resetLogList = (log_dates, action, actionBy, refUser = null) => {
         var filter_clauses = [];
@@ -57,10 +57,10 @@ const SearchMemberLogsList = (props) => {
 
         if (actionInfo) {
             if (actionInfo.ref_table_column === "members.id") {
-                filter_clauses.push("m.id in (select ref_id from logs where date(log_time)>='" + moment(log_dates[0]).format("YYYY-MM-DD") + "' and date(log_time)<='" + moment(log_dates[1]).format("YYYY-MM-DD") + "' and ref_table_column='members.id' and log_name='" + action + "' and logged_type='" + actionBy + "' " + refUserClause + ")")
+                filter_clauses.push("m.id in (select ref_id from logs where date(log_time)>='" + dayjs(log_dates[0]).format("YYYY-MM-DD") + "' and date(log_time)<='" + dayjs(log_dates[1]).format("YYYY-MM-DD") + "' and ref_table_column='members.id' and log_name='" + action + "' and logged_type='" + actionBy + "' " + refUserClause + ")")
             }
             if (actionInfo.ref_table_column === "orders.id") {
-                filter_clauses.push("m.id in (select o.member_auto_id from logs l,orders o where l.ref_id=o.id and date(l.log_time)>='" + moment(log_dates[0]).format("YYYY-MM-DD") + "' and date(l.log_time)<='" + moment(log_dates[1]).format("YYYY-MM-DD") + "' and l.ref_table_column='orders.id' and l.log_name='" + action + "' and l.logged_type='" + actionBy + "' " + refUserOrderClause + ")")
+                filter_clauses.push("m.id in (select o.member_auto_id from logs l,orders o where l.ref_id=o.id and date(l.log_time)>='" + dayjs(log_dates[0]).format("YYYY-MM-DD") + "' and date(l.log_time)<='" + dayjs(log_dates[1]).format("YYYY-MM-DD") + "' and l.ref_table_column='orders.id' and l.log_name='" + action + "' and l.logged_type='" + actionBy + "' " + refUserOrderClause + ")")
             }
         }
         filterColumns.current = filter_clauses;
@@ -227,7 +227,7 @@ const SearchMemberLogsList = (props) => {
                                     <Space direction="vertical">
                                         <DatePicker.RangePicker
                                             onChange={onChangeDate}
-                                           // defaultValue={[moment(), moment()]}
+                                           defaultValue={[dayjs(), dayjs()]}
                                            format="DD/MM/YYYY"
                                             allowClear={false}
                                         />

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate,useParams } from "react-router-dom";
 import { Row, Col, message, Space } from "antd";
 import { MyButton } from "../../../comp";
+import dayjs from 'dayjs';
+
 import {
   Breadcrumb,
   Layout,
@@ -23,7 +25,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { capitalizeFirst } from "../../../utils";
-import moment from "moment";
+
 const Logs = (props) => {
   const context = useContext(PsContext);
 const {userId}=useParams();
@@ -41,13 +43,13 @@ const {userId}=useParams();
   const [visibleModal, setVisibleModal] = useState(false);
   const [refreshTable, setRefreshTable] = useState(0);
   const filterColumns = useRef([
-    " date(log_time)>='" + moment().format("YYYY-MM-DD") + "'",
-    " date(log_time)>='" + moment().format("YYYY-MM-DD") + "'",
+    " date(log_time)>='" + dayjs().format("YYYY-MM-DD") + "'",
+    " date(log_time)>='" + dayjs().format("YYYY-MM-DD") + "'",
   ]);
   useEffect(() => {
     LoadCategories();
 
-    searchForm.setFieldsValue({ log_dates: [moment(), moment()] });
+    searchForm.setFieldsValue({ log_dates: [dayjs(), dayjs()] });
   }, []);
 
   const tableColumns = [
@@ -68,7 +70,7 @@ const {userId}=useParams();
       // dataIndex: 'msg_date',
       key: "log_time",
       render: (item) => (
-        <>{moment(item.log_time).format("DD/MM/YYYY h:mm a")}</>
+        <>{dayjs(item.log_time).format("DD/MM/YYYY h:mm a")}</>
       ),
     },
     {
@@ -85,12 +87,12 @@ const {userId}=useParams();
     var filter_clauses = [];
     filter_clauses.push(
       " date(log_time)>='" +
-        moment(values.log_dates[0]).format("YYYY-MM-DD") +
+        dayjs(values.log_dates[0]).format("YYYY-MM-DD") +
         "'"
     );
     filter_clauses.push(
       " date(log_time)<='" +
-        moment(values.log_dates[1]).format("YYYY-MM-DD") +
+        dayjs(values.log_dates[1]).format("YYYY-MM-DD") +
         "'"
     );
     if (values.action) filter_clauses.push(" log_name='" + values.action + "'");
@@ -200,7 +202,7 @@ const {userId}=useParams();
                       <Space direction="vertical">
                         <DatePicker.RangePicker
                           onChange={onChangeDate}
-                          defaultValue={[moment(), moment()]}
+                          defaultValue={[dayjs(), dayjs()]}
                           format="DD/MM/YYYY"
                           allowClear={false}
                         />

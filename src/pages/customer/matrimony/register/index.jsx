@@ -6,7 +6,7 @@ import AOS from "aos";
 import axios from 'axios';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { apiRequest } from "../../../../models/core";
 import { MyButton } from "../../../../comp";
 import { FormItem } from "../../../../comp";
@@ -94,7 +94,7 @@ const Register = (props) => {
 
     const dobDisabled = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const processSms = (name, mobile, otp) => {
 
@@ -195,9 +195,9 @@ const Register = (props) => {
 
                                     <Space direction="vertical">
                                         <DatePicker
-                                            onChange={(date) => { registerForm.setFieldsValue({ members: { dob: moment(date).format('YYYY-MM-DD') } }) }}
+                                            onChange={(date) => { registerForm.setFieldsValue({ members: { dob: dayjs(date).format('YYYY-MM-DD') } }) }}
                                             format='DD/MM/YYYY'
-                                            defaultValue={moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                                            defaultValue={dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
 
                                             disabledDate={dobDisabled}
                                             allowClear={false}

@@ -17,7 +17,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { faIndianRupeeSign, faUser, faMobileAlt } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 const { Link } = Anchor;
 const RenewalRemainders = (props) => {
@@ -38,7 +38,7 @@ const {userId}=useParams();
 
         var whereClauses = [];
         whereClauses.push("expiry_date>=CURDATE()")
-        whereClauses.push("expiry_date<='" + moment().add(1, "days").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(1, "days").format("YYYY-MM-DD") + "'")
         filterColumns.current = whereClauses;
         setRefreshTable(prev => prev + 1);
     }, []);
@@ -62,17 +62,17 @@ const {userId}=useParams();
         var whereClauses = [];
         whereClauses.push("expiry_date>=CURDATE()")
         if(values.duration==="1-days")
-        whereClauses.push("expiry_date<='" + moment().add(1, "days").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(1, "days").format("YYYY-MM-DD") + "'")
         if(values.duration==="5-days")
-        whereClauses.push("expiry_date<='" + moment().add(5, "days").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(5, "days").format("YYYY-MM-DD") + "'")
         if(values.duration==="10-days")
-        whereClauses.push("expiry_date<='" + moment().add(10, "days").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(10, "days").format("YYYY-MM-DD") + "'")
         if(values.duration==="15-days")
-        whereClauses.push("expiry_date<='" + moment().add(15, "days").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(15, "days").format("YYYY-MM-DD") + "'")
         if(values.duration==="1-month")
-        whereClauses.push("expiry_date<='" + moment().add(1, "month").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(1, "month").format("YYYY-MM-DD") + "'")
         if(values.duration==="2-month")
-        whereClauses.push("expiry_date<='" + moment().add(2, "month").format("YYYY-MM-DD") + "'")
+        whereClauses.push("expiry_date<='" + dayjs().add(2, "month").format("YYYY-MM-DD") + "'")
         filterColumns.current = whereClauses;
         setRefreshTable(prev => prev + 1);
 
@@ -110,7 +110,7 @@ const {userId}=useParams();
             width: "15%",
             render: (text, record, index) => (
                 <>
-                    <div> {moment(record.expiry_date).format('DD-MM-YYYY')}</div>
+                    <div> {dayjs(record.expiry_date).format('DD-MM-YYYY')}</div>
                 </>
             ),
         },

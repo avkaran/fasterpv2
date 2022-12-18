@@ -11,7 +11,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../comp';
 import { capitalizeFirst } from '../../../../utils';
 import { green, red, cyan, blue, magenta } from '@ant-design/colors';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import EditFranchise from './editFranchise';
 const FranchiseProfile = (props) => {

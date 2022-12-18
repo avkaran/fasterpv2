@@ -12,7 +12,7 @@ import { Spin } from "antd";
 import PsContext from "../../../../../context";
 import { FormItem, MyButton } from "../../../../../comp";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import { capitalizeFirst } from "../../../../../utils";
 const ResellerPayment = (props) => {
   const context = useContext(PsContext);
@@ -21,7 +21,7 @@ const ResellerPayment = (props) => {
   const [loader, setLoader] = useState(false);
   const [curAction, setCurAction] = useState("add");
   const [heading] = useState("Payment");
-  const [validFromDate, setValidFromDate] = useState(moment());
+  const [validFromDate, setValidFromDate] = useState(dayjs());
   const { onListClick, onSaveFinish, resellerType, userId } = props;
   useEffect(() => {
     Loadresellers(resellerType);
@@ -29,7 +29,7 @@ const ResellerPayment = (props) => {
     addeditFormAdvertisement.setFieldsValue({
       fr_br_transactions: {
 
-        transaction_date: moment().format("YYYY-MM-DD")
+        transaction_date: dayjs().format("YYYY-MM-DD")
       },
 
     });
@@ -111,8 +111,8 @@ const ResellerPayment = (props) => {
   }
   const validFromDisabled = (current) => {
     // Can not select days before today and today
-    // console.log(current,moment())
-    return current && current < moment().subtract(1, "day");
+    // console.log(current,dayjs())
+    return current && current < dayjs().subtract(1, "day");
   };
 
   const validFromOnChange = (date) => {
@@ -120,7 +120,7 @@ const ResellerPayment = (props) => {
 
     addeditFormAdvertisement.setFieldsValue({
       fr_br_transactions: {
-        transaction_date: moment(date).format('YYYY-MM-DD hh:mm')
+        transaction_date: dayjs(date).format('YYYY-MM-DD hh:mm')
       }
     })
 
@@ -149,7 +149,7 @@ const ResellerPayment = (props) => {
                 <Space direction="vertical">
                   <DatePicker
                     onChange={validFromOnChange}
-                    // defaultValue={editData && !isNaN(moment(editData.valid_from, 'YYYY-MM-DD')) ? moment(editData.valid_from, 'YYYY-MM-DD').format('DD/MM/YYYY') : moment(moment(), 'DD/MM/YYYY')}
+                    // defaultValue={editData && !isNaN(dayjs(editData.valid_from, 'YYYY-MM-DD')) ? dayjs(editData.valid_from, 'YYYY-MM-DD').format('DD/MM/YYYY') : dayjs(dayjs(), 'DD/MM/YYYY')}
                     format='DD/MM/YYYY'
                     value={validFromDate}
                     disabledDate={validFromDisabled}

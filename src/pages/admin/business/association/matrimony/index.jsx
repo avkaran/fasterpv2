@@ -16,7 +16,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { faIndianRupeeSign, faUser, faMobileAlt, faGreaterThan, faSearch, faClose } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ViewProfile from './viewProfile';
 import { heightList } from '../../../../../models/core'
 const Matrimony = (props) => {

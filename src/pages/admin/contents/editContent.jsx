@@ -11,7 +11,7 @@ import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { contentTypes } from '../../../utils/data';
 import { Editor } from '@tinymce/tinymce-react';
 import PsContext from '../../../context'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ImgCrop from 'antd-img-crop';
 import { languages } from '../../../models/core';
 import ResponsiveLayout from '../layout'
@@ -344,13 +344,13 @@ const {userId,content_type:contentType,id:contentId}=useParams();
     const activeFrom_dateOnChange = (date) => {
 
         addForm.setFieldsValue({
-            active_from_date: moment(date).format('YYYY-MM-DD')
+            active_from_date: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const activeTo_dateOnChange = (date) => {
 
         addForm.setFieldsValue({
-            active_to_date: moment(date).format('YYYY-MM-DD')
+            active_to_date: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const onCategoryChange = (value) => {
@@ -495,7 +495,7 @@ const {userId,content_type:contentType,id:contentId}=useParams();
                                                                 //disabledDate={activeFrom_dateDisabled}
                                                                 disabled={lang && lang !== "en"}
                                                                 allowClear={false}
-                                                                defaultValue={viewData && moment(viewData.active_from_date, 'YYYY-MM-DD')}
+                                                                defaultValue={viewData && dayjs(viewData.active_from_date, 'YYYY-MM-DD')}
                                                             />
                                                         </Space>
                                                     </Form.Item>
@@ -511,7 +511,7 @@ const {userId,content_type:contentType,id:contentId}=useParams();
                                                                 //disabledDate={activeTo_dateDisabled}
                                                                 disabled={lang && lang !== "en"}
                                                                 allowClear={false}
-                                                                defaultValue={viewData && moment(viewData.active_to_date, 'YYYY-MM-DD')}
+                                                                defaultValue={viewData && dayjs(viewData.active_to_date, 'YYYY-MM-DD')}
                                                             />
                                                         </Space>
 

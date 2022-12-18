@@ -5,12 +5,11 @@ import { Button, Card } from 'antd';
 import { Form, Input, Select, InputNumber, Radio, Checkbox } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import PsContext from '../../../../../../context';
+import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
-import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../../comp';
-import { capitalizeFirst } from '../../../../../../utils';
-import dayjs from 'dayjs'
-const ViewPackageDiscount = (props) => {
+import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../comp';
+import { capitalizeFirst } from '../../../../../utils';
+const ViewPackage = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -36,7 +35,7 @@ const ViewPackageDiscount = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select pd.*,p.plan_name from package_discounts pd,packages p where pd.discount_for=p.id and p.status=1 and p.id=" + id
+            query: "select * from products where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setviewData(res[0]);
@@ -62,28 +61,41 @@ const ViewPackageDiscount = (props) => {
                     >
                         <Row gutter={16}>
                             <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Discount Title">{viewData.discount_title}</FormViewItem>
+                                <FormViewItem label="Category">{viewData.category_name}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Discount for">{viewData.plan_name}</FormViewItem>
+                                <FormViewItem label="Product Name">{viewData.product_name}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Unit Name">{viewData.unit_name}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Cgst">{viewData.cgst}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Sgst">{viewData.sgst}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Company Profit Percentage">{viewData.company_profit_percentage}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Delivery Boy Incentive Percentage">{viewData.delivery_boy_incentive_percentage}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Agency Profit Percentage">{viewData.agency_profit_percentage}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Delivery Charge">{viewData.delivery_charge}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Description">{viewData.description}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+                                <FormViewItem label="Product Status">{viewData.product_status}</FormViewItem>
                             </Col>
                         </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Valid From">{dayjs(viewData.valid_from).format("DD/MM/YYYY")}</FormViewItem>
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Percentage">{viewData.percentage +"%"}</FormViewItem>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Valid To">{dayjs(viewData.valid_to).format("DD/MM/YYYY")}</FormViewItem>
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-                                <FormViewItem label="Active Status">{viewData.active_status}</FormViewItem>
-                            </Col>
-                        </Row>
+
+
                     </Form>)
                 }
 
@@ -92,4 +104,4 @@ const ViewPackageDiscount = (props) => {
     );
 
 }
-export default ViewPackageDiscount;
+export default ViewPackage;

@@ -1,7 +1,7 @@
 import PsContext from '../../../../../../context'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Row, Col, message, Spin } from 'antd';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { heightList } from '../../../../../../models/core';
 const ProfileViewPrint = (props) => {
     const context = useContext(PsContext);
@@ -103,14 +103,14 @@ const ProfileViewPrint = (props) => {
                                     <td colspan="3" style={{ color: '#000', fontWeight: 'bold', textAlign: 'center' }}><span style={{ fontSize: '10pt' }}>{business.business_address}</span></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"><strong>பதிவு எண் :  {item.member_id} &nbsp;EMP : {item.member_created_ref_id} &nbsp;Amount : {item.paid_amount} <span style={{ float: 'right' }}>பதிவு தேதி : {moment(item.created_date).format("DD/MM/YYYY h:mm a")} </span></strong><hr /></td>
+                                        <td colspan="3"><strong>பதிவு எண் :  {item.member_id} &nbsp;EMP : {item.member_created_ref_id} &nbsp;Amount : {item.paid_amount} <span style={{ float: 'right' }}>பதிவு தேதி : {dayjs(item.created_date).format("DD/MM/YYYY h:mm a")} </span></strong><hr /></td>
 
                                     </tr>
                                     <tr>
                                         <td style={{ width: '20%' }}>பெயர்&nbsp;({item.gender === "Male" ? 'ஆண்' : 'பெண்'})</td>
                                         <td style={{ width: '40%' }}>: {item.name}   ({item.marital_status==='Never Married'?'முதல்மணம்':'மறுமணம்'})</td>
                                         <td rowspan="9" style={{ verticalAlign: 'top' }}>
-                                            Print Date: {moment().format("DD/MM/YYYY h:mm:ss a")}<br />
+                                            Print Date: {dayjs().format("DD/MM/YYYY h:mm:ss a")}<br />
                                             <img src={item.photo?context.baseUrl + item.photo:item.gender==='Male'?context.noMale:context.noFemale} alt={item.member_id} style={{ maxHeight: '270px' }} />
                                             <br />
                                             Last Visit:     </td>
@@ -125,7 +125,7 @@ const ProfileViewPrint = (props) => {
                                     </tr>
                                     <tr>
                                         <td>பிறந்த தேதி</td>
-                                        <td>: {moment(item.dob).format("DD/MM/YYY")} , வயது: {item.age}</td>
+                                        <td>: {dayjs(item.dob).format("DD/MM/YYYY")} , வயது: {item.age}</td>
                                     </tr>
 
                                     <tr>
@@ -223,7 +223,7 @@ const ProfileViewPrint = (props) => {
                                                 <tr>
                                                     <td> நட்சத்திரம்:{item.star} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;பாதம் :{item.patham}</td>
                                                     <td>ராசி:{item.raasi} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;லக்னம் :{item.laknam}</td>
-                                                    <td>பிறந்த நேரம்:{item.birth_time ? moment(item.birth_time, 'H:m:s').format("hh:mm a") : ''}</td>
+                                                    <td>பிறந்த நேரம்:{item.birth_time ? dayjs(item.birth_time, 'H:m:s').format("hh:mm a") : ''}</td>
                                                 </tr>
                                                 <tr>
 

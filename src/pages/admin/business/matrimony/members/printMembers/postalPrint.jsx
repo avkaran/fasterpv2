@@ -1,7 +1,7 @@
 import PsContext from "../../../../../../context";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Row, Col, message, Spin } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import { heightList } from "../../../../../../models/core";
 const PostalPrint = (props) => {
   const context = useContext(PsContext);

@@ -13,7 +13,7 @@ import logo from '../assets/images/logo.png';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { apiRequest } from "../../../../models/core";
 import { MyButton } from "../../../../comp";
 const Register = (props) => {
@@ -86,7 +86,7 @@ const Register = (props) => {
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
 
     const passwordValidate= (e) => {

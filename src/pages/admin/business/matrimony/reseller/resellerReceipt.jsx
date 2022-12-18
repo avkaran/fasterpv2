@@ -1,6 +1,6 @@
 import PsContext from '../../../../../context'
 import React, { useEffect, useContext } from 'react';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const ResellerReceipt = (props) => {
     const context = useContext(PsContext);
     const { franchisReceipteData, business, ...other } = props;
@@ -46,7 +46,7 @@ const ResellerReceipt = (props) => {
                           <tr>
                             
                             <td>Credit Amount :{franchisReceipteData.credit} </td>
-                            <td>தேதி : {moment(franchisReceipteData.transaction_date).format("DD/MM/YYYY h:mm a")}</td>
+                            <td>தேதி : {dayjs(franchisReceipteData.transaction_date).format("DD/MM/YYYY h:mm a")}</td>
                           </tr>
                           <tr>
                             <td colspan="2">

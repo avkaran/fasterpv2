@@ -13,7 +13,7 @@ import logo from '../assets/images/logo.png';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { apiRequest } from "../../../../models/core";
 const Register = (props) => {
     const context = useContext(PsContext);
@@ -84,7 +84,7 @@ const Register = (props) => {
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const processSms = (name, mobile, otp) => {
 
@@ -230,9 +230,9 @@ const Register = (props) => {
 
                                                             <Space direction="vertical">
                                                                 <DatePicker
-                                                                    onChange={(date) => { registerForm.setFieldsValue({ dob: moment(date).format('YYYY-MM-DD') }) }}
+                                                                    onChange={(date) => { registerForm.setFieldsValue({ dob: dayjs(date).format('YYYY-MM-DD') }) }}
                                                                     format='DD/MM/YYYY'
-                                                                    defaultValue={moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                                                                    defaultValue={dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
                                                                     disabledDate={disabledDate}
 
                                                                     //  disabledDate={dobDisabled}

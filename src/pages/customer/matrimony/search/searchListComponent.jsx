@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext,useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Navigate, useParams, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message } from 'antd';
 import { AvatarPaginatedList, ImageUpload } from '../../../../comp'
 import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
-import { Form, Input, Select, InputNumber, Modal, Image,Collapse } from 'antd';
+import { Form, Input, Select, InputNumber, Modal, Image, Collapse } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUser, faUserTimes, faUserClock, faEye, faCheck, faClose } from '@fortawesome/free-solid-svg-icons'
 import { MyButton, MyTable } from '../../../../comp'
-import { green, yellow, grey,cyan } from '@ant-design/colors';
+import { green, yellow, grey, cyan } from '@ant-design/colors';
 import { heightList } from '../../../../models/core';
 
 const SearchListComponent = (props) => {
@@ -22,19 +22,19 @@ const SearchListComponent = (props) => {
     const filterColumns = useRef(null);
     const [refreshList, setRefreshList] = useState(0);
     const InfiniteListRef = useRef();
-    const { filterColumnsRef, refreshComponent, userId,onSendInterestClick,onViewClick, ...other } = props;
+    const { filterColumnsRef, refreshComponent, userId, onSendInterestClick, onViewClick, ...other } = props;
     const [filterLoader, setFilterLoader] = useState(false);
     useEffect(() => {
-        
+
         filterColumns.current = filterColumnsRef;
-       
+
         loadFilterMenu();
         setRefreshList(prev => prev + 1);
     }, [filterColumnsRef, refreshComponent])
 
     const onListPageChange = (page, allData) => {
 
-       
+
     }
     const onFinishFilterPanel = (values) => {
         var filter_clauses = [];
@@ -250,7 +250,11 @@ const SearchListComponent = (props) => {
                     //rules={[{ required: true, message: 'Please input password' }]}
 
                     >
-                        <Checkbox.Group>{childlist}</Checkbox.Group>
+                        <Checkbox.Group>
+                            <Space direction="vertical" style={{ width: '100%' }}>
+                                {childlist}
+                            </Space>
+                        </Checkbox.Group>
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 24 }}>
 
@@ -276,157 +280,157 @@ const SearchListComponent = (props) => {
             <div className="container">
                 <div className="row">
                     <div className="col-md-3" >
-                    <Card
-                        bodyStyle={{
-                            padding: "8px", fontWeight: 'bold', fontSize: '18px', color: cyan[7],
-                            border: '1px solid',
-                            borderBottom: '0',
-                            borderColor: cyan[2]
-                        }}
-                        style={{
-                            margin: "0px",
-                            border: '1px solid #d9d9d9',
-                            borderRadius: '2px',
+                        <Card
+                            bodyStyle={{
+                                padding: "8px", fontWeight: 'bold', fontSize: '18px', color: cyan[7],
+                                border: '1px solid',
+                                borderBottom: '0',
+                                borderColor: cyan[2]
+                            }}
+                            style={{
+                                margin: "0px",
+                                border: '1px solid #d9d9d9',
+                                borderRadius: '2px',
 
-                            //borderRadius: "20px",
-                        }}
-
-
-                    >Filter</Card>
-                    <Spin spinning={filterLoader} >
-                        <Collapse accordion>
-                            {getFilterList()}
+                                //borderRadius: "20px",
+                            }}
 
 
-                        </Collapse>
-                    </Spin>
+                        >Filter</Card>
+                        <Spin spinning={filterLoader} >
+                            <Collapse accordion>
+                                {getFilterList()}
+
+
+                            </Collapse>
+                        </Spin>
                     </div>
                     <div className="col-md-9">
-                        
+
                         <div className="ant-spin-nested-loading">
                             <div className="ant-spin-container">
-                            {
-                        filterColumns.current && (  <AvatarPaginatedList
-                            ref={InfiniteListRef}
-                            listHeading={"Members"}
-    
-                            countQuery={"select count(*) AS count from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs   where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false)}
-                            
-    
-                            listQuery={"select m.*,@rownum:=@rownum+1 as row_num,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')) AS age,COALESCE((SELECT package_price FROM orders where member_auto_id=m.id  and order_status='Paid' and is_current_plan=1 limit 1),0) as paid_amount,ec.course_name,cs.caste_name,f.father_status,f.father_occupation,f.mother_status,f.mother_occupation,f.brothers,f.brothers_married,f.sisters,f.sisters_married,f.family_type,f.dowry_jewels,f.dowry_property,f.dowry_cash,hb.eating_habits,hb.drinking_habits,hb.smoking_habits,hr.star,hr.patham,hr.raasi,hr.laknam,hr.birth_time,hr.birth_place,hr.dhosam_type,hr.jadhagam_type,hr.raasi_chart,hr.amsam_chart,p.height,p.weight,p.body_type,p.complexion,p.physical_status,p.physical_status_description,mp.prefered_eating_habits,mp.prefered_smoking_habits,mp.prefered_drinking_habits,mp.prefered_martial_status,CONCAT(mp.age_from,',',mp.age_to) as pref_age,CONCAT(mp.height_from,',',mp.height_to) as pref_height,CONCAT(mp.weight_from,',',mp.weight_to) as pref_weight,mp.prefered_physical_status,mp.prefered_mother_tongue,mp.prefered_religion,mp.prefered_caste,mp.prefered_education,mp.prefered_job_type,mp.prefered_job,mp.prefered_country,mp.prefered_state,mp.prefered_district,CONCAT(mp.income_from,',',mp.income_to) as pref_income,mp.expectation_notes from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id  and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by created_date desc"}
-                            recordsPerRequestOrPage={10}
-                            encryptFields={['mobile_no', 'mobile_alt_no_1', 'mobile_alt_no_2', 'whatsapp_no']}
-                            userId={userId}
-                            refresh={refreshList}
-                            isCheckboxList={false}
-                          //  onCheckedChange={onCheckedChange}
-                            onPageChange={onListPageChange}
-                            renderItem={(item, index) => {
-                                return <>
-                                   <div className="d-md-block">
-                                    <div className="mb-15 card">
-                                        <div className="p-0 hover  card-body">
-                                            <div className="row">
-                                                <div className="col-md-3">
-                                                    <img
-                                                        src={item.photo ? context.baseUrl + item.photo : item.gender === 'Male' ? context.noMale : context.noFemale}
-                                                        className="border"
-                                                        style={{ height: 260, width: 220 }}
-                                                        alt={item.name}
-                                                    />
-                                                </div>
-                                                <div className="pl-35 col-md-7">
-                                                    <div className="pb-10 pt-15 border-bottom mb-15">
-                                                        <a
-                                                            
-                                                            onClick={() => onViewClick(item)}
-                                                        >
-                                                            <h6 className="font-weight-600 d-flex justify-content-between ">
-                                                                <span>{item.name}, {item.age} Yrs</span>
-                                                                <span className="text-theme">{item.member_id}</span>
-                                                            </h6>
-                                                        </a>
+                                {
+                                    filterColumns.current && (<AvatarPaginatedList
+                                        ref={InfiniteListRef}
+                                        listHeading={"Members"}
+
+                                        countQuery={"select count(*) AS count from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs   where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false)}
+
+
+                                        listQuery={"select m.*,@rownum:=@rownum+1 as row_num,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')) AS age,COALESCE((SELECT package_price FROM orders where member_auto_id=m.id  and order_status='Paid' and is_current_plan=1 limit 1),0) as paid_amount,ec.course_name,cs.caste_name,f.father_status,f.father_occupation,f.mother_status,f.mother_occupation,f.brothers,f.brothers_married,f.sisters,f.sisters_married,f.family_type,f.dowry_jewels,f.dowry_property,f.dowry_cash,hb.eating_habits,hb.drinking_habits,hb.smoking_habits,hr.star,hr.patham,hr.raasi,hr.laknam,hr.birth_time,hr.birth_place,hr.dhosam_type,hr.jadhagam_type,hr.raasi_chart,hr.amsam_chart,p.height,p.weight,p.body_type,p.complexion,p.physical_status,p.physical_status_description,mp.prefered_eating_habits,mp.prefered_smoking_habits,mp.prefered_drinking_habits,mp.prefered_martial_status,CONCAT(mp.age_from,',',mp.age_to) as pref_age,CONCAT(mp.height_from,',',mp.height_to) as pref_height,CONCAT(mp.weight_from,',',mp.weight_to) as pref_weight,mp.prefered_physical_status,mp.prefered_mother_tongue,mp.prefered_religion,mp.prefered_caste,mp.prefered_education,mp.prefered_job_type,mp.prefered_job,mp.prefered_country,mp.prefered_state,mp.prefered_district,CONCAT(mp.income_from,',',mp.income_to) as pref_income,mp.expectation_notes from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id  and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by created_date desc"}
+                                        recordsPerRequestOrPage={10}
+                                        encryptFields={['mobile_no', 'mobile_alt_no_1', 'mobile_alt_no_2', 'whatsapp_no']}
+                                        userId={userId}
+                                        refresh={refreshList}
+                                        isCheckboxList={false}
+                                        //  onCheckedChange={onCheckedChange}
+                                        onPageChange={onListPageChange}
+                                        renderItem={(item, index) => {
+                                            return <>
+                                                <div className="d-md-block">
+                                                    <div className="mb-15 card">
+                                                        <div className="p-0 hover  card-body">
+                                                            <div className="row">
+                                                                <div className="col-md-3">
+                                                                    <img
+                                                                        src={item.photo ? context.baseUrl + item.photo : item.gender === 'Male' ? context.noMale : context.noFemale}
+                                                                        className="border"
+                                                                        style={{ height: 260, width: 220 }}
+                                                                        alt={item.name}
+                                                                    />
+                                                                </div>
+                                                                <div className="pl-35 col-md-7">
+                                                                    <div className="pb-10 pt-15 border-bottom mb-15">
+                                                                        <a
+
+                                                                            onClick={() => onViewClick(item)}
+                                                                        >
+                                                                            <h6 className="font-weight-600 d-flex justify-content-between ">
+                                                                                <span>{item.name}, {item.age} Yrs</span>
+                                                                                <span className="text-theme">{item.member_id}</span>
+                                                                            </h6>
+                                                                        </a>
+                                                                    </div>
+                                                                    <table
+                                                                        width="100%"
+                                                                        className="font-12 font-weight-200"
+                                                                        style={{ fontWeight: 300 }}
+                                                                    >
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td width="50%" />
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.age} Yrs, {getHeight(item.height)}</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.religion} , {item.caste_name}</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.course_name}</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.marital_staus}</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td width="50%" />
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.district}, {item.state}</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td height={25}>{item.job_type ? item.job_type + "/" : '' + item.job_name}</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div className="d-flex justify-content-center align-items-center col-md-2">
+                                                                    <div className="row">
+                                                                        <div className="text-center  col-md-12">
+                                                                            <a className="ant-dropdown-trigger ant-dropdown-link">
+                                                                                <i className="icofont-rounded-down" />
+                                                                            </a>
+                                                                            <br />
+                                                                            <br />
+                                                                        </div>
+                                                                        <div className="text-center col-md-12">
+                                                                            <a onClick={() => onViewClick(item)}>
+                                                                                <span className="pro_shortlist">
+                                                                                    <i className="icofont-eye" />
+                                                                                </span>
+                                                                                <br />
+                                                                                <span className="font-13 font-weight-400">
+                                                                                    View Profile
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div className="text-center mt-20 col-md-12">
+                                                                            <a onClick={() => onSendInterestClick(item)}>
+                                                                                <span className="pro_interest">
+                                                                                    <i className="icofont-heart" />
+                                                                                </span>
+                                                                                <br />
+                                                                                <span className="font-13 font-weight-400">
+                                                                                    Send Interest
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <table
-                                                        width="100%"
-                                                        className="font-12 font-weight-200"
-                                                        style={{ fontWeight: 300 }}
-                                                    >
-                                                        <tbody>
-                                                            <tr>
-                                                                <td width="50%" />
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.age} Yrs, {getHeight(item.height)}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.religion} , {item.caste_name}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.course_name}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.marital_staus}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="50%" />
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.district}, {item.state}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td height={25}>{item.job_type ? item.job_type + "/" : '' + item.job_name}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div className="d-flex justify-content-center align-items-center col-md-2">
-                                                    <div className="row">
-                                                        <div className="text-center  col-md-12">
-                                                            <a className="ant-dropdown-trigger ant-dropdown-link">
-                                                                <i className="icofont-rounded-down" />
-                                                            </a>
-                                                            <br />
-                                                            <br />
-                                                        </div>
-                                                        <div className="text-center col-md-12">
-                                                            <a onClick={() => onViewClick(item)}>
-                                                                <span className="pro_shortlist">
-                                                                    <i className="icofont-eye" />
-                                                                </span>
-                                                                <br />
-                                                                <span className="font-13 font-weight-400">
-                                                                   View Profile
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                        <div className="text-center mt-20 col-md-12">
-                                                            <a onClick={()=>onSendInterestClick(item)}>
-                                                                <span className="pro_interest">
-                                                                    <i className="icofont-heart" />
-                                                                </span>
-                                                                <br />
-                                                                <span className="font-13 font-weight-400">
-                                                                    Send Interest
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><br/>
-                                
-                                </>
-                            }}
-                        />)
-                    }
-                                
+                                                </div><br />
+
+                                            </>
+                                        }}
+                                    />)
+                                }
+
 
                             </div>
                         </div>
-                      
+
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@ import { ImageUpload, FormItem, MyButton } from "../../../comp";
 import { capitalizeFirst } from "../../../utils";
 import PhoneInput from "react-phone-input-2";
 
-import moment from "moment";
+import dayjs from "dayjs";
 const AddEditAdvertisement = (props) => {
   const context = useContext(PsContext);
   const navigate = useNavigate();
@@ -37,8 +37,8 @@ const AddEditAdvertisement = (props) => {
   const [editId, setEditId] = useState(null);
   const [designations, setDesignations] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selDob, setSelDob] = useState(moment().subtract(18, "years"));
-  const [selDoj, setSelDoj] = useState(moment());
+  const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"));
+  const [selDoj, setSelDoj] = useState(dayjs());
   const [country, setCountry] = useState("India");
   const [districts, setDistricts] = useState([]);
   const [districtLoading, setDistrictLoading] = useState(false);

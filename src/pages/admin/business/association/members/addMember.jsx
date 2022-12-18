@@ -9,7 +9,7 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { listCollections } from '../../../../../models/core'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import bcrypt from 'bcryptjs'
@@ -37,7 +37,7 @@ const AddMember = (props) => {
             if (res) {
                 setCollectionData(res)
                 /* addForm.setFieldsValue({
-                    dob: { dob: moment(moment().subtract(18, "years"), 'DD/MM/YYYY') }
+                    dob: { dob: dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY') }
                 }) */
             }
 
@@ -99,7 +99,7 @@ const AddMember = (props) => {
     const onChangeDob = (date) => {
 
         addForm.setFieldsValue({
-            dob: moment(date).format('YYYY-MM-DD')
+            dob: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const onFinish = (values) => {
@@ -185,7 +185,7 @@ const AddMember = (props) => {
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     return (
         <>
@@ -306,7 +306,7 @@ const AddMember = (props) => {
                                         <Space direction="vertical">
 
                                             <DatePicker onChange={onChangeDob} format='DD/MM/YYYY'
-                                                defaultValue={moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                                                defaultValue={dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
                                                 disabledDate={disabledDate}
                                                 allowClear={false}
                                             //dateRender={(currentDate,today)=>{}}

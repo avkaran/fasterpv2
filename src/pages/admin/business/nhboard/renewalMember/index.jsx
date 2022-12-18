@@ -18,7 +18,7 @@ import { faIndianRupeeSign, faUser, faMobileAlt } from '@fortawesome/free-solid-
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { useParams } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { Link } = Anchor;
 
@@ -92,7 +92,7 @@ const {userId}=useParams();
             width: "15%",
             render: (text, record, index) => (
                 <>
-                    <div> {moment(record.expiry_date).format('DD-MM-YYYY')}</div>
+                    <div> {dayjs(record.expiry_date).format('DD-MM-YYYY')}</div>
                 </>
             ),
         },

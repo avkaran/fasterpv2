@@ -7,7 +7,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber, Modal, Image, Collapse } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUser, faUserTimes, faUserClock, faEye, faCheck, faClose, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { MyButton, MyTable } from '../../../../comp'
@@ -40,7 +40,7 @@ const ProfileSearch = (props) => {
         filter_clauses.push(" ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),m.dob)), '%Y'))<" + phraseSplit[2]);
         filter_clauses.push(" m.religion ='" + phraseSplit[3] + "'");
         }else{
-            filter_clauses.push(" date(m.created_date)>='" + moment().subtract(1, 'd').format("YYYY-MM-DD") + "'")
+            filter_clauses.push(" date(m.created_date)>='" + dayjs().subtract(1, 'd').format("YYYY-MM-DD") + "'")
             if(!isPublicSearch)
             filter_clauses.push(" m.gender<>'" +context.customerUser.gender + "'")
         }

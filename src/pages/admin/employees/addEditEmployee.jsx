@@ -11,7 +11,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../comp';
 import { capitalizeFirst } from '../../../utils';
 import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const AddEditEmployee = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -24,8 +24,8 @@ const AddEditEmployee = (props) => {
     const [editId, setEditId] = useState(null);
     const [designations, setDesignations] = useState([]);
     const [branches, setBranches] = useState([]);
-    const [selDob, setSelDob] = useState(moment().subtract(18, "years"))
-    const [selDoj, setSelDoj] = useState(moment())
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
+    const [selDoj, setSelDoj] = useState(dayjs())
     useEffect(() => {
         LoadBranches();
         LoadDesignations();
@@ -77,8 +77,8 @@ const AddEditEmployee = (props) => {
         })
     }
     const setEditValues = (mydata) => {
-        setSelDob(moment(mydata['dob'], "YYYY-MM-DD"));
-        setSelDoj(moment(mydata['doj'], "YYYY-MM-DD"));
+        setSelDob(dayjs(mydata['dob'], "YYYY-MM-DD"));
+        setSelDoj(dayjs(mydata['doj'], "YYYY-MM-DD"));
         addeditFormEmployee.setFieldsValue({
 
             employees: {
@@ -247,13 +247,13 @@ const AddEditEmployee = (props) => {
     }
     const dobDisabled = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const dobOnChange = (date) => {
         //  console.log('dchange', date)
         setSelDob(date);
         addeditFormEmployee.setFieldsValue({
-            employees: { dob: moment(date).format('YYYY-MM-DD') }
+            employees: { dob: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };
@@ -261,7 +261,7 @@ const AddEditEmployee = (props) => {
         //  console.log('dchange', date)
         setSelDoj(date);
         addeditFormEmployee.setFieldsValue({
-            employees: { doj: moment(date).format('YYYY-MM-DD') }
+            employees: { doj: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };

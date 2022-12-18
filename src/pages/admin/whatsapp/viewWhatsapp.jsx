@@ -10,7 +10,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../comp';
 import { capitalizeFirst } from '../../../utils';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 
@@ -69,7 +69,7 @@ const ViewWhatsapp = (props) => {
                     >
 
                         <FormViewItem label="Status">: <Tag color={viewData.msg_status === 'Delivered' ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{viewData.msg_status}</Tag></FormViewItem>
-                        <FormViewItem label="Date">{moment(viewData.msg_date).format('DD/MM/YYYY h:mm a').toString()}</FormViewItem>
+                        <FormViewItem label="Date">{dayjs(viewData.msg_date).format('DD/MM/YYYY h:mm a').toString()}</FormViewItem>
                         <FormViewItem label="Mobile No">{viewData.mobile_no}</FormViewItem>
                         <FormViewItem label="Message Type">{viewData.msg_type}</FormViewItem>
                         <Card title="Message">

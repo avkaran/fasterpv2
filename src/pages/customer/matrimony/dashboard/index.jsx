@@ -7,7 +7,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber, Modal, Image } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import StatCard from './statcard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUser, faUserTimes, faUserClock, faEye, faCheck, faClose, faHeart, faPeoplePulling } from '@fortawesome/free-solid-svg-icons'

@@ -12,7 +12,7 @@ import {
 import { green, red, cyan } from "@ant-design/colors";
 import ResellerPayment from "./resellerPayment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import moment from "moment";
+import dayjs from "dayjs";
 import { capitalizeFirst, printDocument } from "../../../../../utils";
 import { Form, DatePicker, Select } from "antd";
 import ResellerReceipt from "./resellerReceipt";
@@ -40,13 +40,13 @@ const ResellerPaymentList = (props) => {
   const [visiblePrintModal, setVisiblePrintModal] = useState(false);
   const [printFranchiseData, setPrintFranchisetData] = useState([]);
   const filterColumns = useRef([
-    " date(transaction_date)>='" + moment().format("YYYY-MM-DD") + "'",
-    " date(transaction_date)>='" + moment().format("YYYY-MM-DD") + "'",
+    " date(transaction_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
+    " date(transaction_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
   ]);
   useEffect(() => {
     loadBusinessNames();
     loadResellers(resellerType)
-    searchForm.setFieldsValue({ transaction_date: [moment(), moment()] });
+    searchForm.setFieldsValue({ transaction_date: [dayjs(), dayjs()] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -75,7 +75,7 @@ const ResellerPaymentList = (props) => {
       // dataIndex: 'transaction_date ',
       key: "transaction_date",
       render: (item) => (
-        <>{moment(item.transaction_date).format("DD/MM/YYYY h:mm a")}</>
+        <>{dayjs(item.transaction_date).format("DD/MM/YYYY h:mm a")}</>
       ),
     },
 
@@ -182,12 +182,12 @@ const ResellerPaymentList = (props) => {
     var filter_clauses = [];
     filter_clauses.push(
       " date(transaction_date)>='" +
-      moment(values.transaction_date[0]).format("YYYY-MM-DD") +
+      dayjs(values.transaction_date[0]).format("YYYY-MM-DD") +
       "'"
     );
     filter_clauses.push(
       " date(transaction_date)<='" +
-      moment(values.transaction_date[1]).format("YYYY-MM-DD") +
+      dayjs(values.transaction_date[1]).format("YYYY-MM-DD") +
       "'"
     );
     if (values.user_id) filter_clauses.push("user_id='" + values.user_id + "'");
@@ -357,7 +357,7 @@ const ResellerPaymentList = (props) => {
                 <Space direction="vertical">
                   <DatePicker.RangePicker
                     onChange={onChangeDate}
-                    defaultValue={[moment(), moment()]}
+                    defaultValue={[dayjs(), dayjs()]}
                     format="DD/MM/YYYY"
                     allowClear={false}
                   />
@@ -546,7 +546,7 @@ const ResellerPaymentList = (props) => {
                     marginLeft: "7%",
                   }}
                 >
-                  {moment(viewOrEditData.transaction_date).format(
+                  {dayjs(viewOrEditData.transaction_date).format(
                     "DD/MM/YYYY h:mm a"
                   )}
                 </span>{" "}

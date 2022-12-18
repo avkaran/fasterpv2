@@ -37,7 +37,7 @@ import {
 import { capitalizeFirst } from "../../../utils";
 import AddEditCRM from './addEditCRM';
 import ViewCRM from './viewCRM';
-import moment from "moment";
+import dayjs from "dayjs";
 const CRMList = (props) => {
   const context = useContext(PsContext);
   const { Content } = Layout;
@@ -62,8 +62,8 @@ const CRMList = (props) => {
   const { editIdOrObject, viewIdOrObject, onListClick, userId, ...other } = props;
   const filterColumns = useRef([
 
-    // " date(log_time)>='" + moment().format("YYYY-MM-DD") + "'",
-    // " date(log_time)>='" + moment().format("YYYY-MM-DD") + "'",
+    // " date(log_time)>='" + dayjs().format("YYYY-MM-DD") + "'",
+    // " date(log_time)>='" + dayjs().format("YYYY-MM-DD") + "'",
   ]);
   useEffect(() => {
     LoadCategories();
@@ -71,7 +71,7 @@ const CRMList = (props) => {
     loadCategory();
 
 
-    searchForm.setFieldsValue({ case_tasks: [moment(), moment()] });
+    searchForm.setFieldsValue({ case_tasks: [dayjs(), dayjs()] });
   }, []);
   const loadPlanNames = () => {
     var reqData = {
@@ -115,7 +115,7 @@ const CRMList = (props) => {
       dataIndex: 'title',
       key: "title",
       //   render: (item) => (
-      //     <>{moment(item.log_time).format("DD/MM/YYYY h:mm a")}</>
+      //     <>{dayjs(item.log_time).format("DD/MM/YYYY h:mm a")}</>
       //   ),
     },
    

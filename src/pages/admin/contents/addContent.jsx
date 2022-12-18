@@ -11,7 +11,7 @@ import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { contentTypes } from '../../../utils/data';
 import { Editor } from '@tinymce/tinymce-react';
 import PsContext from '../../../context'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ImgCrop from 'antd-img-crop';
 import ResponsiveLayout from '../layout'
 const AddContent = (props) => {
@@ -189,13 +189,13 @@ const {userId,content_type:contentType}=useParams();
     const activeFrom_dateOnChange = (date) => {
 
         addForm.setFieldsValue({
-            active_from_date: moment(date).format('YYYY-MM-DD')
+            active_from_date: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const activeTo_dateOnChange = (date) => {
 
         addForm.setFieldsValue({
-            active_to_date: moment(date).format('YYYY-MM-DD')
+            active_to_date: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const onCategoryChange = (value) => {

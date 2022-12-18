@@ -9,13 +9,13 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { listCollections } from '../../../../../models/core'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import bcrypt from 'bcryptjs'
 import { Steps } from 'antd';
 import PsContext from '../../../../../context';
-import { lettersOnly, integerIndMobile, momentDate, pincode } from '../utilFunctions'
+import { lettersOnly, integerIndMobile, dayjsDate, pincode } from '../utilFunctions'
 import $ from 'jquery';
 import toast from 'react-hot-toast';
 
@@ -42,7 +42,7 @@ const {userId}=useParams();
     const [checkValue, setCheckValue] = useState("");
     const dateFormat = 'YYYY/MM/DD';
     const [renewalTemplate,setRenewalTemplate]=useState(null);
-    const [paidDate,setPaidDate]=useState(moment())
+    const [paidDate,setPaidDate]=useState(dayjs())
 
     const onMemberFormFinish = (values) => {
         var form = new FormData();
@@ -126,7 +126,7 @@ const {userId}=useParams();
     const processSms = () => {
 
         //approved sms
-        var renewalDate=moment(paidDate).add(5,"years").format("DD/MM/YYYY")
+        var renewalDate=dayjs(paidDate).add(5,"years").format("DD/MM/YYYY")
         var smsData = {
             template_id: renewalTemplate.template_id, //query_type=insert | update | delete | query
             unicode: renewalTemplate.is_unicode,
@@ -268,7 +268,7 @@ const {userId}=useParams();
                                         rules={[{ required: true, message: 'Paid Date is required' }]}
                                     >
                                         <Space direction="vertical">
-                                            <Input type="date" defaultValue={moment(new Date()).format('MM/DD/YYYY')}  onChange={(date)=>setPaidDate(date)} />
+                                            <Input type="date" defaultValue={dayjs(new Date()).format('MM/DD/YYYY')}  onChange={(date)=>setPaidDate(date)} />
                                         </Space>
                                     </Form.Item>
                                 </Col>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PsContext from "../../../context";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Row, Col } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

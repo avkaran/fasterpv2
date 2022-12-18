@@ -13,7 +13,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUser, faUserTimes, faUserClock } from '@fortawesome/free-solid-svg-icons'
 import PsContext from '../../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { MyButton, MyTable, ViewItem } from '../../../../../comp';
 import { StoreProfile } from './syncProfile'
 

@@ -16,7 +16,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { faIndianRupeeSign, faUser, faMobileAlt, faGreaterThan, faSearch, faClose } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ViewProfile from '../matrimony/viewProfile'
 import { heightList } from '../../../../models/core'
 import './blink.css';
@@ -115,7 +115,7 @@ const CustomerMembers = (props) => {
             else if (value === 'ec_members')
                 finalColumns.membership_plan = 'EC Member'
             else if (value === 'today')
-                finalColumns.created_date = moment().format("YYYY-MM-DD")
+                finalColumns.created_date = dayjs().format("YYYY-MM-DD")
             else if (value === 'matrimony')
                 finalColumns.is_matrimony_member = 1
             filterColumns.current = finalColumns;

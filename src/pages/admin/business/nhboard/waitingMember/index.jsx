@@ -18,7 +18,7 @@ import { faIndianRupeeSign, faUser, faMobileAlt } from '@fortawesome/free-solid-
 import { useMediaQuery } from 'react-responsive';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { useParams } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const { Link } = Anchor;
 

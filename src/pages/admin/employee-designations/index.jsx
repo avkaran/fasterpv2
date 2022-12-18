@@ -13,7 +13,7 @@ import ViewDesignation from './viewDesignation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../utils';
-import moment from 'moment';
+import dayjs from 'dayjs';
 const EmployeeDesignations = (props) => {
     const context = useContext(PsContext);
 const {userId}=useParams();
@@ -83,7 +83,7 @@ const {userId}=useParams();
                     title={heading}
                     table="designations"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id, designation: item.designation, last_updated: moment(item.last_updated).toString(), note: 'Designation will be Deleted' }}
+                    dataItem={{ id: item.id, designation: item.designation, last_updated: dayjs(item.last_updated).toString(), note: 'Designation will be Deleted' }}
                 // avatar={context.baseUrl + item.course_image}
                 />
 

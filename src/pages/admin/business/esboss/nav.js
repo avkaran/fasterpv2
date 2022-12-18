@@ -2,12 +2,13 @@ import { ROLES } from "../../../../utils/data"
 const mynav = [
 	{ name: 'Dashboard', path: '/:userId/admin', icon: 'fa-solid fa-house', exact: true, allowed: ROLES.ALL },
 	{
-		name: 'Projects',
-		path: '/:userId/admin/projects',
+		name: 'Products',
+		path: '/:userId/admin/products',
 		icon: 'fa-solid fa-list-alt',
 		exact: false,
 		childrens: [
-			{ name: 'All Projects', path: '/:userId/admin/projects', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL},
+			{ name: 'Product List', path: '/:userId/admin/productservice/product', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL},
+			{ name: 'Service List', path: '/:userId/admin/productservice/service', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL},
 		],
 		allowed: ROLES.ALL
 	},

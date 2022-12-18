@@ -5,7 +5,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber,Modal } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { heightList } from '../../../../models/core'
@@ -49,7 +49,7 @@ const ViewProfile = (props) => {
             setViewData(mydata)
 
             setIsMatrimonyMember(parseInt(mydata.is_matrimony_member) == 1);
-            var d = moment(mydata.dob, 'YYYY-MM-DD')
+            var d = dayjs(mydata.dob, 'YYYY-MM-DD')
             if (d instanceof Date) {
                 editForm.setFieldsValue({ dob: mydata.dob })
             }
@@ -72,7 +72,7 @@ const ViewProfile = (props) => {
         processedValues['member_id']=context.customerUser.member_id;
         processedValues['expressed_auto_id']=viewData.id;
         processedValues['expressed_member_id']=viewData.member_id;
-        processedValues['expressed_date']=moment().format('YYYY-MM-DD HH:mm')
+        processedValues['expressed_date']=dayjs().format('YYYY-MM-DD HH:mm')
 
         var reqData = { 
             query_type: 'insert',
@@ -107,7 +107,7 @@ const ViewProfile = (props) => {
                                 <ViewItem label="Name" labelCol={8} wrapperCol={16} value={viewData.name} />
                                 <ViewItem label="Age" labelCol={8} wrapperCol={16} value={viewData.age + " Years"} />
                                 <ViewItem label="gender" labelCol={8} wrapperCol={16} value={viewData.gender} />
-                                <ViewItem label="Date of Birth" labelCol={8} wrapperCol={16} value={viewData.dob && moment(viewData.dob, 'YYYY-MM-DD').format('DD/MM/YYYY')} />
+                                <ViewItem label="Date of Birth" labelCol={8} wrapperCol={16} value={viewData.dob && dayjs(viewData.dob, 'YYYY-MM-DD').format('DD/MM/YYYY')} />
                                 <ViewItem label="Qualification" labelCol={8} wrapperCol={16} value={viewData.qualification} />
                                 <ViewItem label="Highter Study" labelCol={8} wrapperCol={16} value={viewData.higher_study} />
                                 <ViewItem label="Marital Status" labelCol={8} wrapperCol={16} value={viewData.marital_status} />

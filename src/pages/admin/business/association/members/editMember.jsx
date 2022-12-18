@@ -9,7 +9,7 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { listCollections } from '../../../../../models/core'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import PsContext from '../../../../../context';
@@ -32,14 +32,14 @@ const EditMember = (props) => {
     const [country, setCountry] = useState('');
     const [memberId] = useState(props.match.params.memberId)
     const [viewData, setViewData] = useState([]);
-    const [selectedDob, setSelectedDob] = useState(moment().subtract(18, "years"));
+    const [selectedDob, setSelectedDob] = useState(dayjs().subtract(18, "years"));
     const [IsMatrimonyMember, setIsMatrimonyMember] = useState(false);
     useEffect(() => {
         listCollections().then(res => {
             if (res) {
                 setCollectionData(res)
                 /* addForm.setFieldsValue({
-                    dob: { dob: moment(moment().subtract(18, "years"), 'DD/MM/YYYY') }
+                    dob: { dob: dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY') }
                 }) */
             }
 
@@ -94,7 +94,7 @@ const EditMember = (props) => {
                 });
                 addForm.setFieldsValue({password:context.psGlobal.decrypt(mydata.password)});
                 setIsMatrimonyMember(parseInt(mydata.is_matrimony_member) == 1);
-                var d = moment(viewData.dob, 'YYYY-MM-DD')
+                var d = dayjs(viewData.dob, 'YYYY-MM-DD')
                 if (d instanceof Date) {
                     setSelectedDob(d);
                     addForm.setFieldsValue({ dob: mydata.dob })
@@ -178,7 +178,7 @@ const EditMember = (props) => {
     const onChangeDob = (date) => {
 
         addForm.setFieldsValue({
-            dob: moment(date).format('YYYY-MM-DD')
+            dob: dayjs(date).format('YYYY-MM-DD')
         })
         setSelectedDob(date)
     };
@@ -252,7 +252,7 @@ const EditMember = (props) => {
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     return (
         <>
@@ -365,7 +365,7 @@ const EditMember = (props) => {
                                         <Space direction="vertical">
 
                                             <DatePicker onChange={onChangeDob} format='DD/MM/YYYY'
-                                                defaultValue={viewData && !isNaN(moment(viewData.dob, 'YYYY-MM-DD')) ? moment(viewData.dob, 'YYYY-MM-DD') : moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                                                defaultValue={viewData && !isNaN(dayjs(viewData.dob, 'YYYY-MM-DD')) ? dayjs(viewData.dob, 'YYYY-MM-DD') : dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
                                                 disabledDate={disabledDate}
                                                 allowClear={false}
                                             //dateRender={(currentDate,today)=>{}}

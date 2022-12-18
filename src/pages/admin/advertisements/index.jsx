@@ -10,7 +10,7 @@ import { green, blue, red, cyan, grey } from '@ant-design/colors';
 import AddEditAdvertisement from './addEditAdvertisement';
 import ViewAdvertisement from './viewAdvertisement';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import moment from "moment";
+import dayjs from "dayjs";
 import { capitalizeFirst } from '../../../utils';
 import {   Form, DatePicker, Input, Select } from 'antd';
 import { faTrash, faUserTimes, faClose, faImage, faFilePdf, faSearch } from '@fortawesome/free-solid-svg-icons'

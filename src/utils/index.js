@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 5, name: 'esboss' };
+export const currentInstance = { index: 4, name: 'mywatch' };
 export const businesses = [
   { //0
     key: 'association',
@@ -76,7 +76,7 @@ export const businesses = [
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
-    responsive: { isMobile: true, }
+    responsive: { isMobile: false, }
   }
 
 ]

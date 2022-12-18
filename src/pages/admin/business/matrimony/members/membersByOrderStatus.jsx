@@ -13,7 +13,7 @@ import { heightList } from '../../../../../models/core'
 import { LoadingOutlined } from '@ant-design/icons';
 import ListMemberComponent from './listMemberComponent';
 import AddEditMember from './AddEditMember';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import ViewMember from './viewMember';
 import { FormItem } from '../../../../../comp';
 import { useParams } from 'react-router-dom';

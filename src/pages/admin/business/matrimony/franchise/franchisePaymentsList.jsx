@@ -11,7 +11,7 @@ import {
 } from "../../../../../comp"
 import { green, red, cyan } from "@ant-design/colors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import moment from "moment";
+import dayjs from "dayjs";
 import { capitalizeFirst, printDocument } from "../../../../../utils";
 import { Form, DatePicker, Select } from "antd";
 

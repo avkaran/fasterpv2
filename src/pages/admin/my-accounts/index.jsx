@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate,useParams } from "react-router-dom";
 import PsContext from "../../../context";
-import moment from "moment";
+import dayjs from "dayjs";
 const MyAdminProfile = (props) => {
   const context = useContext(PsContext);
 const {userId}=useParams();

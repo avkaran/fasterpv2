@@ -14,7 +14,7 @@ import PsContext from '../../../../../context';
 import StatCard from './statcard';
 import { green, blue, red, cyan, grey, magenta, yellow } from '@ant-design/colors';
 import { MyButton, MyTable } from '../../../../../comp';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import AdminDashboard from './adminDashboard';
 import EmployeeDashboard from './employeeDashboard';
 const Dashboard = (props) => {

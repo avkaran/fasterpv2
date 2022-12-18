@@ -29,7 +29,7 @@ import {
   FormViewItem,
 } from "../../../../comp";
 import { green, red, cyan, blue, magenta } from "@ant-design/colors";
-import moment from "moment";
+import dayjs from "dayjs";
 import EditEmployee from "./editEmployee";
 const EmployeeProfile = (props) => {
   const context = useContext(PsContext);
@@ -284,12 +284,12 @@ const EmployeeProfile = (props) => {
                     </Col>
                     <Col className="gutter-row" xs={24} xl={12}>
                       <FormViewItem label="Date of Birth">
-                        {moment(viewData.dob).format("DD/MM/YYYY")}
+                        {dayjs(viewData.dob).format("DD/MM/YYYY")}
                       </FormViewItem>
                     </Col>
                     <Col className="gutter-row" xs={24} xl={12}>
                       <FormViewItem label="Date of Join">
-                        {moment(viewData.doj).format("DD/MM/YYYY")}
+                        {dayjs(viewData.doj).format("DD/MM/YYYY")}
                       </FormViewItem>
                     </Col>
                     <Col className="gutter-row" xs={24} xl={12}>

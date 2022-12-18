@@ -9,7 +9,7 @@ import { green, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faMobile } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const CustomerPayment = (props) => {
     const navigate = useNavigate();
     const context = useContext(PsContext);

@@ -13,7 +13,7 @@ import { capitalizeFirst } from '../../../utils';
 import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import TextArea from 'antd/lib/input/TextArea';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const AddEditCRM = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -28,8 +28,8 @@ const AddEditCRM = (props) => {
     const [country, setCountry] = useState('');
     const [districts, setDistricts] = useState([]);
     const [districtLoading, setDistrictLoading] = useState(false)
-    const [selDob, setSelDob] = useState(moment().subtract(18, "years"))
-    const [selDoj, setSelDoj] = useState(moment())
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
+    const [selDoj, setSelDoj] = useState(dayjs())
     const [planNames, setPlanNames] = useState(null);
     const [selPlanData, setSelPlanData] = useState({})
     const [selData, setSelData] = useState({})
@@ -332,7 +332,7 @@ const AddEditCRM = (props) => {
         //  console.log('dchange', date)
         setSelData(date);
         addeditFormCms.setFieldsValue({
-            employees: { dob: moment(date).format('YYYY-MM-DD') }
+            employees: { dob: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };
@@ -393,7 +393,7 @@ const AddEditCRM = (props) => {
     //     })
     // }
     const onChangeDate = (dates) => {
-        addeditFormEmployee.setFieldsValue({ log_dates: [moment(), moment()] });
+        addeditFormEmployee.setFieldsValue({ log_dates: [dayjs(), dayjs()] });
     };
     return (
         <>

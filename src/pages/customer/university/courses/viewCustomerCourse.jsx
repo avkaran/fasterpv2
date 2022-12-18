@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import avg from '../../../../assets/images/avatar.jpg';
 import PsContext from '../../../../context';
 import { Form, Input, Select, InputNumber, message, Space, Image, Spin, Row, Col } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
 import { MyButton } from '../../../../comp';
@@ -117,7 +117,7 @@ const ViewCustomerCourse = (props) => {
                                                                 return actions.order.create({
                                                                     purchase_units: [
                                                                         {
-                                                                            reference_id: moment().unix(),
+                                                                            reference_id: dayjs().unix(),
                                                                             amount: {
                                                                                 value: courseFee,
                                                                             },

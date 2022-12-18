@@ -16,7 +16,7 @@ import ProfileViewPrint from './printMembers/profileViewprint';
 import ShortLinePrint from "./printMembers/shortLinePrint";
 import PostalPrint from "./printMembers/postalPrint";
 import PhotoPrint from "./printMembers/printPhoto";
-import moment from 'moment';
+import dayjs from 'dayjs';
 const ListMemberComponent = (props) => {
     const context = useContext(PsContext);
     const { Panel } = Collapse;
@@ -460,7 +460,7 @@ const ListMemberComponent = (props) => {
                     query_type: 'insert',
                     table: 'whatsapp_reports',
                     values: {
-                        msg_date: moment().format("YYYY-MM-DD HH:mm:ss"),
+                        msg_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
                         mobile_no: sentMobileNumber,
                         msg_type: 'compaign',
                         ref_table_column: "members.id",

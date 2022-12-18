@@ -14,7 +14,7 @@ import PsContext from '../../../context';
 import { Breadcrumb, Layout, Form } from 'antd';
 import { green, blue, red, cyan, grey, magenta, yellow } from '@ant-design/colors';
 import { MyButton, MyTable } from '../../../comp';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { HomeOutlined } from '@ant-design/icons';
 import { currentInstance, businesses } from '../../../utils';
 import HomeContainer from '../layout-mobile/homeContainer';

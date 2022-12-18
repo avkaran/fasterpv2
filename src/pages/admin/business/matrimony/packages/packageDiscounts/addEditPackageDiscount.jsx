@@ -10,7 +10,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../../comp';
 import { capitalizeFirst } from '../../../../../../utils';
 import PhoneInput from 'react-phone-input-2'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { resetServerContext } from 'react-beautiful-dnd';
 const AddEditPackageDiscount = (props) => {
     const context = useContext(PsContext);
@@ -23,8 +23,8 @@ const AddEditPackageDiscount = (props) => {
     const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
     const [editId, setEditId] = useState(null);
     const [packages,setPackages]=useState([]);
-    const [validFromDate,setValidFromDate]=useState(moment());
-    const [validToDate,setValidToDate]=useState(moment())
+    const [validFromDate,setValidFromDate]=useState(dayjs());
+    const [validToDate,setValidToDate]=useState(dayjs())
     useEffect(() => {
         loadPackages();
 
@@ -88,8 +88,8 @@ const AddEditPackageDiscount = (props) => {
         })
     }
     const setEditValues = (mydata) => {
-                setValidFromDate(moment(mydata.valid_from,'YYYY-MM-DD'));
-                setValidToDate(moment(mydata.valid_to,'YYYY-MM-DD'));
+                setValidFromDate(dayjs(mydata.valid_from,'YYYY-MM-DD'));
+                setValidToDate(dayjs(mydata.valid_to,'YYYY-MM-DD'));
         addeditFormPackageDiscount.setFieldsValue({
 
             package_discounts: {
@@ -155,20 +155,20 @@ const AddEditPackageDiscount = (props) => {
     };
     const validFromDisabled = (current) => {
         // Can not select days before today and today
-       // console.log(current,moment())
-        return current && current < moment().subtract(1, "day");
+       // console.log(current,dayjs())
+        return current && current < dayjs().subtract(1, "day");
     };
     const validToDisabled = (current) => {
 
         // Can not select days before today and today
-        return current && current < moment().subtract(1, "day");
+        return current && current < dayjs().subtract(1, "day");
     };
     const validFromOnChange = (date) => {
         setValidFromDate(date);
 
         addeditFormPackageDiscount.setFieldsValue({
             package_discounts: {
-                valid_from: moment(date).format('YYYY-MM-DD')
+                valid_from: dayjs(date).format('YYYY-MM-DD')
             }
         })
 
@@ -177,7 +177,7 @@ const AddEditPackageDiscount = (props) => {
         setValidToDate(date);
         addeditFormPackageDiscount.setFieldsValue({
             package_discounts: {
-                valid_to: moment(date).format('YYYY-MM-DD')
+                valid_to: dayjs(date).format('YYYY-MM-DD')
             }
         })
 
@@ -232,7 +232,7 @@ const AddEditPackageDiscount = (props) => {
                                 <Space direction="vertical">
                                     <DatePicker
                                         onChange={validFromOnChange}
-                                       // defaultValue={editData && !isNaN(moment(editData.valid_from, 'YYYY-MM-DD')) ? moment(editData.valid_from, 'YYYY-MM-DD').format('DD/MM/YYYY') : moment(moment(), 'DD/MM/YYYY')}
+                                       // defaultValue={editData && !isNaN(dayjs(editData.valid_from, 'YYYY-MM-DD')) ? dayjs(editData.valid_from, 'YYYY-MM-DD').format('DD/MM/YYYY') : dayjs(dayjs(), 'DD/MM/YYYY')}
                                         format='DD/MM/YYYY'
                                         value={validFromDate}
                                         disabledDate={validFromDisabled}
@@ -280,7 +280,7 @@ const AddEditPackageDiscount = (props) => {
                                 <Space direction="vertical">
                                     <DatePicker onChange={validToOnChange}
                                         format='DD/MM/YYYY'
-                                       // defaultValue={moment(editData.valid_to, 'YYYY-MM-DD')}
+                                       // defaultValue={dayjs(editData.valid_to, 'YYYY-MM-DD')}
                                         value={validToDate}
                                         disabledDate={validToDisabled}
                                         allowClear={false}

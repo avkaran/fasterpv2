@@ -7,7 +7,7 @@ import { Form, Input, Select, InputNumber, Steps } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FormItem, MyButton, MyTable } from '../../../../../comp';
 import PsContext from '../../../../../context';
 import AddEditMember from './AddEditMember';

@@ -9,7 +9,7 @@ import axios from 'axios';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
 import { green } from '@ant-design/colors';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import OTPLogin from "./otpLogin";
 const Login = (props) => {
     const context = useContext(PsContext);

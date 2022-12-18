@@ -13,7 +13,7 @@ import logo from '../assets/images/logo.png';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { apiRequest, decrypt, encrypt } from "../../../../models/core";
 import { ViewItem } from "../../../../comp";
 import { green, red } from '@ant-design/colors';

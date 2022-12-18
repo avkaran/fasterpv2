@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { encrypt, decrypt } from '../../../../../models/core'
-import moment from 'moment'
+import dayjs from 'dayjs'
 export const StoreProfile = async (profileId) => {
     return new Promise((resolve, reject) => {
         var reqData = [{
@@ -234,7 +234,7 @@ export const StoreProfile = async (profileId) => {
                         mother_name: storeFamilyData.mother_name,
                         //profiles
                         gender: storeProfileData.gender,
-                        dob: moment.unix(storeProfileData.dob).format("YYYY-MM-DD"),
+                        dob: dayjs.unix(storeProfileData.dob).format("YYYY-MM-DD"),
                         marital_status: storeProfileData.martial_status,
                         no_of_children: storeProfileData.no_of_children,
                         children_living_status: storeProfileData.children_living_status,
@@ -302,7 +302,7 @@ export const StoreProfile = async (profileId) => {
                         is_family_updated: storeStatusData.is_family_details_updated,
                         is_horroscope_updated: storeStatusData.is_horroscope_updated,
                         is_physical_updated: storeStatusData.is_physical_attributes_updated,
-                        created_date: moment.unix(storeProfileData.created_date).format("YYYY-MM-DD")
+                        created_date: dayjs.unix(storeProfileData.created_date).format("YYYY-MM-DD")
                         // is_partner_preferences_updated: storeStatusData.is_partner_preferences_updated,
 
                     },
@@ -350,7 +350,7 @@ export const StoreProfile = async (profileId) => {
                         patham: storeHoroData.patham,
                         raasi: storeHoroData.raasi,
                         laknam: storeHoroData.laknam,
-                        birth_time: storeHoroData.birth_time && moment.unix(storeHoroData.birth_time).format("h:mma"),
+                        birth_time: storeHoroData.birth_time && dayjs.unix(storeHoroData.birth_time).format("h:mma"),
                         birth_place: storeHoroData.birth_place,
                         dhosam_type: storeHoroData.dosham_type,
                         jadhagam_type: storeHoroData.jadhagam_type,
@@ -461,9 +461,9 @@ export const StoreProfile = async (profileId) => {
                         is_send_whatsapp: item.is_whatsapp,
                         is_vip: 0,
                         order_date: item.ordered_date,
-                        paid_date: item.paid_date && moment.unix(item.paid_date).format("YYYY-MM-DD"),
-                        expiry_date: item.order_expiry_date && moment.unix(item.order_expiry_date).format("YYYY-MM-DD"),
-                        cancel_date: item.cancelled_date && moment.unix(item.cancelled_date).format("YYYY-MM-DD"),
+                        paid_date: item.paid_date && dayjs.unix(item.paid_date).format("YYYY-MM-DD"),
+                        expiry_date: item.order_expiry_date && dayjs.unix(item.order_expiry_date).format("YYYY-MM-DD"),
+                        cancel_date: item.cancelled_date && dayjs.unix(item.cancelled_date).format("YYYY-MM-DD"),
                         order_status: item.order_status,
                         is_current_plan: item.is_current_plan === 'Yes' ? 1 : 0,
                         paid_by: item.paid_by,

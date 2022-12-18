@@ -15,7 +15,7 @@ import { Breadcrumb, Layout, Form } from 'antd';
 import StatCard from './statcard';
 import { green, blue, red, cyan, grey, magenta, yellow } from '@ant-design/colors';
 import { MyButton, MyTable } from '../../../../../comp';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { HomeOutlined } from '@ant-design/icons';
 import { currentInstance, businesses } from '../../../../../utils';
 import HomeContainer from '../../../layout-mobile/homeContainer';
@@ -147,7 +147,7 @@ const {userId}=useParams();
         var reqData = [
             {
                 query_type: 'query',
-                query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='" + moment().format("YYYY-MM-DD") + "' GROUP by log_name,logged_type"
+                query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='" + dayjs().format("YYYY-MM-DD") + "' GROUP by log_name,logged_type"
             },
         ]
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Checkbox, Form, Input, Space, Spin, Select, DatePicker, Row, Col, message } from 'antd';
 import { useNavigate,useParams } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
-import { CardFixedTop, momentDate } from '../../../../../utils';
+import { CardFixedTop, dayjsDate } from '../../../../../utils';
 import { listCollections } from '../../../../../models/core'
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -26,7 +26,7 @@ const MakePayment = (props) => {
     const [membershipPlans, setMembershipPlans] = useState([])
     useEffect(() => {
         addForm.setFieldsValue({
-            paid_date: moment().format('YYYY-MM-DD')
+            paid_date: dayjs().format('YYYY-MM-DD')
         })
         loadMembershipPlans();
         listCollections().then(res => {
@@ -125,7 +125,7 @@ const MakePayment = (props) => {
     };
     const onChangePaidDate = (date) => {
         addForm.setFieldsValue({
-            paid_date: moment(date).format('YYYY-MM-DD')
+            paid_date: dayjs(date).format('YYYY-MM-DD')
         })
 
     };
@@ -144,7 +144,7 @@ const MakePayment = (props) => {
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment();
+        return current && current > dayjs();
     };
     return (
         <>
@@ -197,7 +197,7 @@ const MakePayment = (props) => {
 
 
                                 >
-                                    {moment(viewData.dob).format('DD/MM/YYYY')}
+                                    {dayjs(viewData.dob).format('DD/MM/YYYY')}
                                 </Form.Item>
                             </Col>
                         </Row> {/* tow column row end */}
@@ -240,7 +240,7 @@ const MakePayment = (props) => {
                                     <Space direction="vertical">
 
                                         <DatePicker onChange={onChangePaidDate} format='DD/MM/YYYY'
-                                            defaultValue={moment()}
+                                            defaultValue={dayjs()}
                                             disabledDate={disabledDate}
                                             allowClear={false}
                                         //dateRender={(currentDate,today)=>{}}

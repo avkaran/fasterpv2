@@ -10,7 +10,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../comp';
 import { capitalizeFirst } from '../../../utils';
 import { green, red, cyan, blue, magenta } from '@ant-design/colors';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const ViewEmployee = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -264,10 +264,10 @@ const ViewEmployee = (props) => {
                                             <FormViewItem label="Address">{viewData.address}</FormViewItem>
                                         </Col>
                                         <Col className='gutter-row' xs={24} xl={12}>
-                                            <FormViewItem label="Date of Birth">{moment(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
+                                            <FormViewItem label="Date of Birth">{dayjs(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
                                         </Col>
                                         <Col className='gutter-row' xs={24} xl={12}>
-                                            <FormViewItem label="Date of Join">{moment(viewData.doj).format("DD/MM/YYYY")}</FormViewItem>
+                                            <FormViewItem label="Date of Join">{dayjs(viewData.doj).format("DD/MM/YYYY")}</FormViewItem>
                                         </Col>
                                         <Col className='gutter-row' xs={24} xl={12}>
                                             <FormViewItem label="Employee Status">{viewData.employee_status}</FormViewItem>

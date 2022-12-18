@@ -13,7 +13,7 @@ import { heightList } from '../../../../../models/core'
 import { LoadingOutlined } from '@ant-design/icons';
 import ListMemberComponent from './listMemberComponent';
 import AddEditMember from './AddEditMember';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import ViewMember from './viewMember';
 import { useParams } from 'react-router-dom';
 const ListMembers = (props) => {
@@ -28,7 +28,7 @@ const {userId}=useParams();
     const [casteList, setCasteList] = useState([]);
     const [casteLoader, setCasteLoader] = useState(false);
     const [searchActiveKeys, setSearchActiveKeys] = useState([]);
-    const filterColumns = useRef([" date(m.created_date)>='" + moment().subtract(1, 'd').format("YYYY-MM-DD") + "'"]);
+    const filterColumns = useRef([" date(m.created_date)>='" + dayjs().subtract(1, 'd').format("YYYY-MM-DD") + "'"]);
     const [refreshMemberList, setRefreshMemberList] = useState(0);
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
@@ -69,7 +69,7 @@ const {userId}=useParams();
     useEffect(() => {
 
         /*   var filter_clauses = [];
-          filter_clauses.push(" date(m.created_date)='"+ moment().format("YYYY-MM-DD")+"'");
+          filter_clauses.push(" date(m.created_date)='"+ dayjs().format("YYYY-MM-DD")+"'");
           filterColumns.current = filter_clauses;
           setRefreshMemberList(prev => prev + 1); */
         //   loadFilterMenu();

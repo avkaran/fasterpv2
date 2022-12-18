@@ -9,7 +9,7 @@ import { baseUrl } from '../../../../../utils';
 import { HomeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { listCollections } from '../../../../../models/core'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import bcrypt from 'bcryptjs'
@@ -126,20 +126,20 @@ const MemberCounts = (props) => {
             title: 'Male',
             dataIndex: 'male',
             key: 'male',
-            //render: (item) => <strong>{moment(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
+            //render: (item) => <strong>{dayjs(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
         },
         {
             title: 'Female',
             dataIndex: 'female',
             key: 'female',
-            //render: (item) => <strong>{moment(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
+            //render: (item) => <strong>{dayjs(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
         }
         ,
         {
             title: 'Total',
             dataIndex: 'total',
             key: 'total',
-            //render: (item) => <strong>{moment(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
+            //render: (item) => <strong>{dayjs(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
         },
     ]
     return (

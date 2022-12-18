@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Button, Form, Spin, Row, Col, Card, message, Modal } from 'antd';
 import { useNavigate,useParams } from 'react-router-dom';
 //import { Row, Col } from 'react-bootstrap';
-import { CardFixedTop, momentDate } from '../../../../../utils';
+import { CardFixedTop, dayjsDate } from '../../../../../utils';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 //import EditWebPage from './editWebPage';

@@ -13,7 +13,7 @@ import logo from '../assets/images/logo.png';
 import PsContext from '../../../../context'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
 import CustomerForgetPassword from "./forgetPassword";
@@ -44,7 +44,7 @@ const Login = (props) => {
     const dobOnChange = (date) => {
 
         registerForm.setFieldsValue({
-            dob: moment(date).format('YYYY-MM-DD')
+            dob: dayjs(date).format('YYYY-MM-DD')
         })
 
     };
@@ -75,7 +75,7 @@ const Login = (props) => {
     }
     const dobDisabled = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const onRegisterFinish = (values) => {
         setRegisterLoader(true);
@@ -221,7 +221,7 @@ const Login = (props) => {
 
                                                     <Space direction="vertical">
                                                         <DatePicker onChange={dobOnChange} format='DD/MM/YYYY'
-                                                            defaultValue={moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                                                            defaultValue={dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
                                                             disabledDate={dobDisabled}
                                                             allowClear={false}
                                                         />

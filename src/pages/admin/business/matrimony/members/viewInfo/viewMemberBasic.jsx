@@ -1,7 +1,7 @@
 import PsContext from '../../../../../../context'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Row, Col, message, Spin, Form } from 'antd';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { FormViewItem } from '../../../../../../comp';
 const ViewMemberBasic = (props) => {
     const context = useContext(PsContext);
@@ -47,7 +47,7 @@ const ViewMemberBasic = (props) => {
                     <FormViewItem label="Gender">{viewData.gender}</FormViewItem>
                 </Col>
                 <Col className='gutter-row' xs={24} xl={12}>
-                    <FormViewItem label="Dob">{moment(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
+                    <FormViewItem label="Dob">{dayjs(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
                 </Col>
                 <Col className='gutter-row' xs={24} xl={12}>
                     <FormViewItem label="Marital Status">{viewData.marital_status}</FormViewItem>
@@ -105,7 +105,7 @@ const ViewMemberBasic = (props) => {
                 }
 
                 <Col className='gutter-row' xs={24} xl={12}>
-                    <FormViewItem label="Created Date">{moment(viewData.created_date).format("DD/MM/YYYY h:m a")}</FormViewItem>
+                    <FormViewItem label="Created Date">{dayjs(viewData.created_date).format("DD/MM/YYYY h:m a")}</FormViewItem>
                 </Col>
                 <Col className='gutter-row' xs={24} xl={12}>
                     <FormViewItem label="About Profile">{viewData.about_profile}</FormViewItem>

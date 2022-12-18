@@ -1,7 +1,7 @@
 import PsContext from "../../../../../../context";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Row, Col, message, Spin } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import { heightList } from "../../../../../../models/core";
 const ShortLinePrint = (props) => {
   const context = useContext(PsContext);
@@ -50,12 +50,8 @@ const ShortLinePrint = (props) => {
                           : "NA"}
                         /-&nbsp;
                       </td>
-                      <td>{item.star}/{item.raasi}</td>
-<<<<<<< HEAD
-                    <td>
-=======
+ 
                       <td>
->>>>>>> 87f5ccdc505291a9a965e54f0276567076eb2b9f
                         {item.taluk},{item.district}
                       </td>
                     {isContact && ( <td>{context.psGlobal.decrypt(item.mobile_no)}</td>)} 

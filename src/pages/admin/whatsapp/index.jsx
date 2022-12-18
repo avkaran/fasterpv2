@@ -11,7 +11,7 @@ import ViewWhatsapp from './viewWhatsapp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose, faImage, faFilePdf, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../utils';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const WhatsappReports = (props) => {
     const context = useContext(PsContext);
 const {userId}=useParams();
@@ -25,11 +25,11 @@ const {userId}=useParams();
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [visibleModal, setVisibleModal] = useState(false);
     const [refreshTable, setRefreshTable] = useState(0);
-    const filterColumns = useRef([" date(msg_date)>='" + moment().format("YYYY-MM-DD") + "'", " date(msg_date)>='" + moment().format("YYYY-MM-DD") + "'"]);
+    const filterColumns = useRef([" date(msg_date)>='" + dayjs().format("YYYY-MM-DD") + "'", " date(msg_date)>='" + dayjs().format("YYYY-MM-DD") + "'"]);
     useEffect(() => {
         //  loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        searchForm.setFieldsValue({ msg_dates: [moment(), moment()] })
+        searchForm.setFieldsValue({ msg_dates: [dayjs(), dayjs()] })
     }, []);
 
     const tableColumns = [
@@ -49,7 +49,7 @@ const {userId}=useParams();
             title: 'Date',
             // dataIndex: 'msg_date',
             key: 'msg_date',
-            render: (item) => <>{moment(item.msg_date).format('DD/MM/YYYY h:mm a')}</>,
+            render: (item) => <>{dayjs(item.msg_date).format('DD/MM/YYYY h:mm a')}</>,
         },
         {
             title: 'Type',
@@ -92,8 +92,8 @@ const {userId}=useParams();
     const onFinishSearch = (values) => {
        
         var filter_clauses = [];
-        filter_clauses.push(" date(msg_date)>='" + moment(values.msg_dates[0]).format('YYYY-MM-DD') + "'")
-        filter_clauses.push(" date(msg_date)<='" + moment(values.msg_dates[1]).format('YYYY-MM-DD') + "'")
+        filter_clauses.push(" date(msg_date)>='" + dayjs(values.msg_dates[0]).format('YYYY-MM-DD') + "'")
+        filter_clauses.push(" date(msg_date)<='" + dayjs(values.msg_dates[1]).format('YYYY-MM-DD') + "'")
         if (values.msg_type)
             filter_clauses.push(" msg_type='" + values.msg_type + "'");
         if (values.reference)
@@ -149,7 +149,7 @@ const {userId}=useParams();
 
                                     <Space direction="vertical">
                                         <DatePicker.RangePicker onChange={onChangeDate}
-                                            defaultValue={[moment(), moment()]}
+                                            defaultValue={[dayjs(), dayjs()]}
                                             format='DD/MM/YYYY'
                                             allowClear={false}
                                         />

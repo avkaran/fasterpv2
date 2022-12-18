@@ -12,7 +12,7 @@ import { ImageUpload, FormItem, MyButton, FormViewItem, DeleteButton, PaginatedT
 import { capitalizeFirst } from '../../../../../utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen, faBookOpenReader, faClose, faDharmachakra, faEdit, faEnvelope, faEye, faIndianRupeeSign, faLocationPin, faMessage, faMinusCircle, faMobile, faMobileAlt, faPeopleRoof, faPersonSnowboarding, faPersonWalking, faPhoneVolume, faPrint, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { heightList } from '../../../../../models/core';
 import AddEditMember from './AddEditMember';
@@ -255,7 +255,7 @@ const ViewMember = (props) => {
             title: 'Order Date',
             dataIndex: 'order_date',
             //  key: 'order_data',
-            render: (text, record) => <strong>{moment(record.order_date).format("DD/MM/YYYY h:m a")}</strong>,
+            render: (text, record) => <strong>{dayjs(record.order_date).format("DD/MM/YYYY h:m a")}</strong>,
         },
         {
             title: 'Order Id',
@@ -371,9 +371,9 @@ const ViewMember = (props) => {
 
 
         processedValues['package_price'] = getDiscountInfo('final-amount');
-        processedValues['order_date'] = moment(values.paid_date).format("YYYY-MM-DD");
-        processedValues['paid_date'] = moment(values.paid_date).format("YYYY-MM-DD");
-        processedValues['expiry_date'] = moment(values.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD");
+        processedValues['order_date'] = dayjs(values.paid_date).format("YYYY-MM-DD");
+        processedValues['paid_date'] = dayjs(values.paid_date).format("YYYY-MM-DD");
+        processedValues['expiry_date'] = dayjs(values.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD");
         processedValues['order_status'] = 'Paid';
 
         processedValues['paid_by'] = context.adminUser(userId).role;
@@ -531,7 +531,7 @@ const ViewMember = (props) => {
     }
     const paidDateOnChange = (date) => {
         paymentForm.setFieldsValue({
-            orders: { paid_date: moment(date).format('YYYY-MM-DD') }
+            orders: { paid_date: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };

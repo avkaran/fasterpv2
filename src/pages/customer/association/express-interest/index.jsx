@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import avg from '../../../../assets/images/avatar.jpg';
 import PsContext from '../../../../context';
 import { Form, Input, Select, InputNumber, message, Space } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
 import { MyButton, MyTable } from '../../../../comp';
@@ -59,7 +59,7 @@ const ExpressInterest = (props) => {
             title: 'Date',
            // dataIndex: 'name',
           //  key: 'name',
-            render: (item) => <strong>{moment(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
+            render: (item) => <strong>{dayjs(item.expressed_date).format('DD/MM/YYYY hh:mm A')}</strong>,
         },
         {
             title: 'Action',

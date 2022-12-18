@@ -7,7 +7,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber, Modal, Image } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUser, faUserTimes, faUserClock, faEye, faCheck, faClose } from '@fortawesome/free-solid-svg-icons'
 import { MyButton, MyTable } from '../../../../comp'
@@ -71,16 +71,16 @@ const MyPlan = (props) => {
                                     <FormViewItem label="Is Vip">{parseInt(paymentInfo.orderData.is_vip) === 1 ? "Yes" : "No"}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Order Date">{moment(paymentInfo.orderData.order_date).format("DD/MM/YYYY")}</FormViewItem>
+                                    <FormViewItem label="Order Date">{dayjs(paymentInfo.orderData.order_date).format("DD/MM/YYYY")}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Paid Date">{moment(paymentInfo.orderData.paid_date).format("DD/MM/YYYY")}</FormViewItem>
+                                    <FormViewItem label="Paid Date">{dayjs(paymentInfo.orderData.paid_date).format("DD/MM/YYYY")}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
                                     <FormViewItem label="Payment Mode">{paymentInfo.orderData.payment_mode}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Expiry Date">{moment(paymentInfo.orderData.expiry_date).format("DD/MM/YYYY")}</FormViewItem>
+                                    <FormViewItem label="Expiry Date">{dayjs(paymentInfo.orderData.expiry_date).format("DD/MM/YYYY")}</FormViewItem>
                                 </Col>
                             </Row>
 

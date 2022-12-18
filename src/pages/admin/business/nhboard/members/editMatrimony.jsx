@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Checkbox, Form, Input, Space, Spin, Select, DatePicker, Row, Col, message, Upload } from 'antd';
 import { useNavigate,useParams } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PsContext from '../../../../../context';
-import { CardFixedTop, momentDate } from '../../../../../utils';
+import { CardFixedTop, dayjsDate } from '../../../../../utils';
 import { listCollections } from '../../../../../models/core'
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -30,7 +30,7 @@ const {userId}=useParams();
     useEffect(() => {
         loadViewData(memberId)
         /*  addForm.setFieldsValue({
-             paid_date: moment().format('YYYY-MM-DD')
+             paid_date: dayjs().format('YYYY-MM-DD')
          }) */
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

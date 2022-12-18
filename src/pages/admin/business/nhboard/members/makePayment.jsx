@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Checkbox, Form, Input, Space, Spin, Select, DatePicker, Row, Col, message } from 'antd';
 import { useNavigate,useParams } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { CardFixedTop, momentDate } from '../../../../../utils';
 import { listCollections } from '../../../../../models/core'
@@ -25,7 +25,7 @@ const {userId}=useParams();
     const [membershipPlans, setMembershipPlans] = useState([])
     useEffect(() => {
         addForm.setFieldsValue({
-            paid_date: moment().format('YYYY-MM-DD')
+            paid_date: dayjs().format('YYYY-MM-DD')
         })
         loadMembershipPlans();
         listCollections().then(res => {
@@ -113,7 +113,7 @@ const {userId}=useParams();
     };
     const onChangePaidDate = (date) => {
         addForm.setFieldsValue({
-            paid_date: moment(date).format('YYYY-MM-DD')
+            paid_date: dayjs(date).format('YYYY-MM-DD')
         })
 
     };
@@ -132,7 +132,7 @@ const {userId}=useParams();
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment();
+        return current && current > dayjs();
     };
     return (
         <>
@@ -228,7 +228,7 @@ const {userId}=useParams();
                                     <Space direction="vertical">
 
                                         <DatePicker onChange={onChangePaidDate} format='DD/MM/YYYY'
-                                            defaultValue={moment()}
+                                            defaultValue={dayjs()}
                                             disabledDate={disabledDate}
                                             allowClear={false}
                                         //dateRender={(currentDate,today)=>{}}

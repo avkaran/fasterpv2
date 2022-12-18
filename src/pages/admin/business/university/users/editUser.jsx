@@ -6,7 +6,7 @@ import { Button, Card, Space, DatePicker } from 'antd';
 import { Form, Input, Select } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import PsContext from '../../../../../context';
@@ -60,7 +60,7 @@ const {userId}=useParams();
 
 
                 });
-                var d = moment(viewData.dob, 'YYYY-MM-DD')
+                var d = dayjs(viewData.dob, 'YYYY-MM-DD')
                 if (d instanceof Date) {
 
                     addForm.setFieldsValue({ dob: mydata.dob })
@@ -80,7 +80,7 @@ const {userId}=useParams();
     const onChangeDob = (date) => {
 
         addForm.setFieldsValue({
-            dob: moment(date).format('YYYY-MM-DD')
+            dob: dayjs(date).format('YYYY-MM-DD')
         })
     };
     const onFinish = (values) => {
@@ -124,7 +124,7 @@ const {userId}=useParams();
     };
     const disabledDate = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     return (
         <>
@@ -243,7 +243,7 @@ const {userId}=useParams();
 
 
                                                     <DatePicker onChange={onChangeDob} format='DD/MM/YYYY'
-                                                        defaultValue={viewData && moment(viewData.dob, 'YYYY-MM-DD')}
+                                                        defaultValue={viewData && dayjs(viewData.dob, 'YYYY-MM-DD')}
                                                         //value={selectedDob}
                                                         disabledDate={disabledDate}
                                                         allowClear={false}

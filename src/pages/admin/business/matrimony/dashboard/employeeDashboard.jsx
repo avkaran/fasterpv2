@@ -14,7 +14,7 @@ import PsContext from '../../../../../context';
 import StatCard from './statcard';
 import { green, blue, red, cyan, grey, magenta, yellow } from '@ant-design/colors';
 import { MyButton, MyTable } from '../../../../../comp';
-import moment from 'moment';
+import dayjs from 'dayjs';
 const EmployeeDashboard = (props) => {
     const context = useContext(PsContext);
     const {userId,...other}=  props;
@@ -117,7 +117,7 @@ const EmployeeDashboard = (props) => {
         var reqData = [
             { 
             query_type: 'query', 
-            query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='"+moment().format("YYYY-MM-DD")+"' and logged_type='employee' and logged_by='"+context.adminUser(userId).id+"' GROUP by log_name"
+            query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='"+dayjs().format("YYYY-MM-DD")+"' and logged_type='employee' and logged_by='"+context.adminUser(userId).id+"' GROUP by log_name"
             },
         ]
         context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{

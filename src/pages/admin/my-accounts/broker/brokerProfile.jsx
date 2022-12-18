@@ -27,7 +27,7 @@ import {
 } from "../../../../comp";
 import { capitalizeFirst } from "../../../../utils";
 import { green, red, cyan, blue, magenta } from "@ant-design/colors";
-import moment from "moment";
+import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import EditBroker from "./editProfile";

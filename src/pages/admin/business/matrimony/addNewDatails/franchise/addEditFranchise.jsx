@@ -11,7 +11,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../../../comp';
 import { capitalizeFirst } from '../../../../../../utils';
 import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import moment from 'moment'
+import dayjs from 'dayjs'
 const AddEditFranchise = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -27,8 +27,8 @@ const AddEditFranchise = (props) => {
     const [branches, setBranches] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [districtLoading, setDistrictLoading] = useState(false)
-    const [selDob, setSelDob] = useState(moment().subtract(18, "years"))
-    const [selDoj, setSelDoj] = useState(moment())
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
+    const [selDoj, setSelDoj] = useState(dayjs())
     useEffect(() => {
         if (editIdOrObject) {
             if (typeof editIdOrObject === 'object') {

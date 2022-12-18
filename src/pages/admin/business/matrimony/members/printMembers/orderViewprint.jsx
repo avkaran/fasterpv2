@@ -1,7 +1,7 @@
 import PsContext from '../../../../../../context'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Row, Col, message, Spin } from 'antd';
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { heightList } from '../../../../../../models/core';
 const OrderViewPrint = (props) => {
     const context = useContext(PsContext);
@@ -28,7 +28,7 @@ const OrderViewPrint = (props) => {
                             <td>ரசீது  எண் : {receiptData.order_id}</td>
                             
                             <td style={{textAlign:'center'}}><h2>Receipt/ரசீது</h2></td>
-                            <td>தேதி : {moment(receiptData.paid_date).format("DD/MM/YYYY")}</td>
+                            <td>தேதி : {dayjs(receiptData.paid_date).format("DD/MM/YYYY")}</td>
                           </tr>
                           <tr>
                             <td rowspan="6">

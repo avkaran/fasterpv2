@@ -11,7 +11,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import PhoneInput from 'react-phone-input-2'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { green, red, cyan, grey } from '@ant-design/colors';
 import { LoadingOutlined } from '@ant-design/icons';
 import { heightList } from '../../../../../models/core'
@@ -46,7 +46,7 @@ const AddEditMember = (props) => {
     const [preferedCasteLoader, setPreferedCasteLoader] = useState(false);
     const [visibleChildrenOptions, setvisibleChildrenOptions] = useState(false);
     const [visibleHomeMappillai, setVisibleHomeMappillai] = useState(false);
-    const [selDob, setSelDob] = useState(moment().subtract(18, "years"))
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
     useEffect(() => {
         loadEducation();
         if (editIdOrObject) {
@@ -118,8 +118,8 @@ const AddEditMember = (props) => {
             if (fieldValue) fieldValue = fieldValue.toString()
 
             if (fieldName === "dob") {
-                fieldValue = moment(mydata['dob'], "YYYY-MM-DD");
-                setSelDob(moment(mydata['dob'], "YYYY-MM-DD"));
+                fieldValue = dayjs(mydata['dob'], "YYYY-MM-DD");
+                setSelDob(dayjs(mydata['dob'], "YYYY-MM-DD"));
             }
 
             if (fieldName === "password")
@@ -551,13 +551,13 @@ const AddEditMember = (props) => {
     };
     const dobDisabled = (current) => {
         // Can not select days before today and today
-        return current && current > moment().subtract(18, "years");
+        return current && current > dayjs().subtract(18, "years");
     };
     const dobOnChange = (date) => {
         //  console.log('dchange', date)
         setSelDob(date);
         addeditFormMember.setFieldsValue({
-            members: { dob: moment(date).format('YYYY-MM-DD') }
+            members: { dob: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };
@@ -860,7 +860,7 @@ const AddEditMember = (props) => {
 
                 <Space>
                     <DatePicker format='DD/MM/YYYY'
-                        //defaultValue={editData ? moment(editData.dob, 'YYYY-MM-DD') : moment(moment().subtract(18, "years"), 'DD/MM/YYYY')}
+                        //defaultValue={editData ? dayjs(editData.dob, 'YYYY-MM-DD') : dayjs(dayjs().subtract(18, "years"), 'DD/MM/YYYY')}
                         onChange={dobOnChange}
                         value={selDob}
                         disabledDate={dobDisabled}

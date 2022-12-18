@@ -1,5 +1,5 @@
 import { apiRequest } from "../../../../../models/core";
-import moment from 'moment';
+import dayjs from 'dayjs';
 export const getPaymentInfo = async (id) => {
 
     return new Promise((resolve, reject) => {
@@ -19,8 +19,8 @@ export const getPaymentInfo = async (id) => {
 
             }
             if (res.length > 0) {
-                var expiryDate = moment(res[0].expiry_date);
-                if (moment() > expiryDate){
+                var expiryDate = dayjs(res[0].expiry_date);
+                if (dayjs() > expiryDate){
                     paymentInfo.status = 'Expired';
                     paymentInfo.id = res[0].id;
                 }  
@@ -58,7 +58,7 @@ export const getUserAction = async (id, toId, action) => {
             if (res.length > 0) {
 
                 actionInfo.isActionDone = true;
-                actionInfo.lastActionDate = moment(res[0].action_date);
+                actionInfo.lastActionDate = dayjs(res[0].action_date);
                 actionInfo.actionInfo = res[0].action_info;
 
             }

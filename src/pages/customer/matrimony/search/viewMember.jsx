@@ -7,7 +7,7 @@ import { Spin, Card } from 'antd';
 import { Button, Checkbox, Space, DatePicker } from 'antd';
 import { Form, Input, Select, InputNumber, Modal, Image, Avatar, Tag, Divider } from 'antd';
 import PsContext from '../../../../context';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookOpen, faBookOpenReader, faClose, faDharmachakra, faEdit, faEnvelope, faEye, faHeart, faIndianRupeeSign, faLocationPin, faMessage, faMinusCircle, faMobile, faMobileAlt, faPeopleRoof, faPersonSnowboarding, faPersonWalking, faPhoneVolume, faPrint, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { MyButton, MyTable } from '../../../../comp'
@@ -270,7 +270,7 @@ const ViewMember = (props) => {
                                     <FormViewItem label="Gender">{viewData.gender}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Dob">{moment(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
+                                    <FormViewItem label="Dob">{dayjs(viewData.dob).format("DD/MM/YYYY")}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
                                     <FormViewItem label="Marital Status">{viewData.marital_status}</FormViewItem>
@@ -322,7 +322,7 @@ const ViewMember = (props) => {
                                     </Col>)
                                 }
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Created Date">{moment(viewData.created_date).format("DD/MM/YYYY h:m a")}</FormViewItem>
+                                    <FormViewItem label="Created Date">{dayjs(viewData.created_date).format("DD/MM/YYYY h:m a")}</FormViewItem>
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
                                     <FormViewItem label="About Profile">{viewData.about_profile}</FormViewItem>

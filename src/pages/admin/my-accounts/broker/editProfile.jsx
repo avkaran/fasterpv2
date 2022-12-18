@@ -12,7 +12,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../comp';
 import { capitalizeFirst } from '../../../../utils';
 import PhoneInput from 'react-phone-input-2'
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 const EditBroker = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -29,8 +29,8 @@ const EditBroker = (props) => {
     const [editId, setEditId] = useState(null);
     const [designations, setDesignations] = useState([]);
     const [branches, setBranches] = useState([]);
-    const [selDob, setSelDob] = useState(moment().subtract(18, "years"))
-    const [selDoj, setSelDoj] = useState(moment())
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
+    const [selDoj, setSelDoj] = useState(dayjs())
     const [country, setCountry] = useState('India');
     const [districts, setDistricts] = useState([]);
     const [districtLoading, setDistrictLoading] = useState(false);
@@ -126,8 +126,8 @@ const EditBroker = (props) => {
         })
     }
     const setEditValues = (mydata) => {
-        setSelDob(moment(mydata['dob'], "YYYY-MM-DD"));
-        setSelDoj(moment(mydata['doj'], "YYYY-MM-DD"));
+        setSelDob(dayjs(mydata['dob'], "YYYY-MM-DD"));
+        setSelDoj(dayjs(mydata['doj'], "YYYY-MM-DD"));
         addeditFormBroker.setFieldsValue({
 
             brokers: {

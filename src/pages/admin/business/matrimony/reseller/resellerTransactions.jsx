@@ -11,7 +11,7 @@ import {
 } from "../../../../../comp";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Form, DatePicker, Select } from "antd";
 
 import {
@@ -28,12 +28,12 @@ const ResellerTransactions = (props) => {
   const [refreshTable, setRefreshTable] = useState(0);
   const [selReseller, setSelReseller] = useState('');
   const filterColumns = useRef([
-    " date(transaction_date)>='" + moment().format("YYYY-MM-DD") + "'",
-    " date(transaction_date)>='" + moment().format("YYYY-MM-DD") + "'",
+    " date(transaction_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
+    " date(transaction_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
   ]);
   useEffect(() => {
     loadResellers(resellerType)
-    searchForm.setFieldsValue({ transaction_date: [moment(), moment()] });
+    searchForm.setFieldsValue({ transaction_date: [dayjs(), dayjs()] });
   }, []);
 
   const tableColumns = [
@@ -51,7 +51,7 @@ const ResellerTransactions = (props) => {
       // dataIndex: 'transaction_date ',
       key: "transaction_date",
       render: (item) => (
-        <>{moment(item.transaction_date).format("DD/MM/YYYY h:mm a")}</>
+        <>{dayjs(item.transaction_date).format("DD/MM/YYYY h:mm a")}</>
       ),
     },
     {
@@ -114,12 +114,12 @@ const ResellerTransactions = (props) => {
     var filter_clauses = [];
     filter_clauses.push(
       " date(transaction_date)>='" +
-      moment(values.transaction_date[0]).format("YYYY-MM-DD") +
+      dayjs(values.transaction_date[0]).format("YYYY-MM-DD") +
       "'"
     );
     filter_clauses.push(
       " date(transaction_date)<='" +
-      moment(values.transaction_date[1]).format("YYYY-MM-DD") +
+      dayjs(values.transaction_date[1]).format("YYYY-MM-DD") +
       "'"
     );
     filterColumns.current = filter_clauses;
@@ -154,7 +154,7 @@ const ResellerTransactions = (props) => {
                   <Space direction="vertical">
                     <DatePicker.RangePicker
                       onChange={onChangeDate}
-                      defaultValue={[moment(), moment()]}
+                      defaultValue={[dayjs(), dayjs()]}
                       format="DD/MM/YYYY"
                       allowClear={false}
                     />
