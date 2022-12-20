@@ -1,35 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Row, Col, message, Space } from 'antd';
-import { Button, Card } from 'antd';
-import { Form, Input, Select, InputNumber, Radio, Checkbox } from 'antd';
-import { Breadcrumb, Layout, Spin } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Row, message } from 'antd';
+import { Form, Radio } from 'antd';
+import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
-import { Editor } from '@tinymce/tinymce-react';
-import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../comp';
-import { capitalizeFirst } from '../../../../../utils';
+import ResponsiveLayout from '../../../layout';
+import ProjectConstraints from './ProjectConstraints';
 const ViewProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
+    const { userId, projectId } = useParams()
     const [addForm] = Form.useForm();
     const [loader, setLoader] = useState(false);
-    const [curAction, setCurAction] = useState('add');
+    const [curAction, setCurAction] = useState('constraints');
     const [viewData, setviewData] = useState(null);
-    const [heading] = useState('Project');
-    const { viewIdOrObject, onListClick, userId, ...other } = props;
-    const [viewId, setViewId] = useState(null);
+
     useEffect(() => {
-        if (typeof viewIdOrObject === 'object') {
-            setViewId(viewIdOrObject.id);
-            setviewData(viewIdOrObject);
-
-        } else {
-            setViewId(viewIdOrObject)
-            loadViewData(viewIdOrObject);
-        }
-
+        loadViewData(projectId);
     }, []);
     const loadViewData = (id) => {
         setLoader(true);
@@ -39,6 +27,7 @@ const ViewProject = (props) => {
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setviewData(res[0]);
+            // LoadTables(res[0])
             setLoader(false);
 
         }).catch(err => {
@@ -48,78 +37,37 @@ const ViewProject = (props) => {
         })
     }
     return (
-        <>
-                <Spin spinning={loader} >
-                    {
-                        viewData && (<Form
-                            name="basic"
-                            labelAlign="left"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 20 }}
-                            initialValues={{ remember: true }}
-                            autoComplete="off"
-                        >
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
+        <> <ResponsiveLayout
 
-                                    <FormViewItem label="Plan Name">{viewData.plan_name}</FormViewItem>
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
+            userId={userId}
+            customHeader={null}
+            bottomMenues={null}
+            breadcrumbs={[
+                { name: 'Manage Project', link: null },
+                { name: viewData && viewData.project_name, link: null },
+            ]}
+        >
+            <Spin spinning={loader} >
+                {
+                    viewData && (<>
+                        <Row>
+                            <Radio.Group defaultValue="constraints" buttonStyle="solid">
+                                <Radio.Button value="database">Database</Radio.Button>
+                                <Radio.Button value="constraints">Constraints</Radio.Button>
+                                <Radio.Button value="react-coder"> React Coder</Radio.Button>
+                                <Radio.Button value="php-api-coder"> PHP Api Coder</Radio.Button>
+                            </Radio.Group>
+                        </Row>
+                        {
+                            viewData && (<ProjectConstraints userId={userId} projectId={viewData.id} />)
+                        }
 
-                                    <FormViewItem label="Daily Limit">{viewData.daily_limit}</FormViewItem>
-                                </Col>
-                            </Row>
+                    </>)
+                }
 
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
+            </Spin>
+        </ResponsiveLayout>
 
-                                    <FormViewItem label="Monthly Limit">{viewData.monthly_limit}</FormViewItem>
-
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Validity">{viewData.validity_months +' Months'}</FormViewItem>
-
-
-                                </Col>
-                            </Row>
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Category">{viewData.category}</FormViewItem>
-
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Project Price">{'INR '+ viewData.project_price.toString()}</FormViewItem>
-                                </Col>
-                            </Row>
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Consume Credits">{viewData.consume_credits +' Contacts'}</FormViewItem>
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Project For">{viewData.project_for}</FormViewItem>
-                                </Col>
-                            </Row>
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="SMS">{parseInt(viewData.is_send_sms) === 1 ? 'Yes' : 'No'}</FormViewItem>
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Whatsapp">{parseInt(viewData.is_send_whatsapp) === 1 ? 'Yes' : 'No'}</FormViewItem>
-                                </Col>
-
-                            </Row>
-                            <Row gutter={16}>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="VIP">{parseInt(viewData.is_vip) === 1 ? 'Yes' : 'No'}</FormViewItem>
-                                </Col>
-                                <Col className='gutter-row' xs={24} xl={12}>
-                                    <FormViewItem label="Status">{viewData.project_status}</FormViewItem>
-                                </Col>
-                            </Row>
-                        </Form>)
-                    }
-
-                </Spin>
         </>
     );
 

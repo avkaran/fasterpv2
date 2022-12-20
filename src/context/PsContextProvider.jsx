@@ -7,10 +7,10 @@ import { listCollections, collectionOptions, getWhereClause, capitalizeFirst, ge
 import noImg from '../assets/images/no-img.jpg';
 import noMale from  '../assets/images/male.png';
 import noFemale from  '../assets/images/female.png';
-
 import { useMediaQuery } from 'react-responsive';
+import { currentInstance,businesses } from '../utils';
 const PsContextProvider = (props) => {
-	const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+	const isMobile = useMediaQuery({ query: `(max-width: 760px)` }) && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile;
 	//for admin users
 	const checkAdminLogged = (id) => { return getLs(id + '_admin_logged') || 'no'; };
 	const getAdminUser = (id) => {

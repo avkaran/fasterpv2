@@ -1,7 +1,7 @@
 const dataTypeConstraints = [
    {
       dataType: "Text",
-      possibleConstraints: "None,AutoCode,PrimaryKey",
+      possibleConstraints: "None,AutoCode,PrimaryKey,PrimaryKey2",
       defaultConstraint: "None",
       template: '<Input placeholder="{placeHolder}" defaultValue={defaultValue} />',
       functions: ``,

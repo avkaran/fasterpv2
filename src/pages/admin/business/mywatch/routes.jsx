@@ -31,6 +31,7 @@ import SoftwareProjects from './projects';
 import CodeGenerator from './coder';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
+import ViewProject from './projects/viewProject';
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 
@@ -201,6 +202,13 @@ const AuthRoutes = (props) => {
                     path='/:userId/admin/projects'
                     element={<SoftwareProjects />}
                     title='Translations'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                 <Route
+                    path='/:userId/admin/project/view/:projectId'
+                    element={<ViewProject />}
+                    title='View Project'
                     allowed={ROLES.ALL}
                     exact={true}
                 />

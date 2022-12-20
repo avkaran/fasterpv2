@@ -11,6 +11,7 @@ import { MyOTPInput } from './MyOTPInput';
 import { PaginatedTable } from './paginatedTable';
 import { AvatarInfiniteList } from './avatarInfiniteList';
 import { AvatarPaginatedList } from './avatarPaginatedList';
+import { AvatarMobileInfiniteList } from './avatarMobileInfiniteList';
 export{
 	//AvatarList,
 	MyButton,
@@ -25,4 +26,5 @@ export{
 	MyOTPInput,
 	AvatarInfiniteList,
 	AvatarPaginatedList,
+	AvatarMobileInfiniteList,
 }

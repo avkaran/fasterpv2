@@ -18,10 +18,12 @@ class TableColumn {
    parseColumn(columnData) {
 
       if (columnData && Object.keys(columnData).length > 0) {
+         this.columnData=columnData;
          this.columnType = columnData.COLUMN_TYPE;
          // this.columnType=columnObject.COLUMN_TYPE;
          this.numericPrecision = columnData.DATETIME_PRECISION;
          this.isNullable = columnData.IS_NULLABLE === "NO" ? false : true;
+         this.columnDefault=columnData.COLUMN_DEFAULT;
          this.description = columnData.COLUMN_COMMENT;
          this.orderNo = columnData.ORDINAL_POSITION;
          if (this.description && this.description != '' && this.description.includes(",")) {

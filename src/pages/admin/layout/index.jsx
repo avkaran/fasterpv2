@@ -22,15 +22,16 @@ import HomeContainer from '../layout-mobile/homeContainer';
 const ResponsiveLayout = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
-    const { userId, customHeader, bottomMenues, breadcrumbs, ...other } = props;
-    if (context.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile) {
+    const { userId, customHeader, bottomMenues, breadcrumbs,showNav, ...other } = props;
+    if (context.isMobile) {
 
         return <HomeContainer
             role={context.adminUser(userId).role}
             userId={userId}
-            customHeader={null}
+            customHeader={customHeader}
             bottomMenues={null}
             breadcrumbs={null}
+            showNav={showNav}
         >
 
             {props.children}

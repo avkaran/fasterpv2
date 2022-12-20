@@ -9,6 +9,8 @@ import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
+import { Button as MButton } from 'antd-mobile'
+import { green, blue, red, cyan, grey } from '@ant-design/colors';
 const AddEditProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -38,7 +40,7 @@ const AddEditProject = (props) => {
 
         } else {
             setCurAction("add");
-            addForm.setFieldsValue({ category: 'Plan', project_for: 'Customer(Online)', project_status: 'Active' })
+            // addForm.setFieldsValue({ category: 'Plan', project_for: 'Customer(Online)', project_status: 'Active' })
         }
 
     }, []);
@@ -61,35 +63,35 @@ const AddEditProject = (props) => {
         })
     }
     const setEditValues = (mydata) => {
-        mydata.is_send_sms = parseInt(mydata.is_send_sms) === 1 ? true : false;
-        mydata.is_send_whatsapp = parseInt(mydata.is_send_whatsapp) === 1 ? true : false;
-        mydata.is_vip = parseInt(mydata.is_vip) === 1 ? true : false;
+
         addForm.setFieldsValue({
-            plan_name: mydata.plan_name,
-            daily_limit: mydata.daily_limit,
-            monthly_limit: mydata.monthly_limit,
-            validity_months: mydata.validity_months,
-            category: mydata.category,
-            project_price: mydata.project_price,
-            consume_credits: mydata.consume_credits,
-            project_for: mydata.project_for,
-            is_send_sms: mydata.is_send_sms,
-            is_send_whatsapp: mydata.is_send_whatsapp,
-            is_vip: mydata.is_vip,
-            project_status: mydata.project_status
-        })
+
+            projects: {
+                project_name: mydata.project_name,
+
+                category: mydata.category,
+
+                api_url: mydata.api_url,
+
+                api_password: mydata.api_password,
+
+                database_name: mydata.database_name,
+
+                database_username: mydata.database_username,
+
+                database_password: mydata.database_password,
+            }
+        });
     }
     const onFinish = (values) => {
         setLoader(true);
         var processedValues = {};
-        Object.entries(values).forEach(([key, value]) => {
+        Object.entries(values.projects).forEach(([key, value]) => {
             if (value) {
                 processedValues[key] = value;
             }
         });
-        processedValues.is_send_sms = processedValues.is_send_sms ? 1 : 0;
-        processedValues.is_send_whatsapp = processedValues.is_send_whatsapp ? 1 : 0;
-        processedValues.is_vip = processedValues.is_vip ? 1 : 0;
+
 
         if (curAction === "add") {
             var reqDataInsert = {
@@ -136,180 +138,136 @@ const AddEditProject = (props) => {
                         name="basic"
                         form={addForm}
                         labelAlign="left"
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 20 }}
+                        labelCol={context.isMobile ? null : { span: 8 }}
+                        wrapperCol={context.isMobile ? null : { span: 20 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         autoComplete="off"
+                        layout={context.isMobile ? "vertical" : 'horizontal'}
                     >
                         <Row gutter={16}>
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
-                                    label="Plan Name"
-                                    name="plan_name"
-                                    rules={[{ required: true, message: 'Please Enter Plan Name' }]}
+                                    label="Project Name"
+                                    name={['projects', 'project_name']}
+                                    rules={[{ required: true, message: 'Please Enter Project Name' }]}
                                 >
-                                    <Input placeholder="Plan Name" />
+                                    <Input placeholder="Project Name" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Daily Limit"
-                                    name="daily_limit"
-                                    rules={[{ required: true, message: 'Please Enter Daily Limit' }]}
-                                >
-                                    <InputNumber placeholder="Daily Limit" type="number" style={{ width: '100%' }} />
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Monthly Limit"
-                                    name="monthly_limit"
-                                    rules={[{ required: true, message: 'Please Enter Monthly Limit' }]}
-                                >
-                                    <InputNumber placeholder="Monthly Limit" type="number" style={{ width: '100%' }} />
-                                </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Validity Months"
-                                    name="validity_months"
-                                    rules={[{ required: true, message: 'Please Enter Validity Months' }]}
-                                >
-                                    <InputNumber placeholder="Validity Months" type="number" style={{ width: '100%' }} />
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
                                     label="Category"
-                                    name="category"
+                                    name={['projects', 'category']}
                                     rules={[{ required: true, message: 'Please Enter Category' }]}
                                 >
-                                    <Radio.Group defaultValue="Plan" optionType="default" >
 
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'project-category', 'radio')}
-                                    </Radio.Group>
+                                    <Select
+                                        showSearch
+                                        placeholder="Category"
+
+                                        optionFilterProp="children"
+                                        //onChange={categoryOnChange}
+                                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                                    >
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'project-categories')}
+                                    </Select>
                                 </FormItem>
 
                             </Col>
                             <Col className='gutter-row' xs={24} xl={12}>
 
                                 <FormItem
-                                    label="Project Price"
-                                    name="project_price"
-                                    rules={[{ required: true, message: 'Please Enter Project Price' }]}
+                                    label="Api Url"
+                                    name={['projects', 'api_url']}
+                                    rules={[{ required: true, message: 'Please Enter Api Url' }]}
                                 >
-                                    <InputNumber placeholder="Project Price" type="number" style={{ width: '100%' }} />
+                                    <Input placeholder="Api Url" />
                                 </FormItem>
 
                             </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+
+                                <FormItem
+                                    label="Api Password"
+                                    name={['projects', 'api_password']}
+                                    rules={[{ required: true, message: 'Please Enter Api Password' }]}
+                                >
+                                    <Input placeholder="Api Password" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+
+                                <FormItem
+                                    label="Database Name"
+                                    name={['projects', 'database_name']}
+                                    rules={[{ required: true, message: 'Please Enter Database Name' }]}
+                                >
+                                    <Input placeholder="Database Name" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+
+                                <FormItem
+                                    label="Database Username"
+                                    name={['projects', 'database_username']}
+                                    rules={[{ required: true, message: 'Please Enter Database Username' }]}
+                                >
+                                    <Input placeholder="Database Username" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={12}>
+
+                                <FormItem
+                                    label="Database Password"
+                                    name={['projects', 'database_password']}
+                                    rules={[{ required: true, message: 'Please Enter Database Password' }]}
+                                >
+                                    <Input.Password placeholder="Database Password" />
+                                </FormItem>
+
+                            </Col>
+
                         </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                        <FormItem wrapperCol={context.isMobile ? null : { offset: 10, span: 24 }}
+                        >
+                            {
+                                !context.isMobile && (
+                                    <Space>
+                                        <MyButton size="large" type="outlined" style={{}} onClick={onListClick}>
+                                            Cancel
+                                        </MyButton>
+                                        <MyButton size="large" type="primary" htmlType="submit" style={{}}>
+                                            {curAction === "edit" ? "Update" : "Submit"}
+                                        </MyButton>
+                                    </Space>
 
-                                <FormItem
-                                    label="Consume Credits"
-                                    name="consume_credits"
-                                    rules={[{ required: true, message: 'Please Enter Consume Credits' }]}
-                                >
-                                    <InputNumber placeholder="Consume Credits" type="number" style={{ width: '100%' }} />
-                                </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Project For"
-                                    name="project_for"
-                                    rules={[{ required: true, message: 'Please Enter Project For' }]}
-                                >
-
-                                    <Radio.Group defaultValue="Customer(Online)" optionType="default" >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'projects-for', 'radio')}
-                                    </Radio.Group>
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Send SMS"
-                                    name="is_send_sms"
-                                    valuePropName="checked"
-                                // rules={[{ required: true, message: 'Please Enter Is Send_sms' }]}
-                                >
-                                    <Checkbox />
-                                </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Send Whatsapp"
-                                    name="is_send_whatsapp"
-                                    valuePropName="checked"
-                                // rules={[{ required: true, message: 'Please Enter Is Send_whatsapp' }]}
-                                >
-                                    <Checkbox />
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="VIP"
-                                    name="is_vip"
-                                    valuePropName="checked"
-                                //rules={[{ required: true, message: 'Please Enter Is Vip' }]}
-                                >
-                                    <Checkbox />
-                                </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Project Status"
-                                    name="project_status"
-                                    rules={[{ required: true, message: 'Please Enter Project Status' }]}
-                                >
-
-                                    <Radio.Group defaultValue="Active" optionType="default" >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'active-inactive', 'radio')}
-                                    </Radio.Group>
-                                </FormItem>
-
-                            </Col>
-                        </Row>
-
-                        <FormItem wrapperCol={{ offset: 10, span: 24 }}>
-                            <Space>
-                                <Button size="large" type="outlined" style={{}} onClick={onListClick}>
-                                    Cancel
-                                </Button>
-                                <MyButton size="large" type="primary" htmlType="submit" style={{}}>
-                                    {curAction === "edit" ? "Update" : "Submit"}
-                                </MyButton>
-                            </Space>
+                                )
+                            }
+                            {
+                                context.isMobile && (<Row gutter={2}>
+                                    <Col span={12}>
+                                        <MButton block color='primary' size='small' fill='outline' onClick={onListClick}>
+                                            Cancel
+                                        </MButton>
+                                    </Col>
+                                    <Col span={12}>
+                                        <MButton block type='submit' color='primary' size='small'>
+                                            {curAction === "edit" ? "Update" : "Submit"}
+                                        </MButton>
+                                    </Col>
+                                </Row>)
+                            }
 
                         </FormItem>
+
+
 
                     </Form>)
                 }
