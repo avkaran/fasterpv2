@@ -16,6 +16,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@tinymce/tinymce-react": "^4.2.0",
+    "allotment": "^1.17.1",
     "antd": "^5.0.3",
     "antd-img-crop": "^4.5.2",
     "antd-mobile": "^5.27.0",

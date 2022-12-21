@@ -6,6 +6,7 @@ import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import ResponsiveLayout from '../../../layout';
 import ProjectConstraints from './ProjectConstraints';
+import ReactCodeGenerator from './reactCoder';
 const ViewProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -15,6 +16,7 @@ const ViewProject = (props) => {
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('constraints');
     const [viewData, setviewData] = useState(null);
+    const [curTab, setCurTab] = useState('constraints')
 
     useEffect(() => {
         loadViewData(projectId);
@@ -51,7 +53,7 @@ const ViewProject = (props) => {
                 {
                     viewData && (<>
                         <Row>
-                            <Radio.Group defaultValue="constraints" buttonStyle="solid">
+                            <Radio.Group defaultValue="constraints" buttonStyle="solid" onChange={(e) => setCurTab(e.target.value)} >
                                 <Radio.Button value="database">Database</Radio.Button>
                                 <Radio.Button value="constraints">Constraints</Radio.Button>
                                 <Radio.Button value="react-coder"> React Coder</Radio.Button>
@@ -59,9 +61,13 @@ const ViewProject = (props) => {
                             </Radio.Group>
                         </Row>
                         {
-                            viewData && (<ProjectConstraints userId={userId} projectId={viewData.id} />)
+                            viewData && curTab==='constraints' && (<ProjectConstraints userId={userId} projectId={viewData.id} />)
                         }
 
+
+                        {
+                            viewData && curTab==='react-coder' && (<ReactCodeGenerator userId={userId} projectId={viewData.id} />)
+                        }
                     </>)
                 }
 
