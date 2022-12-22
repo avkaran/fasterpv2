@@ -26,6 +26,7 @@ const ShortLinePrint = (props) => {
     var memberDataNew = [];
     selMembers.forEach(curId => {
       var curMember = allData.find(member => member.id === curId);
+      if (curMember)
       memberDataNew.push(curMember);
     })
     // setPrintData(memberData);

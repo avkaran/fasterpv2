@@ -278,6 +278,7 @@ const ListMemberComponent = (props) => {
             excelMembers.push(curRow);
         })
         setExcelData({ members: excelMembers }); */
+        setSelMembers([]);
         setAllData(allData);
     }
     const changeExcelData = (selIds, allData) => {
@@ -359,16 +360,9 @@ const ListMemberComponent = (props) => {
     }
     useEffect(() => {
         loadFilterMenu();
-        // loadMemberCounts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const onPrintClick = () => {
-        /* var memberData = [];
-        selMembers.forEach(curId => {
-            var curMember = allData.find(member => member.id === curId);
-            memberData.push(curMember);
-        })
-        setPrintData(memberData); */
         setVisiblePrintModal(true);
 
     }
@@ -389,10 +383,6 @@ const ListMemberComponent = (props) => {
             }
         }
         printDocument(values.print_type);
-
-        // printDocument('short-line');
-        //  printDocument('postal')
-        // printDocument("print-photo");
 
         if (values.print_contact) {
 
@@ -578,7 +568,7 @@ const ListMemberComponent = (props) => {
                             onPageChange={onListPageChange}
                             renderItem={(item, index) => {
                                 return <>
-                                    <Row style={{ borderBottom: '1px solid', borderColor: cyan[7], background: '#fff', paddingTop: '10px' }}>
+                                    <Row key={item.id} style={{ borderBottom: '1px solid', borderColor: cyan[7], background: '#fff', paddingTop: '10px' }}>
                                         <Col span={3}>
                                             <Row>
                                                 <Col span={12} style={{ paddingLeft: '10px' }}></Col>
@@ -665,6 +655,9 @@ const ListMemberComponent = (props) => {
                     }
                 </Col>
             </Row>
+            {
+
+            }
             <ProfileViewPrint
                 allData={allData}
                 selMembers={selMembers}
@@ -701,7 +694,7 @@ const ListMemberComponent = (props) => {
                 isContact={isPrintContact}
                 isPhoto={isPrintPhoto}
 
-            />
+            /> 
             <Modal
                 visible={visiblePrintModal}
                 zIndex={999}

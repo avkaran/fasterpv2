@@ -86,10 +86,9 @@ const ProfileViewPrint = (props) => {
         var memberDataNew = [];
         selMembers.forEach(curId => {
             var curMember = allData.find(member => member.id === curId);
-            memberDataNew.push(curMember);
+            if (curMember)
+                memberDataNew.push(curMember);
         })
-        // setPrintData(memberData);
-        console.log('test',memberDataNew)
         return memberDataNew;
     }
     const getMobileNo = (encrypted) => {
@@ -99,7 +98,7 @@ const ProfileViewPrint = (props) => {
                 decrypted = context.psGlobal.decrypt(encrypted);
         }
         catch (err) {
-           // document.getElementById("demo").innerHTML = err.message;
+            // document.getElementById("demo").innerHTML = err.message;
         }
         return decrypted;
 

@@ -65,6 +65,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
                 setIds(currentIds);
                 //  setCheckStatus(currentIds)
                 setInitLoading(false);
+                setCheckedList([])
                 onPageChange(page, res['data'].data)
 
             }
@@ -150,7 +151,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
                         {
                             data.map((item, index) => {
 
-                                return (<Row style={{ background: '#fff' }} ><Col style={{ padding: '5px 5px 5px 5px', textAlign: "center" }} span={1}><Checkbox key={item.id} value={item.id} noStyle /></Col><Col span={23}>{renderItem(item, parseInt(item.row_number) - 1)}</Col></Row>)
+                                return (<Row  style={{ background: '#fff' }} ><Col style={{ padding: '5px 5px 5px 5px', textAlign: "center" }} span={1}><Checkbox key={item.id} value={item.id} noStyle /></Col><Col span={23}>{renderItem(item, parseInt(item.row_number) - 1)}</Col></Row>)
 
                             })
                         }
