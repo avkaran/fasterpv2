@@ -46,7 +46,8 @@ const AddEditMember = (props) => {
     const [preferedCasteLoader, setPreferedCasteLoader] = useState(false);
     const [visibleChildrenOptions, setvisibleChildrenOptions] = useState(false);
     const [visibleHomeMappillai, setVisibleHomeMappillai] = useState(false);
-    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"))
+    const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"));
+    const [raasiList,setRaasiList]=useState([]);
     useEffect(() => {
         loadEducation();
         if (editIdOrObject) {
@@ -625,6 +626,22 @@ const AddEditMember = (props) => {
             //  setCasteLoader(false);
         })
     }
+    const loadRaasiList = (star) => {
+        var reqData =
+        {
+            query_type: 'query',
+            query: "select * from raasi_mapping where status=1  and star='"+star+"'"
+        }
+
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+
+            setRaasiList(res);
+            // setCasteLoader(false);
+        }).catch(err => {
+            message.error(err);
+            //  setCasteLoader(false);
+        })
+    }
     const loadSubCastes = (master_caste_id) => {
         setSubCasteLoader(true);
         var reqData =
@@ -660,7 +677,7 @@ const AddEditMember = (props) => {
     const getWeightList = () => {
 
         let options = [];
-        for (var index = 35; index <= 70; index++) {
+        for (var index = 35; index <= 150; index++) {
             options.push(<Select.Option key={index.toString()} value={index.toString()}>{index.toString()} Kg</Select.Option>)
         }
         return options;
@@ -1998,7 +2015,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Star"
-
+                    onChange={(value)=>loadRaasiList(value)}
                     optionFilterProp="children"
                     //onChange={starOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -2020,6 +2037,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Patham"
+                    allowClear={true}
 
                     optionFilterProp="children"
                     //onChange={pathamOnChange}
@@ -2047,7 +2065,12 @@ const AddEditMember = (props) => {
                     //onChange={raasiOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 >
-                    {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'raasi')}
+                     {
+                        raasiList.map(item => {
+                            return <Select.Option value={item.raasi}>{item.raasi}</Select.Option>
+
+                        })
+                    }
                 </Select>
             </FormItem>
         }

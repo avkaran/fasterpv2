@@ -43,7 +43,7 @@ const {userId}=useParams();
     const getWeightList = () => {
 
         let options = [];
-        for (var index = 35; index <= 70; index++) {
+        for (var index = 35; index <= 150; index++) {
             options.push(<Option key={index} value={index}>{index} Kg</Option>)
         }
         return options;
@@ -95,12 +95,14 @@ const {userId}=useParams();
 
                             for (var i = start; i <= end; i++) {
                                 final_ids.push("RM" + i.toString().padStart(8, '0'))
+                                final_ids.push("RM" + i.toString().padStart(9, '0'))
                             }
                         }
                     }
                     else {
                         var exact_id = parseInt(item.replace("RM", ""));
                         final_ids.push("RM" + exact_id.toString().padStart(8, '0'))
+                        final_ids.push("RM" + exact_id.toString().padStart(9, '0'))
                     }
                 })
             } else if (member_id.includes("-")) {
@@ -110,12 +112,14 @@ const {userId}=useParams();
                 if (start && end) {
                     for (var i = start; i <= end; i++) {
                         final_ids.push("RM" + i.toString().padStart(8, '0'))
+                        final_ids.push("RM" + i.toString().padStart(9, '0'))
                     }
                 }
             }
             else {
                 var exact_id = parseInt(member_id.replace("RM", ""));
                 final_ids.push("RM" + exact_id.toString().padStart(8, '0'))
+                final_ids.push("RM" + exact_id.toString().padStart(9, '0'))
             }
 
             var filter_clauses = [];
@@ -415,7 +419,7 @@ const {userId}=useParams();
                                                     name="age_from"
 
                                                     noStyle >
-                                                    <Select placeholder="From" style={{ width: '120px' }}>
+                                                    <Select   showSearch placeholder="From" style={{ width: '120px' }}>
                                                         {getAge()}
                                                     </Select>
                                                 </Form.Item>
@@ -424,7 +428,7 @@ const {userId}=useParams();
                                                     name="age_to"
                                                     // rules={[{ required: true, message: 'Enter Amount' }]}
                                                     noStyle>
-                                                    <Select placeholder="To" style={{ width: '120px' }}>
+                                                    <Select  showSearch placeholder="To" style={{ width: '120px' }}>
                                                         {getAge()}
                                                     </Select>
                                                 </Form.Item>
@@ -438,7 +442,7 @@ const {userId}=useParams();
                                         // wrapperCol={{ offset: 6, span: 6 }}
 
                                         >
-                                            <Select placeholder="Select Gender" >
+                                            <Select  showSearch placeholder="Select Gender" >
                                                 {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'gender')}
                                             </Select>
                                         </Form.Item>

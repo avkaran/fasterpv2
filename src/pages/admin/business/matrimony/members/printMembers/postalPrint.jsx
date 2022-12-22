@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { heightList } from "../../../../../../models/core";
 const PostalPrint = (props) => {
   const context = useContext(PsContext);
-  const { memberData, business, language, isContact, ...other } = props;
+  const { allData, selMembers, memberData, business, language, isContact, ...other } = props;
   useEffect(() => {
     //load photos of
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,6 +26,15 @@ const PostalPrint = (props) => {
     }
     return rows;
   };
+  const getMemberData = () => {
+    var memberDataNew = [];
+    selMembers.forEach(curId => {
+        var curMember = allData.find(member => member.id === curId);
+        memberDataNew.push(curMember);
+    })
+    // setPrintData(memberData);
+    return memberDataNew;
+}
   const getAddress = (item) => {
     if (Object.entries(item).length > 0) {
       return (
@@ -45,12 +54,24 @@ const PostalPrint = (props) => {
               {item.district},{item.state},{item.landmark}, Pin-
               {item.pincode}
             </p>
-            <p>Mobile Number:{context.psGlobal.decrypt(item.mobile_no)}</p>
+            <p>Mobile Number:{getMobileNo(item.mobile_no)}</p>
           </div>
         </>
       );
     } else return "";
   };
+  const getMobileNo = (encrypted) => {
+    var decrypted = '-';
+    try {
+        if (encrypted)
+            decrypted = context.psGlobal.decrypt(encrypted);
+    }
+    catch (err) {
+       // document.getElementById("demo").innerHTML = err.message;
+    }
+    return decrypted;
+
+}
   return (
     <>
       <div style={{ display: "none" }}>

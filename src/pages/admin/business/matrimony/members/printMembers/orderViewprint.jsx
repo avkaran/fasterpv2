@@ -66,7 +66,7 @@ const OrderViewPrint = (props) => {
                                   </tr>
                                   <tr>
                                     <td>மொபைல் எண்  </td>
-                                    <td>: {context.psGlobal.decrypt(receiptData.mobile_no)}</td>
+                                    <td>: { receiptData.mobile_no && context.psGlobal.decrypt(receiptData.mobile_no)}</td>
                                   </tr>
                                 </table>
                             

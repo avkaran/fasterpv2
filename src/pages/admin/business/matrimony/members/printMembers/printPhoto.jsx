@@ -5,21 +5,27 @@ import dayjs from "dayjs";
 import { heightList } from "../../../../../../models/core";
 const PrintPhoto = (props) => {
   const context = useContext(PsContext);
-  const { memberData, business, language, isContact, ...other } = props;
+  const { allData, selMembers, memberData, business, language, isContact, ...other } = props;
   useEffect(() => {
     //load photos of
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const getMemberData = () => {
+    var memberDataNew = [];
+    selMembers.forEach(curId => {
+        var curMember = allData.find(member => member.id === curId);
+        memberDataNew.push(curMember);
+    })
+    // setPrintData(memberData);
+    return memberDataNew;
+}
 return (
     <>
      <div style={{ display: "none" }}>
         <div id="print-photo" style={{ fontSize: "9pt !important" }}>
           <table width="100%" border="1" cellpadding="5px" borderCollapse="collapse">
            
-            {business &&
-              memberData &&
-              memberData.length > 0 &&
-              memberData.map((item, index) => {
+            { business && allData && selMembers.length > 0 && getMemberData().map((item, index) => {
                 return (
                   <>
                     
