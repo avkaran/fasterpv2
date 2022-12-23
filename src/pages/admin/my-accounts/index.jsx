@@ -13,6 +13,8 @@ const {userId}=useParams();
       navigate("/" + userId + "/admin/myaccounts/employee-profile");
     else if (role === "broker")
     navigate("/" + userId + "/admin/myaccounts/broker-profile");
+    else if (role === "franchise")
+    navigate("/" + userId + "/admin/myaccounts/franchise-profile");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

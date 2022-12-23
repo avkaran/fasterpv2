@@ -38,7 +38,9 @@ const NavBar=(props)=>{
            
         });
         //console.log('menues',menus,permittedMenues)
+        if(ROLE==='employee')
         return permittedMenues;
+        else return menus;
     }
 
     const renderMenus=()=>{

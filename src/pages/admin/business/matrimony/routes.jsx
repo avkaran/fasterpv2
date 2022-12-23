@@ -62,14 +62,14 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin'
                 element={< Dashboard />}
                 title='Dashboard'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/developer'
                 element={< DeveloperHome />}
                 title='Developer'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
@@ -110,7 +110,7 @@ const AuthRoutes = (props) => {
              <Route
                 path='/:userId/admin/members/edit/:memberId'
                 element={< EditMember />}
-                title='Add Member'
+                title='Edit Member'
                 allowed={ROLES.ALL}
                 exact={true}
             />
@@ -118,36 +118,29 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/packages'
                 element={< Packages />}
                 title='Packages'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/package-discounts'
                 element={< PackageDiscounts />}
                 title='Package Discounts'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
-            <Route
-                path='/:userId/admin/members/newview/:memberId'
-                element={< NewViewMember />}
-
-                title='New View Member'
-                allowed={ROLES.ALL}
-                exact={true}
-            />
+           
             <Route
                 path='/:userId/admin/contents/:content_type/add'
                 element={< AddContent />}
                 title='Add Content'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/contents/:content_type/edit/:id'
                 element={< EditContent />}
                 title='Edit Content'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
@@ -155,76 +148,76 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/contents/:contentype/list'
                 element={< ListContents />}
                 title='List Content'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
             />
             <Route
                 path='/:userId/admin/contents/:content_type/view/:id'
                 element={< ViewContent />}
                 title='View Content'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/collections'
                 element={< Collections />}
                 title='Collections'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/business-names'
                 element={< BusinessNames />}
                 title='Business Names'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/castes'
                 element={< CasteList />}
                 title='Caste List'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/employee-designations'
                 element={< EmployeeDesignations />}
                 title='Caste List'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/branches'
                 element={< Branches />}
                 title='Branches'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/employees'
                 element={< Employees />}
                 title='Employees'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/broker'
                 element={< Broker />}
                 title='Broker'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/franchise'
                 element={< Franchise />}
                 title='Franchise'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/sms-templates'
                 element={< SmsTemplate />}
                 title='SmsTemplate'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
@@ -260,42 +253,42 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/logs'
                 element={< Logs />}
                 title='Logs'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/advertisements'
                 element={<Advertisement />}
                 title='Advertisements'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/whatsapp/wapp-reports'
                 element={< WhatsappReports />}
                 title='Whatsapp Reports'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/whatsapp/daily-whatsapp'
                 element={< dailyWhatsapp />}
                 title='Whatsapp Reports'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/franchise/payment-list'
                 element={< FranchisePaymentList />}
                 title='Franchise Payments'
-                allowed={ROLES.ALL}
+                allowed={ROLES.All}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/franchise/transactions'
                 element={< FranchiseTransactions />}
                 title='Franchise Transactions'
-                allowed={ROLES.ALL}
+                allowed={ROLES.All}
                 exact={true}
             />
             <Route
@@ -303,7 +296,7 @@ const AuthRoutes = (props) => {
                 element={< BrokerPaymentList />}
 
                 title='Broker Payments'
-                allowed={ROLES.ALL}
+                allowed={ROLES.All}
                 exact={true}
             />
             <Route
@@ -317,14 +310,14 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/crm/crm-list'
                 element={< MemberCRM />}
                 title='Franchise Transactions'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route
                 path='/:userId/admin/crm/categories'
                 element={< CrmCategoryList />}
                 title='Franchise Transactions'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
             <Route

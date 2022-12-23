@@ -16,7 +16,7 @@ const mynav = [
 	}, */
 	{
 		name: 'Manage Members',
-		path: '/:userId/admin/members',
+		path: '/:userId/admin/member',
 		icon: 'fa-solid fa-user-group',
 		exact: false,
 		childrens: [
@@ -33,11 +33,11 @@ const mynav = [
 		icon: 'fa-solid fa-cube',
 		exact: false,
 		childrens: [
-			{ name: 'Packages', path: '/:userId/admin/packages', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'packages.list-packages' },
-			{ name: 'Package Discounts', path: '/:userId/admin/package-discounts', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL ,resourceName:'packages.list-package-discounts'},
+			{ name: 'Packages', path: '/:userId/admin/packages', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'packages.list-packages' },
+			{ name: 'Package Discounts', path: '/:userId/admin/package-discounts', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee ,resourceName:'packages.list-package-discounts'},
 
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'CMS',
@@ -45,12 +45,12 @@ const mynav = [
 		icon: 'fa-solid fa-globe',
 		exact: false,
 		childrens: [
-			{ name: 'List Pages', path: '/:userId/admin/contents/page/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'pages.list-pages' },
-			{ name: 'List Announcements', path: '/:userId/admin/contents/announcement/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'announcements.list-announcement' },
-			{ name: 'List Gallery', path: '/:userId/admin/contents/gallery/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL ,resourceName:'gallery.list-gallery'},
-			{ name: 'List Events', path: '/:userId/admin/contents/event/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL },
+			{ name: 'List Pages', path: '/:userId/admin/contents/page/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'pages.list-pages' },
+			{ name: 'List Announcements', path: '/:userId/admin/contents/announcement/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'announcements.list-announcement' },
+			{ name: 'List Gallery', path: '/:userId/admin/contents/gallery/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee ,resourceName:'gallery.list-gallery'},
+			{ name: 'List Events', path: '/:userId/admin/contents/event/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'events.list-events'  },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Success Story',
@@ -58,11 +58,11 @@ const mynav = [
 		icon: 'fa-regular fa-calendar-days',
 		exact: false,
 		childrens: [
-			{ name: 'List Success Stories', path: '/:userId/admin/contents/success-story/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'success-story.list-success-story' },
-			{ name: 'Add Success Story', path: '/:userId/admin/contents/success-story/add', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'success-story.add-new-success-story' },
+			{ name: 'List Success Stories', path: '/:userId/admin/contents/success-story/list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'success-story.list-success-story' },
+			{ name: 'Add Success Story', path: '/:userId/admin/contents/success-story/add', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'success-story.add-new-success-story' },
 
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Branches',
@@ -70,9 +70,9 @@ const mynav = [
 		icon: 'fa-solid fa-code-branch',
 		exact: false,
 		childrens: [
-			{ name: 'Branches', path: '/:userId/admin/branches', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'branches.list-branches' },
+			{ name: 'Branches', path: '/:userId/admin/branches', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'branches.list-branches' },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Employees',
@@ -80,10 +80,10 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		childrens: [
-			{ name: 'Employees', path: '/:userId/admin/employees', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'employees.list-employees'}, //
-			{ name: 'Employee Designations', path: '/:userId/admin/employee-designations', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'designations.list-designations' },
+			{ name: 'Employees', path: '/:userId/admin/employees', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.list-employees'}, //
+			{ name: 'Employee Designations', path: '/:userId/admin/employee-designations', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'designations.list-designations' },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Broker',
@@ -91,11 +91,11 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		childrens: [
-			{ name: 'Broker', path: '/:userId/admin/broker', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'brokers.list-brokers' },
-			{ name: 'Payments', path: '/:userId/admin/broker/payment-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'brokers.list-broker-payments' },
-			{ name: 'Transactions', path: '/:userId/admin/broker/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'brokers.list-broker-transactions' },
+			{ name: 'Broker', path: '/:userId/admin/broker', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'brokers.list-brokers' },
+			{ name: 'Payments', path: '/:userId/admin/broker/payment-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'brokers.list-broker-payments' },
+			{ name: 'Transactions', path: '/:userId/admin/broker/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'brokers.list-broker-transactions' },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Franchise',
@@ -103,11 +103,11 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		childrens: [
-			{ name: 'Franchise List', path: '/:userId/admin/franchise', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'franchise.list-franchise' },
-			{ name: 'Payments', path: '/:userId/admin/franchise/payment-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'franchise.list-franchise-payments' },
-			{ name: 'Transactions', path: '/:userId/admin/franchise/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'franchise.list-franchise-transactions' },
+			{ name: 'Franchise List', path: '/:userId/admin/franchise', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'franchise.list-franchise' },
+			{ name: 'Payments', path: '/:userId/admin/franchise/payment-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'franchise.list-franchise-payments' },
+			{ name: 'Transactions', path: '/:userId/admin/franchise/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'franchise.list-franchise-transactions' },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'CRM',
@@ -115,11 +115,11 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		childrens: [
-			{ name: 'CRM', path: '/:userId/admin/crm/crm-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'crm.list-crm' },
-			{ name: 'categories', path: '/:userId/admin/crm/categories', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'crm.list-crm-categories' },
+			{ name: 'CRM', path: '/:userId/admin/crm/crm-list', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'crm.list-crm' },
+			{ name: 'categories', path: '/:userId/admin/crm/categories', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'crm.list-crm-categories' },
 			
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Whatsapp',
@@ -127,25 +127,25 @@ const mynav = [
 		icon: 'fa-solid fa-message',
 		exact: false,
 		childrens: [
-			{ name: 'Whatsapp Reports', path: '/:userId/admin/whatsapp/wapp-reports', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'whatsapp.whatsapp-reports' },
-			{ name: 'Daily Whatsapp', path: '/:userId/admin/whatsapp/daily-whatsapp', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'whatsapp.daily-whatsapp' },
-			{ name: 'Synch Data', path: '/:userId/admin/developer', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'whatsapp.synch-data' },
+			{ name: 'Whatsapp Reports', path: '/:userId/admin/whatsapp/wapp-reports', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.whatsapp-reports' },
+			{ name: 'Daily Whatsapp', path: '/:userId/admin/whatsapp/daily-whatsapp', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.daily-whatsapp' },
+			{ name: 'Synch Data', path: '/:userId/admin/developer', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.synch-data' },
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
-	{ name: 'Form Settings', path: '/:userId/admin/collections', icon: 'fa-regular fa-square-plus', exact: true, allowed: ROLES.ALL,resourceName:'form-settings.list-settings' },
+	{ name: 'Form Settings', path: '/:userId/admin/collections', icon: 'fa-regular fa-square-plus', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'form-settings.list-settings' },
 	{
 		name: 'Add New Details',
 		path: '/:userId/admin/business-names',
 		icon: 'fa-regular fa-briefcase',
 		exact: true,
 		childrens: [
-			{ name: 'Business Names', path: '/:userId/admin/business-names', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'business-names.list-business-names' },
-			{ name: 'Caste List', path: '/:userId/admin/castes', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'castes.list-castes' },
+			{ name: 'Business Names', path: '/:userId/admin/business-names', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'business-names.list-business-names' },
+			{ name: 'Caste List', path: '/:userId/admin/castes', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'castes.list-castes' },
 			
 
 		],
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'My Account',
@@ -163,9 +163,9 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		 childrens: [
-			{ name: 'SmsTemplate', path: '/:userId/admin/sms-templates', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'sms-templates.list-sms-templates' },
+			{ name: 'SmsTemplate', path: '/:userId/admin/sms-templates', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'sms-templates.list-sms-templates' },
 		], 
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Logs',
@@ -173,9 +173,9 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		 childrens: [
-			{ name: 'Logs Report', path: '/:userId/admin/logs', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'logs.list-logs' },
+			{ name: 'Logs Report', path: '/:userId/admin/logs', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'logs.list-logs' },
 		], 
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 	{
 		name: 'Advertisements',
@@ -183,9 +183,9 @@ const mynav = [
 		icon: 'fa-solid fa-user-tie',
 		exact: false,
 		 childrens: [
-			{ name: 'Advertisements', path: '/:userId/admin/advertisements', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'advertisements.list-advertisements' },
+			{ name: 'Advertisements', path: '/:userId/admin/advertisements', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'advertisements.list-advertisements' },
 		], 
-		allowed: ROLES.ALL
+		allowed: ROLES.AdminAndEmployee
 	},
 
 ];
