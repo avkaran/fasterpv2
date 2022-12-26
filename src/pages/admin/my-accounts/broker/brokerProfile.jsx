@@ -33,6 +33,7 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import EditBroker from "./editProfile";
 const BrokerProfile = (props) => {
   const context = useContext(PsContext);
+  const {userId}=useParams()
   const { Content } = Layout;
   const [viewOrEditData, setViewOrEditData] = useState(null);
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const BrokerProfile = (props) => {
   const [curAction, setCurAction] = useState("view");
   const [viewData, setviewData] = useState(null);
   const [heading] = useState("MyAccounts");
-  const { viewIdOrObject, onListClick, userId, ...other } = props;
+
   const [viewId, setViewId] = useState(null);
   const [isModal] = useState(false);
 

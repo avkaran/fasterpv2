@@ -18,9 +18,16 @@ const ProfileViewPrint = (props) => {
     const getRaasiChart = (item) => {
         var viewValuesRaasi = Array(12).fill('');
         if (item.raasi_chart)
-            viewValuesRaasi = item.raasi_chart.replaceAll(",", ", ").split("##");
+            viewValuesRaasi = item.raasi_chart.split("##");
         viewValuesRaasi = viewValuesRaasi.map(obj => {
-            if (obj) obj = obj.substring(0, 2);
+            if (obj) {
+                var tmpValues = obj.split(",")
+                for (var i = 0; i < tmpValues.length; i++) {
+                    tmpValues[i]=tmpValues[i].substring(0, 2);
+                   
+                }
+                obj =tmpValues.join(",")
+            }
             return obj;
         })
         return <table border="1" style={{ width: '80%', borderCollapse: 'collapse', marginLeft: '30px' }}>
@@ -52,9 +59,16 @@ const ProfileViewPrint = (props) => {
     const getAmsamChart = (item) => {
         var viewValuesAmsam = Array(12).fill('');
         if (item.amsam_chart)
-            viewValuesAmsam = item.amsam_chart.replaceAll(",", ", ").split("##");
+            viewValuesAmsam = item.amsam_chart.split("##");
         viewValuesAmsam = viewValuesAmsam.map(obj => {
-            if (obj) obj = obj.substring(0, 2);
+            if (obj) {
+                var tmpValues = obj.split(",")
+                for (var i = 0; i < tmpValues.length; i++) {
+                    tmpValues[i]=tmpValues[i].substring(0, 2);
+                   
+                }
+                obj =tmpValues.join(",")
+            }
             return obj;
         })
         return <table border="1" style={{ width: '80%', borderCollapse: 'collapse' }}>

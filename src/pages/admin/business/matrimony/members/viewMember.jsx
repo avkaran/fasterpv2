@@ -23,6 +23,7 @@ import ViewMemberBasic from './viewInfo/viewMemberBasic';
 import OrderViewPrint from './printMembers/orderViewprint';
 import { baseUrl, printDocument } from '../../../../../utils';
 import { getPaymentInfo } from '../models/matrimonyCore';
+import ContactNotice from './viewInfo/contactNotice'
 const ViewMember = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -58,6 +59,10 @@ const ViewMember = (props) => {
     const [paymentMode, setPaymentMode] = useState(null);
     const [refreshPaymentHistory, setRefreshPaymentHistory] = useState(false);
     const [paymentInfo, setPaymentInfo] = useState(null);
+    const [viewContactLoader, setViewContactLoader] = useState(false);
+    const [isViewContact,setIsViewContact]=useState(true);
+    const [isProfileEdit,setIsProfileEdit]=useState(true)
+
     useEffect(() => {
         loadBusinessNames();
         loadPlanNames();
@@ -74,6 +79,12 @@ const ViewMember = (props) => {
             resetPaymentButton(viewIdOrObject)
             loadViewData(viewIdOrObject);
         }
+
+        if(context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker'){
+            setIsViewContact(false);
+            setIsProfileEdit(false);
+        }
+           
 
     }, []);
 
@@ -127,7 +138,53 @@ const ViewMember = (props) => {
             //  setCasteLoader(false);
         })
     }
+    //for franchise/broker
+    const onContactViewClick=(memberData) => {
+        setViewContactLoader(true);
+        var processedValues = {};
+        processedValues['user_id'] = context.adminUser(userId).ref_id;
+        processedValues['user_type'] = context.adminUser(userId).role;
+        processedValues['transaction_date'] = dayjs().format("YYYY-MM-DD");
+        processedValues['debit'] = 50;
+        processedValues['credit'] = 0;
+        processedValues['paid_amount'] = '50';
+        processedValues['narration'] = 'Profile Viewed/Printed' + viewData.name + '(' + viewData.member_id + ')';
+        processedValues['transaction_status'] = 'Paid';
+        processedValues['ref_order_or_profile'] = viewData.member_id;
+        processedValues['user_payment_mode'] = 'Main Balance';
+        processedValues['transaction_type'] = 'Profile Viewed';
 
+        var reqDataInsert = {
+            query_type: 'insert',
+            table: 'fr_br_transactions',
+            values: processedValues
+
+        };
+
+        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
+
+            var createdId = res;
+            var BillId = 'FRP' + createdId.padStart(4, '0');
+            var reqDataInner = {
+                query_type: 'update',
+                table: 'fr_br_transactions',
+                where: { id: createdId },
+                values: { bill_voucher_no: BillId }
+            };
+            context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then(() => {
+                message.success("Amount Deducted for viewing this contact within a day you  can view/print this contact again")
+                setViewContactLoader(false);
+                setIsViewContact(true)
+            }).catch(err => {
+                message.error(err);
+
+            })
+        }).catch(err => {
+            message.error(err);
+            setViewContactLoader(false);
+        })
+       
+    }
     const loadEducation = () => {
         var reqData =
         {
@@ -400,6 +457,13 @@ const ViewMember = (props) => {
             };
             context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then(resInner => {
 
+
+                //add payment transaction if franchise
+                if (context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker') {
+                    var trDate = dayjs(values.paid_date).format("YYYY-MM-DD");
+
+                    MakeResellerTransaction(trDate, getDiscountInfo('final-amount'), padOrderId,);
+                }
                 context.psGlobal.addLog({
                     log_name: 'make-payment',
                     logged_type: context.adminUser(userId).role,
@@ -435,12 +499,67 @@ const ViewMember = (props) => {
         let d = heightList.find((item) => item.cm == cm);
         return d && d.label;
     }
+    const MakeResellerTransaction = (trDate, trAmount, orderNo,) => {
+        var processedValues = {};
+        processedValues['user_id'] = context.adminUser(userId).ref_id;
+        processedValues['user_type'] = context.adminUser(userId).role;
+        processedValues['transaction_date'] = trDate;
+        processedValues['debit'] = trAmount;
+        processedValues['credit'] = 0;
+        processedValues['paid_amount'] = trAmount;
+        processedValues['narration'] = 'Paid from Main balance for ' + viewData.name + '(' + viewData.member_id + '), order no:' + orderNo;
+        processedValues['transaction_status'] = 'Paid';
+        processedValues['ref_order_or_profile'] = orderNo;
+        processedValues['user_payment_mode'] = 'Main Balance';
+        processedValues['transaction_type'] = 'Order Payment';
+
+        var reqDataInsert = {
+            query_type: 'insert',
+            table: 'fr_br_transactions',
+            values: processedValues
+
+        };
+
+        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
+
+            var createdId = res;
+            var BillId = 'FRP' + createdId.padStart(4, '0');
+            var reqDataInner = {
+                query_type: 'update',
+                table: 'fr_br_transactions',
+                where: { id: createdId },
+                values: { bill_voucher_no: BillId }
+
+            };
+            context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then(() => {
+
+
+            }).catch(err => {
+                message.error(err);
+
+            })
+
+
+
+
+        }).catch(err => {
+            message.error(err);
+            setLoader(false);
+        })
+    }
     const getRaasiChart = (item) => {
         var viewValuesRaasi = Array(12).fill('');
         if (item.raasi_chart)
-            viewValuesRaasi = item.raasi_chart.replaceAll(",", ", ").split("##");
+            viewValuesRaasi = item.raasi_chart.split("##");
         viewValuesRaasi = viewValuesRaasi.map(obj => {
-            if (obj) obj = obj.substring(0, 2);
+            if (obj) {
+                var tmpValues = obj.split(",")
+                for (var i = 0; i < tmpValues.length; i++) {
+                    tmpValues[i] = tmpValues[i].substring(0, 2);
+
+                }
+                obj = tmpValues.join(",")
+            }
             return obj;
         })
         return <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid' }}>
@@ -473,9 +592,16 @@ const ViewMember = (props) => {
     const getAmsamChart = (item) => {
         var viewValuesAmsam = Array(12).fill('');
         if (item.amsam_chart)
-            viewValuesAmsam = item.amsam_chart.replaceAll(",", ", ").split("##");
+            viewValuesAmsam = item.amsam_chart.split("##");
         viewValuesAmsam = viewValuesAmsam.map(obj => {
-            if (obj) obj = obj.substring(0, 2);
+            if (obj) {
+                var tmpValues = obj.split(",")
+                for (var i = 0; i < tmpValues.length; i++) {
+                    tmpValues[i] = tmpValues[i].substring(0, 2);
+
+                }
+                obj = tmpValues.join(",")
+            }
             return obj;
         })
         return <table border="1" style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid' }}>
@@ -535,17 +661,17 @@ const ViewMember = (props) => {
         })
 
     };
-    const onDeleteFinish=()=>{
+    const onDeleteFinish = () => {
         context.psGlobal.addLog({
-            log_name:'delete-member',
-            logged_type:context.adminUser(userId).role,
-            logged_by:context.adminUser(userId).id,
-            ref_table_column:'members.id',
-            ref_id:viewData.id,
-            ref_id2:viewData.member_id,
-            description:'Member Deleted ' + viewData.member_id
-        }).then(logRes=>{
-           
+            log_name: 'delete-member',
+            logged_type: context.adminUser(userId).role,
+            logged_by: context.adminUser(userId).id,
+            ref_table_column: 'members.id',
+            ref_id: viewData.id,
+            ref_id2: viewData.member_id,
+            description: 'Member Deleted ' + viewData.member_id
+        }).then(logRes => {
+
             message.success('Member Deleted Successfullly');
             onListClick();
         })
@@ -595,17 +721,17 @@ const ViewMember = (props) => {
                                         {/* <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faEdit} /> Quick Edit</MyButton>
                                          <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMinusCircle} /> Delete Profile</MyButton>
                                          */}
-                                         {
-                                            context.isAdminResourcePermit(userId, 'matrimony-members.delete-member') && ( <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
-                                            title="Delete Member"
-                                            table="members"
-                                            //id must,+ give first three colums to display
-                                            dataItem={{ id: viewData.id, member_id: viewData.member_id, name: viewData.name, mobile_no: context.psGlobal.decrypt(viewData.mobile_no) }}
-                                            avatar={context.baseUrl + viewData.photo}
-                                        />)
-                                         }
-                                       
-                                       
+                                        {
+                                            context.isAdminResourcePermit(userId, 'matrimony-members.delete-member') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
+                                                title="Delete Member"
+                                                table="members"
+                                                //id must,+ give first three colums to display
+                                                dataItem={{ id: viewData.id, member_id: viewData.member_id, name: viewData.name, mobile_no: context.psGlobal.decrypt(viewData.mobile_no) }}
+                                                avatar={context.baseUrl + viewData.photo}
+                                            />)
+                                        }
+
+
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick(setVisiblePaymentModal(true)) }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
                                     </Space>
                                     {/* <Space style={{ marginTop: '10px' }}>
@@ -625,10 +751,15 @@ const ViewMember = (props) => {
                                 <Tabs>
                                     <Tabs.TabPane tab="Profile" key="profile">
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faUser} /> Basic Details</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("basic") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("basic") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
+                                        
                                         <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} />
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faBookOpenReader} /> Education & Occupation</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("education") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("education") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
                                         <Form
                                             colon={false}
                                             name="basic"
@@ -673,7 +804,10 @@ const ViewMember = (props) => {
 
                                         </Form>
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faPeopleRoof} /> Family Details</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("family") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("family") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
+                                        
 
                                         <Form
                                             name="basic"
@@ -727,7 +861,10 @@ const ViewMember = (props) => {
 
                                         </Form>
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faPersonSnowboarding} /> Habits & Hobbies</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("habits") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("habits") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
+                                        
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -753,7 +890,10 @@ const ViewMember = (props) => {
 
                                         </Form>
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faPersonWalking} /> Physical Attributes</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("physical") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("physical") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
+                                        
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -785,7 +925,10 @@ const ViewMember = (props) => {
 
                                         </Form>
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faDharmachakra} /> Horoscope Information</Divider>
-                                        <MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("horoscope") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>
+                                        {
+                                            isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("horoscope") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
+                                        }
+                                        
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -873,7 +1016,10 @@ const ViewMember = (props) => {
                                                 </Row>
                                                 <Row gutter={16} style={{ color: cyan[6], fontWeight: 'bold', textAlign: 'center', marginTop: '15px' }}>
                                                     <Col className='gutter-row' xs={24} xl={24}>
-                                                        <MyButton onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("photo") }}>Change</MyButton>
+                                                        {
+                                                            isProfileEdit && (<MyButton onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("photo") }}>Change</MyButton>)
+                                                        }
+                                                        
                                                     </Col>
                                                 </Row>
 
@@ -909,7 +1055,8 @@ const ViewMember = (props) => {
                                                 }
                                                 <Row style={{ marginTop: '15px' }}>
                                                     <Col span={8}></Col>
-                                                    <Col span={8} style={{ textAlign: 'center' }}>
+                                                    {
+                                                        isProfileEdit && ( <Col span={8} style={{ textAlign: 'center' }}>
                                                         <ImageUpload
                                                             name="photo"
 
@@ -920,7 +1067,9 @@ const ViewMember = (props) => {
                                                         >
 
                                                         </ImageUpload>
-                                                    </Col>
+                                                    </Col>)
+                                                    }
+                                                   
                                                     <Col span={8}></Col>
                                                 </Row>
                                                 <Modal
@@ -1131,55 +1280,61 @@ const ViewMember = (props) => {
                                 </Tabs>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={6}>
-                                <Card title={<span style={{ color: magenta[6], fontWeight: 'bold' }}>Contact info</span>} extra={<MyButton type="outlined" color={magenta[6]} shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("contact") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>}
+                                <Card title={<span style={{ color: magenta[6], fontWeight: 'bold' }}>Contact info</span>} extra={ isProfileEdit && (<MyButton type="outlined" color={magenta[6]} shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("contact") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)}
 
                                     style={{ borderColor: magenta[6] }}>
-                                    <Row gutter={16}>
-                                        <Col className='gutter-row' xs={24} xl={2}>
-                                            <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faPhoneVolume} /></span>
-                                        </Col>
-                                        <Col className='gutter-row' xs={24} xl={22}>
-                                            <a href={"tel:" + context.psGlobal.decrypt(viewData.mobile_no)}>{context.psGlobal.decrypt(viewData.mobile_no)}</a>
-                                        </Col>
-                                    </Row>
+                                    {
+                                        !isViewContact && (<ContactNotice loading={viewContactLoader} onContactViewClick={onContactViewClick} viewData={viewData} />)
+                                    }
+                                    {
+                                       isViewContact && (<><Row gutter={16}>
+                                            <Col className='gutter-row' xs={24} xl={2}>
+                                                <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faPhoneVolume} /></span>
+                                            </Col>
+                                            <Col className='gutter-row' xs={24} xl={22}>
+                                                <a href={"tel:" + context.psGlobal.decrypt(viewData.mobile_no)}>{context.psGlobal.decrypt(viewData.mobile_no)}</a>
+                                            </Col>
+                                        </Row>
 
-                                    <Row gutter={16}>
-                                        <Col className='gutter-row' xs={24} xl={2}>
-                                            <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faWhatsapp} /></span>
-                                        </Col>
-                                        <Col className='gutter-row' xs={24} xl={22}>
-                                            <a href={viewData.whatsapp_no ? "tel:" + context.psGlobal.decrypt(viewData.whatsapp_no) : ''}>{viewData.whatsapp_no ? context.psGlobal.decrypt(viewData.whatsapp_no) : ''}</a>
-                                        </Col>
-                                    </Row>
-                                    <Row gutter={16}>
-                                        <Col className='gutter-row' xs={24} xl={2}>
-                                            <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faEnvelope} /></span>
-                                        </Col>
-                                        <Col className='gutter-row' xs={24} xl={22}>
-                                            <span style={{ color: cyan[6], fontWeight: 'bold' }}>
-                                                {viewData.email}
-                                            </span>
-                                        </Col>
-                                    </Row>
-                                    <Row gutter={16} style={{ fontSize: '15px' }}>
-                                        <Col className='gutter-row' xs={24} xl={2}>
-                                            <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faMobileAlt} /></span>
-                                        </Col>
-                                        <Col className='gutter-row' xs={24} xl={22}>
-                                            <a href={viewData.mobile_alt_no_1 ? "tel:" + context.psGlobal.decrypt(viewData.mobile_alt_no_1) : ''}>{viewData.mobile_alt_no_1 ? context.psGlobal.decrypt(viewData.mobile_alt_no_1) : 'N/A'}</a><br />
-                                            <a href={viewData.mobile_alt_no_2 ? "tel:" + context.psGlobal.decrypt(viewData.mobile_alt_no_2) : ''}>{viewData.mobile_alt_no_2 ? context.psGlobal.decrypt(viewData.mobile_alt_no_2) : 'N/A'}</a>
-                                        </Col>
-                                    </Row>
-                                    <Row gutter={16}>
-                                        <Col className='gutter-row' xs={24} xl={2}>
-                                            <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faLocationPin} /></span>
-                                        </Col>
-                                        <Col className='gutter-row' xs={24} xl={22}>
-                                            <span style={{ color: cyan[6], fontWeight: 'bold' }}>
-                                                {viewData.door_no}, {viewData.street}, {viewData.area}, {viewData.taluk}, {viewData.landmark}, {viewData.district}, {viewData.state}, Pin : {viewData.pincode}
-                                            </span>
-                                        </Col>
-                                    </Row>
+                                            <Row gutter={16}>
+                                                <Col className='gutter-row' xs={24} xl={2}>
+                                                    <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faWhatsapp} /></span>
+                                                </Col>
+                                                <Col className='gutter-row' xs={24} xl={22}>
+                                                    <a href={viewData.whatsapp_no ? "tel:" + context.psGlobal.decrypt(viewData.whatsapp_no) : ''}>{viewData.whatsapp_no ? context.psGlobal.decrypt(viewData.whatsapp_no) : ''}</a>
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={16}>
+                                                <Col className='gutter-row' xs={24} xl={2}>
+                                                    <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faEnvelope} /></span>
+                                                </Col>
+                                                <Col className='gutter-row' xs={24} xl={22}>
+                                                    <span style={{ color: cyan[6], fontWeight: 'bold' }}>
+                                                        {viewData.email}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={16} style={{ fontSize: '15px' }}>
+                                                <Col className='gutter-row' xs={24} xl={2}>
+                                                    <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faMobileAlt} /></span>
+                                                </Col>
+                                                <Col className='gutter-row' xs={24} xl={22}>
+                                                    <a href={viewData.mobile_alt_no_1 ? "tel:" + context.psGlobal.decrypt(viewData.mobile_alt_no_1) : ''}>{viewData.mobile_alt_no_1 ? context.psGlobal.decrypt(viewData.mobile_alt_no_1) : 'N/A'}</a><br />
+                                                    <a href={viewData.mobile_alt_no_2 ? "tel:" + context.psGlobal.decrypt(viewData.mobile_alt_no_2) : ''}>{viewData.mobile_alt_no_2 ? context.psGlobal.decrypt(viewData.mobile_alt_no_2) : 'N/A'}</a>
+                                                </Col>
+                                            </Row>
+                                            <Row gutter={16}>
+                                                <Col className='gutter-row' xs={24} xl={2}>
+                                                    <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faLocationPin} /></span>
+                                                </Col>
+                                                <Col className='gutter-row' xs={24} xl={22}>
+                                                    <span style={{ color: cyan[6], fontWeight: 'bold' }}>
+                                                        {viewData.door_no}, {viewData.street}, {viewData.area}, {viewData.taluk}, {viewData.landmark}, {viewData.district}, {viewData.state}, Pin : {viewData.pincode}
+                                                    </span>
+                                                </Col>
+                                            </Row></>)
+                                    }
+
                                 </Card>
 
                             </Col>
@@ -1514,7 +1669,7 @@ const ViewMember = (props) => {
                                             //onChange={genderOnChange}
                                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                         >
-                                            {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'payment-modes', 'option', ['Main Balance'])}
+                                            {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'payment-modes', 'option', context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker' ? ['Cash', 'Cheque', 'Bank Deposit', 'Online'] : ['Main Balance'])}
 
                                         </Select>
 

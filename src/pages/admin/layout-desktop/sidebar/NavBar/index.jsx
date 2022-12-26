@@ -10,6 +10,7 @@ const NavBar=(props)=>{
 
     const ROLE = props.role.toLowerCase();
     const getMenues=()=>{
+       // console.log('menues',menus)
         var permittedMenues=[];
         menus.forEach(item => {
             if(item.childrens){
@@ -37,20 +38,27 @@ const NavBar=(props)=>{
             }
            
         });
-        //console.log('menues',menus,permittedMenues)
-        if(ROLE==='employee')
+        
+      
         return permittedMenues;
-        else return menus;
+       
     }
 
     const renderMenus=()=>{
 
-        return getMenues().map((item) => item.allowed.indexOf(ROLE)>-1 ? item.childrens ? 
-             <DropDownNav menu={item} user={props.user} key={item.name}  childrens={item.childrens} menuId={menuId} setMenuId={(id)=>steActiveMenuId(id)} role={ROLE} /> :
-            <SingleNav key={item.name}  menu={item} user={props.user}/> : null);
+        if(ROLE==='employee'){
+            return getMenues().map((item) => item.allowed.indexOf(ROLE)>-1 ? item.childrens ? 
+            <DropDownNav menu={item} user={props.user} key={item.name}  childrens={item.childrens} menuId={menuId} setMenuId={(id)=>steActiveMenuId(id)} role={ROLE} /> :
+           <SingleNav key={item.name}  menu={item} user={props.user}/> : null);
+        }else{
+            return menus.map((item) => item.allowed.indexOf(ROLE)>-1 ? item.childrens ? 
+            <DropDownNav menu={item} user={props.user} key={item.name}  childrens={item.childrens} menuId={menuId} setMenuId={(id)=>steActiveMenuId(id)} role={ROLE} /> :
+           <SingleNav key={item.name}  menu={item} user={props.user}/> : null);
+        }
+       
     };
 
-	return renderMenus();
+	return  renderMenus();
 };
 
 export default NavBar;

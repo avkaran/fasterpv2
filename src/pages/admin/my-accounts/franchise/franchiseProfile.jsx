@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { Button, Card } from 'antd';
 import { Form, Input, Select, InputNumber, Radio, Checkbox, Avatar, Image, Tag } from 'antd';
@@ -17,6 +17,7 @@ import EditFranchise from './editFranchise';
 const FranchiseProfile = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
+     const {userId}=useParams()
     const navigate = useNavigate();
     const [addForm] = Form.useForm();
     const [loader, setLoader] = useState(false);
@@ -28,7 +29,7 @@ const FranchiseProfile = (props) => {
     const [viewData, setviewData] = useState(null);
     const [visiblePasswordModal, setvisiblePasswordModal] = useState(false);
     const [heading] = useState('Package');
-    const { viewIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
+    
     const [viewId, setViewId] = useState(null);
     const [passwordLoader, setPasswordLoader] = useState(false);
     useEffect(() => {
