@@ -144,7 +144,8 @@ const AddMember = (props) => {
             title: 'Edit',
            // dataIndex: 'caste_name',
            // key: 'caste_name',
-            render: (item) => <span><Link to={"/"+userId+"/admin/members/edit/"+ item.id}><MyButton type="primary" shape="circle"><i class="fa-solid fa-pencil"></i></MyButton></Link></span>,
+            render: (item) => <span>
+                {context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee'?<Link to={"/"+userId+"/admin/members/edit/"+ item.id}><MyButton type="primary" shape="circle"><i class="fa-solid fa-pencil"></i></MyButton></Link>:''}</span>,
         },
         {
             title: 'Status',

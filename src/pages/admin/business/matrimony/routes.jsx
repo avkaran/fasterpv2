@@ -50,6 +50,7 @@ import MembersByOrderStatus from "./members/membersByOrderStatus";
 
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
+import MyResellerTransactions from './reseller/myresellerTransactions';
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 const AuthRoutes = (props) => {
@@ -275,6 +276,13 @@ const AuthRoutes = (props) => {
                 element={< dailyWhatsapp />}
                 title='Whatsapp Reports'
                 allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/reseller/mytransactions'
+                element={< MyResellerTransactions />}
+                title='Franchise Payments'
+                allowed={ROLES.All}
                 exact={true}
             />
             <Route

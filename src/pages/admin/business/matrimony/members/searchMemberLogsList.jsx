@@ -43,13 +43,19 @@ const SearchMemberLogsList = (props) => {
     useEffect(() => {
         searchForm.setFieldsValue({ log_dates: [dayjs(), dayjs()], action: action, action_by: actionBy })
         onactionChange(actionBy)
-        resetLogList([dayjs(), dayjs()], action, actionBy)
+        if (context.adminUser(userId).role !== 'admin') {
+            searchForm.setFieldsValue({reference:context.adminUser(userId).id});
+            resetLogList([dayjs(), dayjs()], action, actionBy, context.adminUser(userId).id);
+        }
+        else
+            resetLogList([dayjs(), dayjs()], action, actionBy)
     }, []);
     const resetLogList = (log_dates, action, actionBy, refUser = null) => {
         var filter_clauses = [];
         var actionInfo = actions.find(obj => obj.action === action);
         var refUserClause = '';
         var refUserOrderClause = '';
+
         if (refUser) {
             refUserClause = " and logged_by='" + refUser + "'"
             refUserOrderClause = " and l.logged_by='" + refUser + "'"
@@ -67,7 +73,7 @@ const SearchMemberLogsList = (props) => {
         setRefreshMemberList(prev => prev + 1);
     }
     const onFinishSearch = (values) => {
-         resetLogList(values.log_dates,values.action,values.action_by,values.reference)
+        resetLogList(values.log_dates, values.action, values.action_by, values.reference)
     }
     const onChangeDate = (dates) => {
         searchForm.setFieldsValue({ log_dates: dates });
@@ -215,7 +221,7 @@ const SearchMemberLogsList = (props) => {
                         onFinish={onFinishSearch}
                         autoComplete="off"
                     >
-                    
+
                         <Row gutter={16}>
                             <Col className="gutter-row" xs={24} xl={12}>
                                 <FormItem
@@ -227,12 +233,12 @@ const SearchMemberLogsList = (props) => {
                                     <Space direction="vertical">
                                         <DatePicker.RangePicker
                                             onChange={onChangeDate}
-                                           defaultValue={[dayjs(), dayjs()]}
-                                           format="DD/MM/YYYY"
+                                            defaultValue={[dayjs(), dayjs()]}
+                                            format="DD/MM/YYYY"
                                             allowClear={false}
                                         />
 
-                                        
+
                                     </Space>
                                 </FormItem>
                             </Col>
@@ -278,6 +284,7 @@ const SearchMemberLogsList = (props) => {
                                 >
                                     <Select
                                         showSearch
+                                        disabled={context.adminUser(userId).role !== 'admin'}
                                         placeholder="Action By"
                                         onChange={onactionChange}
                                         optionFilterProp="children"
@@ -304,6 +311,7 @@ const SearchMemberLogsList = (props) => {
                                 >
                                     <Select
                                         showSearch
+                                        disabled={context.adminUser(userId).role !== 'admin'}
                                         allowClear={true}
                                         placeholder="Reference"
                                         optionFilterProp="children"

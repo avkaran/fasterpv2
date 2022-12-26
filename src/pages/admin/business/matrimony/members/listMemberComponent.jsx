@@ -759,15 +759,18 @@ const ListMemberComponent = (props) => {
                             }
                         </Select>
                     </FormItem>
-                    <FormItem
-                        label="Print Contact"
-                        name="print_contact"
-                        onChange={(e) => printForm.setFieldsValue({ print_contact: e.target.checked })}
-
-                    >
-                        <Checkbox />
-
-                    </FormItem>
+                    {
+                        (context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee') && (<FormItem
+                            label="Print Contact"
+                            name="print_contact"
+                            onChange={(e) => printForm.setFieldsValue({ print_contact: e.target.checked })}
+    
+                        >
+                            <Checkbox />
+    
+                        </FormItem>)
+                    }
+                    
                     <FormItem
                         label="Print Photo"
                         name="print_photo"
@@ -777,15 +780,18 @@ const ListMemberComponent = (props) => {
                         <Checkbox />
 
                     </FormItem>
+                    {
+                         (context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee') &&  (<FormItem
+                            label="For Member"
+                            name="member_id"
+                        // rules={[{ required: true, message: "Please Enter Member Name" }]}
+                        >
+    
+                            <Input onChange={onMemberIdChange} />
+                        </FormItem>)
+                    }
 
-                    <FormItem
-                        label="For Member"
-                        name="member_id"
-                    // rules={[{ required: true, message: "Please Enter Member Name" }]}
-                    >
-
-                        <Input onChange={onMemberIdChange} />
-                    </FormItem>
+                    
                     {
                         printingForMemberData && (<Row>
                             <Col className="gutter-row" xs={24} xl={8}>

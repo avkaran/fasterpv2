@@ -68,3 +68,18 @@ export const getUserAction = async (id, toId, action) => {
         })
     });
 }
+export const getResellerBalance = async (resellerType,resellerId) => {
+
+    return new Promise((resolve, reject) => {
+        var reqData = {
+            query_type: 'query',
+            query: "select coalesce(sum(credit)-sum(debit),0) as balance from fr_br_transactions where user_type='" + resellerType + "' and user_id='" + resellerId + "' and transaction_status='Paid' and status=1"
+        }
+
+        apiRequest(reqData, "prod").then((res) => {
+            resolve(res[0].balance)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}

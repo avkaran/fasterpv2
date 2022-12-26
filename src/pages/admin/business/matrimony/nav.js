@@ -187,6 +187,17 @@ const mynav = [
 		], 
 		allowed: ROLES.AdminAndEmployee
 	},
+	{
+		name: 'Transactions',
+		path: '/:userId/admin/transactions',
+		icon: 'fa-solid fa-user-tie',
+		exact: false,
+		 childrens: [
+			{ name: 'Transactions', path: '/:userId/admin/reseller/mytransactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.FranchiseAndBroker },
+		], 
+		allowed: ROLES.FranchiseAndBroker
+	},
+
 
 ];
 export default mynav;

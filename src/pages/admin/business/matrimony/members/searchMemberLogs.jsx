@@ -42,7 +42,7 @@ const {userId}=useParams();
                     <Breadcrumb.Item>List Members</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <SearchMemberLogsList action="add-new-member" actionBy="employee" userId={userId}/>
+                <SearchMemberLogsList action="add-new-member" actionBy={context.adminUser(userId).role} userId={userId}/>
 
             </Content>
         </>

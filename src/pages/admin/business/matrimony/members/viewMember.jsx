@@ -24,6 +24,8 @@ import OrderViewPrint from './printMembers/orderViewprint';
 import { baseUrl, printDocument } from '../../../../../utils';
 import { getPaymentInfo } from '../models/matrimonyCore';
 import ContactNotice from './viewInfo/contactNotice'
+import ProfileViewPrintSingle from './printMembers/profileViewPrintSingle';
+import { getResellerBalance } from '../models/matrimonyCore';
 const ViewMember = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -45,7 +47,8 @@ const ViewMember = (props) => {
     const [printReceiptData, setPrintReceiptData] = useState([]);
     const [allData, setAllData] = useState(null);
     const [selMembers, setSelMembers] = useState([]);
-    const [visiblePrintModal, setVisiblePrintModal] = useState(false);
+    const [visibleReceiptPrintModal, setVisibleReceiptPrintModal] = useState(false);
+    const [visibleProfilePrintModal, setVisibleProfilePrintModal] = useState(false);
     const [businessNames, setBusinessNames] = useState(null);
     const [selBusiness, setSelBusiness] = useState(null);
     const [selPlanData, setSelPlanData] = useState({})
@@ -60,8 +63,9 @@ const ViewMember = (props) => {
     const [refreshPaymentHistory, setRefreshPaymentHistory] = useState(false);
     const [paymentInfo, setPaymentInfo] = useState(null);
     const [viewContactLoader, setViewContactLoader] = useState(false);
-    const [isViewContact,setIsViewContact]=useState(true);
-    const [isProfileEdit,setIsProfileEdit]=useState(true)
+    const [isViewContact, setIsViewContact] = useState(true);
+    const [isProfileEdit, setIsProfileEdit] = useState(true);
+    const [insufficientBalance, setInsufficientBalance] = useState(false)
 
     useEffect(() => {
         loadBusinessNames();
@@ -70,6 +74,7 @@ const ViewMember = (props) => {
         loadEducation()
         if (typeof viewIdOrObject === 'object') {
             setViewId(viewIdOrObject.id);
+            resetResellerProfileViewOption(viewIdOrObject.member_id)
             setviewData(viewIdOrObject);
             loadPhotos(viewIdOrObject.id);
             resetPaymentButton(viewIdOrObject.id)
@@ -80,11 +85,12 @@ const ViewMember = (props) => {
             loadViewData(viewIdOrObject);
         }
 
-        if(context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker'){
+        if (context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker') {
             setIsViewContact(false);
             setIsProfileEdit(false);
+
         }
-           
+
 
     }, []);
 
@@ -92,6 +98,21 @@ const ViewMember = (props) => {
         getPaymentInfo(id).then(res => {
             setPaymentInfo(res);
         })
+    }
+    const resetResellerProfileViewOption = (member_id) => {
+        //verfiy profile is viewed today. then modify is view contact
+        var reqData = {
+            query_type: 'query', //query_type=insert | update | delete | query
+            query: "select * from fr_br_transactions where status=1 and user_id='" + context.adminUser(userId).ref_id + "' and transaction_type='Profile Viewed' and ref_order_or_profile='" + member_id + "' and date(transaction_date)='" + dayjs().format("YYYY-MM-DD") + "'"
+        };
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+
+            if (res.length > 0)
+                setIsViewContact(true);
+        }).catch(err => {
+            message.error(err);
+        })
+
     }
     const loadBusinessNames = () => {
         var reqData = {
@@ -115,10 +136,15 @@ const ViewMember = (props) => {
             message.error(err);
         })
     }
-    const formPrintOnFinish = (values) => {
+    const formReceiptPrintOnFinish = (values) => {
         var business = businessNames.find(item => item.id === values.business_name)
         setSelBusiness(business);
         printDocument('receipt-print');
+    }
+    const formProfilePrintOnFinish = (values) => {
+        var business = businessNames.find(item => item.id === values.business_name)
+        setSelBusiness(business);
+        printDocument('profile-print');
     }
 
     const loadCastes = () => {
@@ -139,7 +165,7 @@ const ViewMember = (props) => {
         })
     }
     //for franchise/broker
-    const onContactViewClick=(memberData) => {
+    const onContactViewClick = (memberData) => {
         setViewContactLoader(true);
         var processedValues = {};
         processedValues['user_id'] = context.adminUser(userId).ref_id;
@@ -183,7 +209,7 @@ const ViewMember = (props) => {
             message.error(err);
             setViewContactLoader(false);
         })
-       
+
     }
     const loadEducation = () => {
         var reqData =
@@ -213,7 +239,9 @@ const ViewMember = (props) => {
         ];
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setSelPlanData(res[0][0]);
-            setDiscountData(res[1][0])
+            setDiscountData(res[1][0]);
+
+
         }).catch(err => {
 
             setLoader(false);
@@ -232,6 +260,15 @@ const ViewMember = (props) => {
             finalAmount = parseFloat(selPlanData.package_price) - discountAmount;
 
         }
+        if (context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker') {
+            getResellerBalance(context.adminUser(userId).role, context.adminUser(userId).ref_id).then(res => {
+                if (parseFloat(res) < finalAmount)
+                    setInsufficientBalance(true);
+                else
+                    setInsufficientBalance(false)
+            })
+        }
+
 
         if (type === 'discount-amount')
             return discountAmount;
@@ -272,6 +309,7 @@ const ViewMember = (props) => {
             encrypt: ['mobile_no', 'mobile_alt_no_1', 'mobile_alt_no_2', 'whatsapp_no']
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+            resetResellerProfileViewOption(res[0].member_id)
             setviewData(res[0]);
             setLoader(false);
 
@@ -376,10 +414,11 @@ const ViewMember = (props) => {
 
 
         setPrintReceiptData(receiptData);
-        setVisiblePrintModal(true);
+        setVisibleReceiptPrintModal(true);
 
     }
-    const onPaymentClick = (item) => {
+    const onPaymentClick = () => {
+
 
         setVisiblePaymentModal(true);
 
@@ -721,6 +760,7 @@ const ViewMember = (props) => {
                                         {/* <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faEdit} /> Quick Edit</MyButton>
                                          <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMinusCircle} /> Delete Profile</MyButton>
                                          */}
+
                                         {
                                             context.isAdminResourcePermit(userId, 'matrimony-members.delete-member') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={onDeleteFinish}
                                                 title="Delete Member"
@@ -732,7 +772,8 @@ const ViewMember = (props) => {
                                         }
 
 
-                                        <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick(setVisiblePaymentModal(true)) }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
+                                        <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick() }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
+                                        <MyButton type="outlined" shape="round" onClick={() => setVisibleProfilePrintModal(true)}><FontAwesomeIcon icon={faPrint} /> Print</MyButton>
                                     </Space>
                                     {/* <Space style={{ marginTop: '10px' }}>
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMessage} /> Send SMS</MyButton>
@@ -754,7 +795,7 @@ const ViewMember = (props) => {
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("basic") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
-                                        
+
                                         <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} />
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faBookOpenReader} /> Education & Occupation</Divider>
                                         {
@@ -807,7 +848,7 @@ const ViewMember = (props) => {
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("family") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
-                                        
+
 
                                         <Form
                                             name="basic"
@@ -864,7 +905,7 @@ const ViewMember = (props) => {
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("habits") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
-                                        
+
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -893,7 +934,7 @@ const ViewMember = (props) => {
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("physical") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
-                                        
+
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -928,7 +969,7 @@ const ViewMember = (props) => {
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("horoscope") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
-                                        
+
                                         <Form
                                             name="basic"
                                             labelAlign="left"
@@ -1019,7 +1060,7 @@ const ViewMember = (props) => {
                                                         {
                                                             isProfileEdit && (<MyButton onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("photo") }}>Change</MyButton>)
                                                         }
-                                                        
+
                                                     </Col>
                                                 </Row>
 
@@ -1056,20 +1097,20 @@ const ViewMember = (props) => {
                                                 <Row style={{ marginTop: '15px' }}>
                                                     <Col span={8}></Col>
                                                     {
-                                                        isProfileEdit && ( <Col span={8} style={{ textAlign: 'center' }}>
-                                                        <ImageUpload
-                                                            name="photo"
+                                                        isProfileEdit && (<Col span={8} style={{ textAlign: 'center' }}>
+                                                            <ImageUpload
+                                                                name="photo"
 
-                                                            isAddOnly={true}
-                                                            cropRatio="3/4"
-                                                            storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
-                                                            onFinish={onOtherPhotoUploadFinish}
-                                                        >
+                                                                isAddOnly={true}
+                                                                cropRatio="3/4"
+                                                                storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
+                                                                onFinish={onOtherPhotoUploadFinish}
+                                                            >
 
-                                                        </ImageUpload>
-                                                    </Col>)
+                                                            </ImageUpload>
+                                                        </Col>)
                                                     }
-                                                   
+
                                                     <Col span={8}></Col>
                                                 </Row>
                                                 <Modal
@@ -1182,7 +1223,7 @@ const ViewMember = (props) => {
                                             />
 
                                             <Modal
-                                                visible={visiblePrintModal}
+                                                visible={visibleReceiptPrintModal}
                                                 zIndex={999}
                                                 footer={null}
                                                 centered={false}
@@ -1190,8 +1231,8 @@ const ViewMember = (props) => {
                                                 style={{ marginTop: '20px' }}
                                                 width={600}
                                                 // footer={null}
-                                                onCancel={() => { setVisiblePrintModal(false) }}
-                                                title={<span style={{ color: green[4] }} ><FontAwesomeIcon icon={faPrint} /> Print Members</span>}
+                                                onCancel={() => { setVisibleReceiptPrintModal(false) }}
+                                                title={<span style={{ color: green[4] }} ><FontAwesomeIcon icon={faPrint} /> Print Receipt</span>}
                                             >
                                                 <Form
                                                     name="basic"
@@ -1200,34 +1241,10 @@ const ViewMember = (props) => {
                                                     labelCol={{ span: 8 }}
                                                     wrapperCol={{ span: 20 }}
                                                     initialValues={{ remember: true }}
-                                                    onFinish={formPrintOnFinish}
+                                                    onFinish={formReceiptPrintOnFinish}
                                                     autoComplete="off"
                                                 >
 
-                                                    {/* <FormItem
-                                                label="Print Type"
-                                                name="print_type"
-                                                rules={[{ required: true, message: 'Please Select Print Type' }]}
-                                            >
-
-                                                <Select
-                                                    showSearch
-                                                    placeholder="Print Type"
-
-                                                    optionFilterProp="children"
-                                                    //onChange={businessStatusOnChange}
-                                                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                                                >
-                                                    <Select.Option value="Profile View">Profile View</Select.Option>
-                                                    <Select.Option value="Profile View No Address">Profile View No Address</Select.Option>
-                                                    <Select.Option value="Postal">Postal</Select.Option>
-                                                    <Select.Option value="Short Line">Short Line</Select.Option>
-                                                    <Select.Option value="Short Line WO Phone No">Short Line WO Phone No</Select.Option>
-                                                    <Select.Option value="Photo Short Line">Photo Short Line</Select.Option>
-                                                    <Select.Option value="Photo Short Line WO Address">Photo Short Line WO Address</Select.Option>
-                                                    <Select.Option value="Photo Print">Photo Print</Select.Option>
-                                                </Select>
-                                            </FormItem> */}
 
                                                     <FormItem
                                                         label="Business Name"
@@ -1252,7 +1269,7 @@ const ViewMember = (props) => {
 
                                                     <FormItem wrapperCol={{ offset: 10, span: 24 }}>
                                                         <Space>
-                                                            <Button size="large" type="outlined" onClick={() => setVisiblePrintModal(false)}>
+                                                            <Button size="large" type="outlined" onClick={() => setVisibleReceiptPrintModal(false)}>
                                                                 Cancel
                                                             </Button>
                                                             <MyButton size="large" type="primary" htmlType="submit">
@@ -1280,14 +1297,14 @@ const ViewMember = (props) => {
                                 </Tabs>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={6}>
-                                <Card title={<span style={{ color: magenta[6], fontWeight: 'bold' }}>Contact info</span>} extra={ isProfileEdit && (<MyButton type="outlined" color={magenta[6]} shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("contact") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)}
+                                <Card title={<span style={{ color: magenta[6], fontWeight: 'bold' }}>Contact info</span>} extra={isProfileEdit && (<MyButton type="outlined" color={magenta[6]} shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("contact") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)}
 
                                     style={{ borderColor: magenta[6] }}>
                                     {
-                                        !isViewContact && (<ContactNotice loading={viewContactLoader} onContactViewClick={onContactViewClick} viewData={viewData} />)
+                                        !isViewContact && (<ContactNotice loading={viewContactLoader} onContactViewClick={onContactViewClick} viewData={viewData} userId={userId} />)
                                     }
                                     {
-                                       isViewContact && (<><Row gutter={16}>
+                                        isViewContact && (<><Row gutter={16}>
                                             <Col className='gutter-row' xs={24} xl={2}>
                                                 <span style={{ color: magenta[6], fontWeight: 'bold' }}> <FontAwesomeIcon icon={faPhoneVolume} /></span>
                                             </Col>
@@ -1689,9 +1706,15 @@ const ViewMember = (props) => {
                                             <Button size="large" type="outlined" onClick={() => setVisiblePaymentModal(false)}>
                                                 Cancel
                                             </Button>
-                                            <MyButton size="large" type="primary" htmlType="submit">
-                                                {curAction === "edit" ? "Update" : "Submit"}
-                                            </MyButton>
+                                            {
+                                                !insufficientBalance && (<MyButton size="large" type="primary" htmlType="submit">
+                                                    {curAction === "edit" ? "Update" : "Submit"}
+                                                </MyButton>)
+                                            }
+                                            {
+                                                insufficientBalance && (<>Insufficient Balance</>)
+                                            }
+
                                         </Space>
 
                                     </FormItem>
@@ -1700,11 +1723,80 @@ const ViewMember = (props) => {
                             </Spin>
 
                         </Modal>
+                        <Modal
+                            visible={visibleProfilePrintModal}
+                            zIndex={999}
+                            footer={null}
+                            centered={false}
+                            closable={true}
+                            style={{ marginTop: '20px' }}
+                            width={600}
+                            // footer={null}
+                            onCancel={() => { setVisibleProfilePrintModal(false) }}
+                            title={<span style={{ color: green[4] }} ><FontAwesomeIcon icon={faPrint} /> Print Profile</span>}
+                        >
+                            <Form
+                                name="basic"
+                                //form={addeditFormPrint}
+                                labelAlign="left"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 20 }}
+                                initialValues={{ remember: true }}
+                                onFinish={formProfilePrintOnFinish}
+                                autoComplete="off"
+                            >
+
+                                <FormItem
+                                    label="Business Name"
+                                    name='business_name'
+                                    rules={[{ required: true, message: 'Please Enter Business Name' }]}
+                                >
+                                    <Select
+                                        showSearch
+                                        placeholder="Business Name"
+
+                                        optionFilterProp="children"
+                                        //onChange={businessStatusOnChange}
+                                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                                    >
+                                        {
+                                            businessNames && businessNames.map(item => {
+                                                return <Select.Option value={item.id}>{item.business_name}</Select.Option>
+                                            })
+                                        }
+                                    </Select>
+                                </FormItem>
+
+                                <FormItem wrapperCol={{ offset: 10, span: 24 }}>
+                                    <Space>
+                                        <Button size="large" type="outlined" onClick={() => setVisibleProfilePrintModal(false)}>
+                                            Cancel
+                                        </Button>
+                                        <MyButton size="large" type="primary" htmlType="submit">
+                                            Print
+                                        </MyButton>
+                                    </Space>
+
+                                </FormItem>
+
+                            </Form>
+
+                        </Modal>
                         <OrderViewPrint
                             receiptData={printReceiptData}
                             business={selBusiness}
                         // language={printLanguage}
                         />
+                        <div style={{ display: 'none' }}>
+                            <div id="profile-print" style={{ fontSize: '8pt !important' }}>
+                                {
+                                    selBusiness && (<ProfileViewPrintSingle key={viewData.id} item={viewData} isContact={isViewContact} business={selBusiness} />)
+                                }
+
+                            </div>
+                        </div>
+
+
                     </>)
                 }
             </Spin>

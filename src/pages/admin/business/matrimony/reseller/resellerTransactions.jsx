@@ -34,6 +34,9 @@ const ResellerTransactions = (props) => {
   useEffect(() => {
     loadResellers(resellerType)
     searchForm.setFieldsValue({ transaction_date: [dayjs(), dayjs()] });
+    if(context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker' ){
+      searchForm.setFieldsValue({ user_id: context.adminUser(userId).ref_id });
+    }
   }, []);
 
   const tableColumns = [
@@ -169,6 +172,7 @@ const ResellerTransactions = (props) => {
                 >
                   <Select
                     showSearch
+                    disabled={context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker'}
                     placeholder={capitalizeFirst(resellerType)}
                     optionFilterProp="children"
                     //onChange={designationIdOnChange}

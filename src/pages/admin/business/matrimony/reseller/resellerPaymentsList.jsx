@@ -47,6 +47,9 @@ const ResellerPaymentList = (props) => {
     loadBusinessNames();
     loadResellers(resellerType)
     searchForm.setFieldsValue({ transaction_date: [dayjs(), dayjs()] });
+    if(context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker' ){
+      searchForm.setFieldsValue({ user_id: context.adminUser(userId).ref_id });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -180,6 +183,7 @@ const ResellerPaymentList = (props) => {
   };
   const onFinishSearch = (values) => {
     var filter_clauses = [];
+    
     filter_clauses.push(
       " date(transaction_date)>='" +
       dayjs(values.transaction_date[0]).format("YYYY-MM-DD") +
@@ -373,6 +377,7 @@ const ResellerPaymentList = (props) => {
               >
                 <Select
                   showSearch
+                  disabled={context.adminUser(userId).role==='franchise' || context.adminUser(userId).role==='broker'}
                   placeholder="User"
                   optionFilterProp="children"
                   //onChange={designationIdOnChange}
@@ -403,11 +408,11 @@ const ResellerPaymentList = (props) => {
           columns={tableColumns}
           refresh={refreshTable}
           countQuery={
-            "select count(*) as count from fr_br_transactions where status=1 and user_type='" + resellerType + "'" +
+            "select count(*) as count from fr_br_transactions where status=1 and transaction_type='Main Balance Added' and user_type='" + resellerType + "'" +
             context.psGlobal.getWhereClause(filterColumns.current, false)
           }
           listQuery={
-            "select t.*,f.name,f.mobile_no,f.address,f."+resellerType+"_code,f.email,@rownum:=@rownum+1 as row_num from  "+(resellerType==='franchise'?'franchise':'brokers')+" f,fr_br_transactions t CROSS JOIN (SELECT @rownum:=0) crj where t.status=1 and t.user_id =f.id and user_type='" + resellerType + "'" +
+            "select t.*,f.name,f.mobile_no,f.address,f."+resellerType+"_code,f.email,@rownum:=@rownum+1 as row_num from  "+(resellerType==='franchise'?'franchise':'brokers')+" f,fr_br_transactions t CROSS JOIN (SELECT @rownum:=0) crj where t.status=1 and t.user_id =f.id and transaction_type='Main Balance Added' and user_type='" + resellerType + "'" +
             context.psGlobal.getWhereClause(filterColumns.current, false)+" ORDER BY t.transaction_date desc"
           }
           userId={userId}

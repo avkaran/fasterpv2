@@ -2,6 +2,7 @@ import Axios from 'axios';
 import toast from 'react-hot-toast';
 import { Select, Radio, message } from 'antd';
 import crypto from 'crypto';
+import dayjs from 'dayjs'
 export const listCollections = async () => {
 	const form = new FormData();
 	return new Promise((resolve, reject) => {
@@ -159,6 +160,7 @@ export const apiRequest = async (reqData, mode, postForm = false) => {
 }
 export const addLog = async (logData) => {
 	return new Promise((resolve, reject) => {
+		logData['log_time']=dayjs().format('YYYY-MM-DD HH:mm:ss')
 		var reqData = {
 			query_type: 'insert',
 			table: 'logs',

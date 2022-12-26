@@ -17,6 +17,8 @@ import { MyButton, MyTable } from '../../../../../comp';
 import dayjs from 'dayjs';
 import AdminDashboard from './adminDashboard';
 import EmployeeDashboard from './employeeDashboard';
+import BrokerDashboard from './brokerDashboard';
+import FranchiseDashboard from './franchiseDashboard';
 const Dashboard = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -34,6 +36,12 @@ const Dashboard = (props) => {
                 }
                 {
                     context.adminUser(userId).role === 'employee' && (<EmployeeDashboard userId={userId} />)
+                }
+                 {
+                    context.adminUser(userId).role === 'broker' && (<BrokerDashboard userId={userId} />)
+                }
+                 {
+                    context.adminUser(userId).role === 'franchise' && (<FranchiseDashboard userId={userId} />)
                 }
             </Card>
         </>
