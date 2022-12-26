@@ -128,10 +128,10 @@ const BrokerDashboard = (props) => {
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var tCountData = [
                 { actionLabel: 'New Entry', action: "add-new-member", employee: 0 },
-                { actionLabel: 'Profile Edit', action: "edit-member", employee: 0 },
-                { actionLabel: 'Profile Delete', action: "delete-member", employee: 0 },
-                { actionLabel: 'Photo Upload', action: "upload-photo", employee: 0 },
-                { actionLabel: 'Profile Print', action: "print-profile", employee: 0 },
+               // { actionLabel: 'Profile Edit', action: "edit-member", employee: 0 },
+               // { actionLabel: 'Profile Delete', action: "delete-member", employee: 0 },
+               // { actionLabel: 'Photo Upload', action: "upload-photo", employee: 0 },
+                //{ actionLabel: 'Profile Print', action: "print-profile", employee: 0 },
                 { actionLabel: 'Paid', action: "make-payment", employee: 0 },
             ];
             tCountData.forEach((item, index) => {
