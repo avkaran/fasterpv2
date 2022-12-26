@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { FormViewItem } from '../../../../../../comp';
 const ViewMemberBasic = (props) => {
     const context = useContext(PsContext);
-    const { viewData, isForCustomer, ...other } = props;
+    const { viewData, isForCustomer,userId, ...other } = props;
     useEffect(() => {
         //load photos of
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +99,7 @@ const ViewMemberBasic = (props) => {
                     </Col>)
                 }
                 {
-                    !isForCustomer && (<Col className='gutter-row' xs={24} xl={12}>
+                    !isForCustomer && (context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee') && (<Col className='gutter-row' xs={24} xl={12}>
                         <FormViewItem label="Password">{context.psGlobal.decrypt(viewData.password)}</FormViewItem>
                     </Col>)
                 }

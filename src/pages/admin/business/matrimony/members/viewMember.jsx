@@ -796,7 +796,7 @@ const ViewMember = (props) => {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("basic") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
 
-                                        <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} />
+                                        <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} userId={userId}/>
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faBookOpenReader} /> Education & Occupation</Divider>
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("education") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
