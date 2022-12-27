@@ -33,7 +33,8 @@ export const businesses = [
     apiUrl: 'https://rajmatrimony.com/api/v2_0/',
     dbName: 'rajmatrimony',
     activeModels: ['dashboard', 'members', 'contents',],
-    companies: [{ id: '1', name: 'Raj Matrimony', logo: '' }]
+    companies: [{ id: '1', name: 'Raj Matrimony', logo: '' }],
+    //responsive: { isMobile: true, }
   },
   { //3
     key: 'nhboard',
