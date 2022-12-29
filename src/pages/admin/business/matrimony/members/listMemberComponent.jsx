@@ -354,6 +354,7 @@ const ListMemberComponent = (props) => {
                         priceClauses.push(' sum(package_price)>=5000')
                        
                     })
+                    
                     if(priceClauses.length>0)
                     filter_clauses.push(" m.id in (SELECT member_auto_id FROM `orders` WHERE order_status='Paid'  GROUP by member_auto_id HAVING " + priceClauses.join(" OR ") +")");
                 }

@@ -75,7 +75,6 @@ export const getResellerBalance = async (resellerType,resellerId) => {
             query_type: 'query',
             query: "select  sum(coalesce(credit,0)-coalesce(debit,0)) as balance from fr_br_transactions where user_type='" + resellerType + "' and user_id='" + resellerId + "' and transaction_status='Paid' and status=1"
         }
-
         apiRequest(reqData, "dev").then((res) => {
             resolve(res[0].balance)
         }).catch(err => {
