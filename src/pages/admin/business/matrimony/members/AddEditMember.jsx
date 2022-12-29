@@ -1315,6 +1315,7 @@ const AddEditMember = (props) => {
                     showSearch
                     placeholder="Sub Caste"
                     optionFilterProp="children"
+                    allowClear={true}
                     //onChange={casteOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 >
@@ -1422,7 +1423,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Residence Type"
-
+                    allowClear={true}
                     optionFilterProp="children"
                     //onChange={residenceTypeOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -1895,6 +1896,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Height"
+                    allowClear={true}
 
                     optionFilterProp="children"
                     //onChange={heightOnChange}
@@ -1917,7 +1919,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Weight"
-
+                    allowClear={true}
                     optionFilterProp="children"
                 //onChange={weightOnChange}
                 // filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -2060,7 +2062,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Raasi"
-
+                    allowClear={true}
                     optionFilterProp="children"
                     //onChange={raasiOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -2140,7 +2142,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Dhosam Type"
-
+                    allowClear={true}
                     optionFilterProp="children"
                     //onChange={dhosamTypeOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -2162,7 +2164,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Jadhagam Type"
-
+                    allowClear={true}
                     optionFilterProp="children"
                     //onChange={jadhagamTypeOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}

@@ -32,50 +32,50 @@ const ShortLinePrint = (props) => {
     // setPrintData(memberData);
     return memberDataNew;
   }
+  const cellStyle={ borderCollapse:"collapse",border:'1px solid black'}
   return (
     <>
       <div style={{ display: "none" }}>
         <div id="short-line" style={{ fontSize: "9pt !important" }}>
-          <table width="100%" border="1" cellpadding="5px" borderCollapse="collapse">
+          <table width="100%"  cellpadding="5px" style={{border:'1px solid black',borderCollapse:"collapse"}}  >
             <tr>
-              <th >S.No</th>
-              <th>Profile Id</th>
-              <th>Amount</th>
-              <th>Photo</th>
-              <th>Name/Father Name</th>
-              <th>Education/Age</th>
-              <th>Job/Income(PM)</th>
-              <th>Star/Rassi</th>
-              <th>Taluk/District</th>
-              {isContact && (<th>Mobile</th>)}
+              <th style={cellStyle}>S.No</th>
+              <th style={cellStyle}>Profile Id</th>
+             
+              <th style={cellStyle}><img src={context.baseUrl+context.noFemale} style={{width:'10px'}} /></th>
+              <th style={cellStyle}>Name<br/>Father Name</th>
+              <th style={cellStyle}>Edu<br/>Age</th>
+              <th style={cellStyle}>Job<br/>Income(PM)</th>
+              <th style={cellStyle}>Star<br/>Rassi</th>
+              <th style={cellStyle}>Taluk<br/>District</th>
+              {isContact && (<th style={cellStyle}>Mobile</th>)}
             </tr>
             {business && allData && selMembers.length > 0 && getMemberData().map((item, index) => {
               return (
                 <>
                   <tr>
-                    <td>{index + 1}</td>
-                    <td> {item.member_id}</td>
-                    <td> {item.paid_amount}</td>
-                    <td> {parseInt(item.is_photo_updated) === 1 ? 'Yes' : 'No'}</td>
-                    <td>{item.name} / {item.father_name}
+                    <td style={cellStyle}>{index + 1}</td>
+                    <td style={cellStyle}> {item.member_id}<br/>{item.paid_amount}</td>
+                    <td style={cellStyle}> {parseInt(item.is_photo_updated) === 1 ? 'Yes' : 'No'} </td>
+                    
+                    <td style={cellStyle}>{item.name && item.name.substr(0, 15)} <br/>{item.father_name && item.father_name.substr(0, 15)}
                     </td>
-                    <td>
-                      {item.course_name},{item.education_detail},{item.age}
+                    <td style={cellStyle}>
+                      {item.course_name}<br/>{item.age}
                     </td>
 
-                    <td>{item.job_name},
+                    <td  style={cellStyle}>{item.job_name}<br/>
                       {parseFloat(item.job_annual_income) > 0
                         ? (parseFloat(item.job_annual_income) / 12).toFixed(2)
                         : "NA"}
-                      /-&nbsp;
                     </td>
-                    <td>
-                      {item.star},{item.raasi}
+                    <td style={cellStyle}>
+                      {item.star}<br/>{item.raasi}
                     </td>
-                    <td>
-                      {item.taluk},{item.district}
+                    <td style={cellStyle}>
+                      {item.taluk}<br/>{item.district}
                     </td>
-                    {isContact && (<td>{getMobileNo(item.mobile_no)}</td>)}
+                    {isContact && (<td style={cellStyle}><strong>{getMobileNo(item.mobile_no)}<br/>{getMobileNo(item.mobile_alt_no_1)}</strong></td>)}
                   </tr>
                 </>
               );
