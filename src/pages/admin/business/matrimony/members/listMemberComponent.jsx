@@ -1,7 +1,7 @@
 import PsContext from '../../../../../context'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Row, Col, message, Spin } from 'antd';
-import { Avatar, Card, Image, Space, Tag, Checkbox, Collapse, Modal, Input, Select, Form, Button } from 'antd';
+import { Avatar, Card, Image, Space, Tag, Checkbox, Collapse, Modal, Input, Select, Form, Button, Radio } from 'antd';
 import { MyButton } from '../../../../../comp'
 import { baseUrl, printDocument } from '../../../../../utils';
 import noImg from '../../../../../assets/images/no-img.jpg'
@@ -175,7 +175,14 @@ const ListMemberComponent = (props) => {
 
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var menus = [];
-
+            //add menu for payment
+            var payChildrens = [];
+            payChildrens.push({ label: "Below 500", value: '500', key: 'amount_paid_key_500', })
+            payChildrens.push({ label: "500-1000", value: '1000', key: 'amount_paid_key_1000', })
+            payChildrens.push({ label: "1000-2000", value: '2000', key: 'amount_paid_key_2000', })
+            payChildrens.push({ label: "2000-5000", value: '5000', key: 'amount_paid_key_5000', })
+            payChildrens.push({ label: "Above 5000", value: '10000', key: 'amount_paid_key_10000', })
+            menus.push({ label: "AMOUNT PAID", key: 'amount_paid', children: payChildrens });
             reqData.forEach((item, index) => {
                 var curWhereClasuses = filterColumns.current;
                 var isClauseFound = false;
@@ -224,6 +231,7 @@ const ListMemberComponent = (props) => {
             var childlist = [];
             item.children.forEach(child => {
                 childlist.push(<><Checkbox value={child.value} noStyle>{child.label}</Checkbox><br /></>)
+
             });
             panelList.push(<Panel header={item.label} key={item.key}>
                 <Form
@@ -247,6 +255,8 @@ const ListMemberComponent = (props) => {
                                 {childlist}
                             </Space>
                         </Checkbox.Group>
+
+
                     </Form.Item>
                     <Form.Item wrapperCol={{ offset: 8, span: 24 }}>
 
@@ -269,15 +279,15 @@ const ListMemberComponent = (props) => {
     }
     const onListPageChange = (page, allData) => {
 
-         /*   var excelMembers = [];
-     allData.forEach(item => {
-            var curRow = {};
-            memberColumns.forEach(column => {
-                curRow[column.title] = item[column.fieldName];
-            })
-            excelMembers.push(curRow);
-        })
-        setExcelData({ members: excelMembers }); */
+        /*   var excelMembers = [];
+    allData.forEach(item => {
+           var curRow = {};
+           memberColumns.forEach(column => {
+               curRow[column.title] = item[column.fieldName];
+           })
+           excelMembers.push(curRow);
+       })
+       setExcelData({ members: excelMembers }); */
         setSelMembers([]);
         setAllData(allData);
     }
@@ -324,10 +334,29 @@ const ListMemberComponent = (props) => {
         var filter_clauses = [];
         if (filterColumns.current && Array.isArray(filterColumns.current))
             filter_clauses = filterColumns.current;
+
         Object.entries(values).forEach(([key, value], index) => {
             if (value) {
                 if (key === "gender")
                     filter_clauses.push(" m.gender in ('" + value.join("','") + "')");
+                else if (key === "amount_paid") {
+                    var priceClauses = []
+                    value.forEach(price => {
+                        if (parseInt(price) === 500)
+                            priceClauses.push(' sum(package_price)<500 ')
+                        else if (parseInt(price) === 1000)
+                            priceClauses.push(' (sum(package_price)>= 500 AND sum(package_price)<1000)')
+                        else if (parseInt(price) === 2000)
+                            priceClauses.push(' (sum(package_price)>= 1000 AND sum(package_price)<2000)')
+                        else if (parseInt(price) === 5000)
+                            priceClauses.push(' (sum(package_price)>= 2000 AND sum(package_price)<5000)')
+                        else
+                        priceClauses.push(' sum(package_price)>=5000')
+                       
+                    })
+                    if(priceClauses.length>0)
+                    filter_clauses.push(" m.id in (SELECT member_auto_id FROM `orders` WHERE order_status='Paid'  GROUP by member_auto_id HAVING " + priceClauses.join(" OR ") +")");
+                }
                 else if (key === "marital_status")
                     filter_clauses.push(" m.marital_status in ('" + value.join("','") + "')");
                 else if (key === "country")
@@ -694,7 +723,7 @@ const ListMemberComponent = (props) => {
                 isContact={isPrintContact}
                 isPhoto={isPrintPhoto}
 
-            /> 
+            />
             <Modal
                 visible={visiblePrintModal}
                 zIndex={999}
@@ -760,17 +789,17 @@ const ListMemberComponent = (props) => {
                         </Select>
                     </FormItem>
                     {
-                        (context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee') && (<FormItem
+                        (context.adminUser(userId).role === 'admin' || context.adminUser(userId).role === 'employee') && (<FormItem
                             label="Print Contact"
                             name="print_contact"
                             onChange={(e) => printForm.setFieldsValue({ print_contact: e.target.checked })}
-    
+
                         >
                             <Checkbox />
-    
+
                         </FormItem>)
                     }
-                    
+
                     <FormItem
                         label="Print Photo"
                         name="print_photo"
@@ -781,17 +810,17 @@ const ListMemberComponent = (props) => {
 
                     </FormItem>
                     {
-                         (context.adminUser(userId).role==='admin' || context.adminUser(userId).role==='employee') &&  (<FormItem
+                        (context.adminUser(userId).role === 'admin' || context.adminUser(userId).role === 'employee') && (<FormItem
                             label="For Member"
                             name="member_id"
                         // rules={[{ required: true, message: "Please Enter Member Name" }]}
                         >
-    
+
                             <Input onChange={onMemberIdChange} />
                         </FormItem>)
                     }
 
-                    
+
                     {
                         printingForMemberData && (<Row>
                             <Col className="gutter-row" xs={24} xl={8}>
