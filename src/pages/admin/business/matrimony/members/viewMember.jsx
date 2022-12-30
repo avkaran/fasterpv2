@@ -61,6 +61,7 @@ const ViewMember = (props) => {
     const [planNames, setPlanNames] = useState(null);
     const [paymentMode, setPaymentMode] = useState(null);
     const [refreshPaymentHistory, setRefreshPaymentHistory] = useState(false);
+    const [refreshPrintedProfiles,setRefreshPrintedProfiles]=useState(0)
     const [paymentInfo, setPaymentInfo] = useState(null);
     const [viewContactLoader, setViewContactLoader] = useState(false);
     const [isViewContact, setIsViewContact] = useState(true);
@@ -796,7 +797,7 @@ const ViewMember = (props) => {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("basic") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
                                         }
 
-                                        <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} userId={userId}/>
+                                        <ViewMemberBasic isForCustomer={isForCustomer} viewData={viewData} userId={userId} />
                                         <Divider orientation="left" style={{ borderWidth: '3px', borderColor: cyan[7] }}><FontAwesomeIcon icon={faBookOpenReader} /> Education & Occupation</Divider>
                                         {
                                             isProfileEdit && (<MyButton shape="round" style={{ float: 'right' }} onClick={() => { setVisibleEditBasicModal(true); setCurEditForm("education") }}><FontAwesomeIcon icon={faEdit} /> Edit</MyButton>)
@@ -1212,7 +1213,7 @@ const ViewMember = (props) => {
                                         </Form>
                                     </Tabs.TabPane>
                                     {
-                                        !isForCustomer && (<Tabs.TabPane tab="Payment History" key="payment">
+                                        !isForCustomer && (<><Tabs.TabPane tab="Payment History" key="payment">
 
                                             <PaginatedTable
                                                 columns={tableColumns}
@@ -1282,7 +1283,44 @@ const ViewMember = (props) => {
                                                 </Form>
 
                                             </Modal>
-                                        </Tabs.TabPane>)
+                                        </Tabs.TabPane>
+                                            <Tabs.TabPane tab="Printed Profiles" key="printed_profiles">
+                                                <PaginatedTable
+                                                    columns={
+                                                        [
+                                                            {
+                                                                title: 'S.No',
+                                                                dataIndex: 'row_num',
+                                                                key: 'row_num',
+                                                                //render: (item) => <strong>{item}</strong>,
+                                                            },
+                                                            {
+                                                                title: 'Print Date',
+                                                                dataIndex: 'log_time',
+                                                                //  key: 'order_data',
+                                                                render: (text, record) => <strong>{dayjs(record.log_time).format("DD/MM/YYYY h:m a")}</strong>,
+                                                            },
+                                                            {
+                                                                title: 'Member Id',
+                                                                dataIndex: 'member_id',
+                                                                key: 'member_id',
+
+                                                            },
+                                                            {
+                                                                title: 'Name',
+                                                                dataIndex: 'name',
+                                                                key: 'name',
+                                                            },
+                                                        ]
+                                                    }
+                                                    countQuery={"select count(*) as count from members m,logs o  where  m.id=o.ref_id  and o.log_name='print_profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    listQuery={"select m.*,o.log_time,@rownum:=@rownum+1 as row_num from  members m,logs o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where m.id=o.ref_id  and o.log_name='print_profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    itemsPerPage={20}
+                                                    userId={userId}
+                                                    refresh={refreshPrintedProfiles}
+                                                />
+                                            </Tabs.TabPane>
+                                        </>)
                                     }
 
                                     {/* <Tabs.TabPane tab="Profile Views" key="views">

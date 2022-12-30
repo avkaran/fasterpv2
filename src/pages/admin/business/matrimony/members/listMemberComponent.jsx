@@ -178,9 +178,9 @@ const ListMemberComponent = (props) => {
             //add menu for payment
             var payChildrens = [];
             payChildrens.push({ label: "Below 500", value: '500', key: 'amount_paid_key_500', })
-            payChildrens.push({ label: "500-1000", value: '1000', key: 'amount_paid_key_1000', })
-            payChildrens.push({ label: "1000-2000", value: '2000', key: 'amount_paid_key_2000', })
-            payChildrens.push({ label: "2000-5000", value: '5000', key: 'amount_paid_key_5000', })
+            payChildrens.push({ label: "501-1000", value: '1000', key: 'amount_paid_key_1000', })
+            payChildrens.push({ label: "1001-2000", value: '2000', key: 'amount_paid_key_2000', })
+            payChildrens.push({ label: "2001-5000", value: '5000', key: 'amount_paid_key_5000', })
             payChildrens.push({ label: "Above 5000", value: '10000', key: 'amount_paid_key_10000', })
             menus.push({ label: "AMOUNT PAID", key: 'amount_paid', children: payChildrens });
             reqData.forEach((item, index) => {
@@ -343,15 +343,15 @@ const ListMemberComponent = (props) => {
                     var priceClauses = []
                     value.forEach(price => {
                         if (parseInt(price) === 500)
-                            priceClauses.push(' sum(package_price)<500 ')
+                            priceClauses.push(' sum(package_price)<=500 ')
                         else if (parseInt(price) === 1000)
-                            priceClauses.push(' (sum(package_price)>= 500 AND sum(package_price)<1000)')
+                            priceClauses.push(' (sum(package_price)> 500 AND sum(package_price)<=1000)')
                         else if (parseInt(price) === 2000)
-                            priceClauses.push(' (sum(package_price)>= 1000 AND sum(package_price)<2000)')
+                            priceClauses.push(' (sum(package_price)> 1000 AND sum(package_price)<=2000)')
                         else if (parseInt(price) === 5000)
-                            priceClauses.push(' (sum(package_price)>= 2000 AND sum(package_price)<5000)')
+                            priceClauses.push(' (sum(package_price)> 2000 AND sum(package_price)<=5000)')
                         else
-                        priceClauses.push(' sum(package_price)>=5000')
+                        priceClauses.push(' sum(package_price)>5000')
                        
                     })
                     
@@ -417,14 +417,14 @@ const ListMemberComponent = (props) => {
         if (values.print_contact && values.print_type==='profile-view') {
             selMembers.forEach(obj=>{
     
-                if(printingForMemberData){
+                if(printingForMemberData && printingForMemberData.member_id){
                     context.psGlobal.addLog({
                         log_name: 'print-profile',
                         logged_type: context.adminUser(userId).role,
                         logged_by: context.adminUser(userId).id,
                         ref_table_column: 'members.id',
                         ref_id: obj,
-                        ref_id2: printingForMemberData ? printingForMemberData.id : '',
+                        ref_id2: printingForMemberData ? printingForMemberData.member_id : '',
                         description: selMembers.length.toString() + " Profiles printed for " + values.member_id
                     })
                 }

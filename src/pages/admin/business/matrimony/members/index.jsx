@@ -18,7 +18,7 @@ import ViewMember from './viewMember';
 import { useParams } from 'react-router-dom';
 const ListMembers = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
+    const { userId } = useParams();
     const { Panel } = Collapse;
     const [searchByIdForm] = Form.useForm();
     const [basicSearchForm] = Form.useForm();
@@ -144,7 +144,7 @@ const {userId}=useParams();
             }
             else {
                 if (values.mobile_no.trim().length === 10)
-                    final_nos.push("91"+values.mobile_no.trim())
+                    final_nos.push("91" + values.mobile_no.trim())
 
                 final_nos.push(values.mobile_no.trim())
             }
@@ -160,6 +160,13 @@ const {userId}=useParams();
 
 
         }
+    }
+    const onFinishSearchPrintedProfiles = (values) => {
+        var filter_clauses = [];
+        filter_clauses.push(" m.id in (select ref_id from logs where log_name='print-profile' and ref_id2='"+values.member_id+"') ");
+        filterColumns.current = filter_clauses;
+        setSearchActiveKeys([]);
+        setRefreshMemberList(prev => prev + 1)
     }
     const onBasicSearchFormFinish = (values) => {
         var filter_clauses = [];
@@ -244,17 +251,17 @@ const {userId}=useParams();
                             'members.caste',
                             'members.sub_caste',
                             'members.caste_detail',
-                            
+
                             'members.password',
                             'members.marital_status',
                             'members.childrens',
                             'members.children_living_status',
-                            
+
                             'members.mobile_no',
                             'members.mobile_alt_no_1',
                             'members.mobile_alt_no_2',
                             'members.whatsapp_no',
-                           
+
                             'members.door_no',
                             'members.street',
                             'members.area',
@@ -264,9 +271,9 @@ const {userId}=useParams();
                             'members.country',
                             'members.state',
                             'members.district',
-                           
+
                             'members.email',
-                          
+
                             'members.mother_tongue',
                             'members.gothra',
                             'members.kuladeivam',
@@ -419,7 +426,7 @@ const {userId}=useParams();
                                                     name="age_from"
 
                                                     noStyle >
-                                                    <Select   showSearch placeholder="From" style={{ width: '120px' }}>
+                                                    <Select showSearch placeholder="From" style={{ width: '120px' }}>
                                                         {getAge()}
                                                     </Select>
                                                 </Form.Item>
@@ -428,7 +435,7 @@ const {userId}=useParams();
                                                     name="age_to"
                                                     // rules={[{ required: true, message: 'Enter Amount' }]}
                                                     noStyle>
-                                                    <Select  showSearch placeholder="To" style={{ width: '120px' }}>
+                                                    <Select showSearch placeholder="To" style={{ width: '120px' }}>
                                                         {getAge()}
                                                     </Select>
                                                 </Form.Item>
@@ -442,7 +449,7 @@ const {userId}=useParams();
                                         // wrapperCol={{ offset: 6, span: 6 }}
 
                                         >
-                                            <Select  showSearch placeholder="Select Gender" >
+                                            <Select showSearch placeholder="Select Gender" >
                                                 {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'gender')}
                                             </Select>
                                         </Form.Item>
@@ -587,6 +594,42 @@ const {userId}=useParams();
                                             </Space>
                                         </Form.Item>
                                     </Form>
+                                </Tabs.TabPane>
+                                <Tabs.TabPane tab="Printed Profiles" key="search_printed_profiles">
+                                    <Form
+                                        name="basic"
+                                        // form={searchPrintedProfilesForm}
+                                        labelAlign="left"
+                                        labelCol={{ span: 8 }}
+                                        wrapperCol={{ span: 20 }}
+                                        initialValues={{ remember: true }}
+                                        onFinish={onFinishSearchPrintedProfiles}
+                                        autoComplete="off"
+                                    >
+                                        <Row gutter={16}>
+
+                                            <Col className='gutter-row' xs={24} xl={12}>
+                                                <Form.Item
+                                                    label="Member Id"
+                                                    name="member_id"
+                                                    tooltip={{ title: "Type the member id to list the printed profiles for him/her", color: green[6], icon: <FontAwesomeIcon icon={faCircleQuestion} style={{ color: green[6] }} /> }}
+                                                    rules={[{ required: true, message: 'Enter Member Id' }]}
+                                                >
+                                                    <Input placeholder="Member Id" />
+
+                                                </Form.Item>
+
+
+                                                <Form.Item wrapperCol={{ offset: 10, span: 24 }}>
+                                                    <Button size="large" type="primary" htmlType="submit" style={{}}>
+                                                        <FontAwesomeIcon icon={faSearch} /> &nbsp; Get Printed Profiles
+                                                    </Button>
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+
+                                    </Form>
+
                                 </Tabs.TabPane>
                             </Tabs>
                         </Panel>

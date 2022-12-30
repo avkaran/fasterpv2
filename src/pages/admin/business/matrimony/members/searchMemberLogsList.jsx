@@ -34,7 +34,7 @@ const SearchMemberLogsList = (props) => {
         { actionLabel: 'Profile Edit', action: "edit-member", ref_table_column: 'members.id' },
         { actionLabel: 'Profile Delete', action: "delete-member", ref_table_column: 'members.id' },
         { actionLabel: 'Photo Upload', action: "upload-photo", ref_table_column: 'members.id' },
-        { actionLabel: 'Profile Print', action: "print-profile", ref_table_column: 'members.id' },
+        { actionLabel: 'Print Profile', action: "print-profile", ref_table_column: 'members.id' },
         { actionLabel: 'Paid', action: "make-payment", ref_table_column: 'orders.id' },
         { actionLabel: 'Visit/Login', action: "login", ref_table_column: 'members.id' },
         { actionLabel: 'Payment Tried', action: "payment-tried", ref_table_column: 'orders.id' },
