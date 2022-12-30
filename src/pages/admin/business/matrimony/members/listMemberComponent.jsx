@@ -376,25 +376,31 @@ const ListMemberComponent = (props) => {
         if (values.print_contact) setIsPrintContact(true);
         if (values.print_photo) setIsPrintPhoto(true);
 
-        if (values.print_contact) {
-            if (!values.member_id) {
+        if (values.print_contact && values.print_type==='profile-view') {
+            if (!printingForMemberData) {
                 message.error("Provide for Member Id for Printing");
                 return;
             }
         }
+        
         printDocument(values.print_type);
-
-        if (values.print_contact) {
-
-            context.psGlobal.addLog({
-                log_name: 'print-profile',
-                logged_type: context.adminUser(userId).role,
-                logged_by: context.adminUser(userId).id,
-                ref_table_column: 'members.id',
-                ref_id: printingForMemberData ? printingForMemberData.id : '',
-                ref_id2: values.member_id,
-                description: selMembers.length.toString() + " Profiles printed for " + values.member_id
+        if (values.print_contact && values.print_type==='profile-view') {
+            selMembers.forEach(obj=>{
+    
+                if(printingForMemberData){
+                    context.psGlobal.addLog({
+                        log_name: 'print-profile',
+                        logged_type: context.adminUser(userId).role,
+                        logged_by: context.adminUser(userId).id,
+                        ref_table_column: 'members.id',
+                        ref_id: obj,
+                        ref_id2: printingForMemberData ? printingForMemberData.id : '',
+                        description: selMembers.length.toString() + " Profiles printed for " + values.member_id
+                    })
+                }
+               
             })
+           
         }
     };
     const onMemberIdChange = (e) => {
