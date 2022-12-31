@@ -23,7 +23,7 @@ const mynav = [
 			{ name: 'All Members', path: '/:userId/admin/members', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL},
 			{ name: 'Add Member', path: '/:userId/admin/members/add-member', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'matrimony-members.add-new-member' },
 			{ name: 'Member Logs', path: '/:userId/admin/members/member-logs', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL },
-
+			{ name: 'Deleted Members', path: '/:userId/admin/members/deleted-member', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'matrimony-members.list-deleted-members' },
 		],
 		allowed: ROLES.ALL
 	},

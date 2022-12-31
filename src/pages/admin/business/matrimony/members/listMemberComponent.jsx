@@ -177,11 +177,13 @@ const ListMemberComponent = (props) => {
             var menus = [];
             //add menu for payment
             var payChildrens = [];
-            payChildrens.push({ label: "Below 500", value: '500', key: 'amount_paid_key_500', })
+            payChildrens.push({ label: "1-500", value: '500', key: 'amount_paid_key_500', })
             payChildrens.push({ label: "501-1000", value: '1000', key: 'amount_paid_key_1000', })
-            payChildrens.push({ label: "1001-2000", value: '2000', key: 'amount_paid_key_2000', })
-            payChildrens.push({ label: "2001-5000", value: '5000', key: 'amount_paid_key_5000', })
-            payChildrens.push({ label: "Above 5000", value: '10000', key: 'amount_paid_key_10000', })
+            payChildrens.push({ label: "1001-1500", value: '1500', key: 'amount_paid_key_1500', })
+            payChildrens.push({ label: "1501-4500", value: '4500', key: 'amount_paid_key_4500', })
+            payChildrens.push({ label: "4501-5000", value: '5000', key: 'amount_paid_key_5000', })
+            payChildrens.push({ label: "5001-10000", value: '10000', key: 'amount_paid_key_10000', })
+            payChildrens.push({ label: "10001-50000", value: '50000', key: 'amount_paid_key_50000', })
             menus.push({ label: "AMOUNT PAID", key: 'amount_paid', children: payChildrens });
             reqData.forEach((item, index) => {
                 var curWhereClasuses = filterColumns.current;
@@ -346,17 +348,21 @@ const ListMemberComponent = (props) => {
                             priceClauses.push(' sum(package_price)<=500 ')
                         else if (parseInt(price) === 1000)
                             priceClauses.push(' (sum(package_price)> 500 AND sum(package_price)<=1000)')
-                        else if (parseInt(price) === 2000)
-                            priceClauses.push(' (sum(package_price)> 1000 AND sum(package_price)<=2000)')
+                        else if (parseInt(price) === 1500)
+                            priceClauses.push(' (sum(package_price)> 1000 AND sum(package_price)<=1500)')
+                        else if (parseInt(price) === 4500)
+                            priceClauses.push(' (sum(package_price)> 1500 AND sum(package_price)<=4500)')
                         else if (parseInt(price) === 5000)
-                            priceClauses.push(' (sum(package_price)> 2000 AND sum(package_price)<=5000)')
+                            priceClauses.push(' (sum(package_price)> 4500 AND sum(package_price)<=5000)')
+                        else if (parseInt(price) === 10000)
+                            priceClauses.push(' (sum(package_price)> 5000 AND sum(package_price)<=10000)')
                         else
-                        priceClauses.push(' sum(package_price)>5000')
-                       
+                            priceClauses.push(' sum(package_price)>50000')
+
                     })
-                    
-                    if(priceClauses.length>0)
-                    filter_clauses.push(" m.id in (SELECT member_auto_id FROM `orders` WHERE order_status='Paid'  GROUP by member_auto_id HAVING " + priceClauses.join(" OR ") +")");
+
+                    if (priceClauses.length > 0)
+                        filter_clauses.push(" m.id in (SELECT member_auto_id FROM `orders` WHERE order_status='Paid'  GROUP by member_auto_id HAVING " + priceClauses.join(" OR ") + ")");
                 }
                 else if (key === "marital_status")
                     filter_clauses.push(" m.marital_status in ('" + value.join("','") + "')");
@@ -406,18 +412,18 @@ const ListMemberComponent = (props) => {
         if (values.print_contact) setIsPrintContact(true);
         if (values.print_photo) setIsPrintPhoto(true);
 
-        if (values.print_contact && values.print_type==='profile-view') {
+        if (values.print_contact && values.print_type === 'profile-view') {
             if (!printingForMemberData) {
                 message.error("Provide for Member Id for Printing");
                 return;
             }
         }
-        
+
         printDocument(values.print_type);
-        if (values.print_contact && values.print_type==='profile-view') {
-            selMembers.forEach(obj=>{
-    
-                if(printingForMemberData && printingForMemberData.member_id){
+        if (values.print_contact && values.print_type === 'profile-view') {
+            selMembers.forEach(obj => {
+
+                if (printingForMemberData && printingForMemberData.member_id) {
                     context.psGlobal.addLog({
                         log_name: 'print-profile',
                         logged_type: context.adminUser(userId).role,
@@ -428,9 +434,9 @@ const ListMemberComponent = (props) => {
                         description: selMembers.length.toString() + " Profiles printed for " + values.member_id
                     })
                 }
-               
+
             })
-           
+
         }
     };
     const onMemberIdChange = (e) => {

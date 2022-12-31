@@ -47,6 +47,7 @@ import Advertisement from "../../advertisements";
 import SearchMemberLogs from "./members/searchMemberLogs";
 import MemberLogsByAction from "./members/memberLogsByAction";
 import MembersByOrderStatus from "./members/membersByOrderStatus";
+import DeleteMemberReport from "./members/deleteMemberReport";
 
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
@@ -332,6 +333,13 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/error/permission-error'
                 element={< PermissionError />}
                 title='Permission Error'
+                allowed={ROLES.ALL}
+                exact={true}
+            />
+            <Route
+                path='/:userId/admin/members/deleted-member'
+                element={< DeleteMemberReport />}
+                title='Deleted Members'
                 allowed={ROLES.ALL}
                 exact={true}
             />

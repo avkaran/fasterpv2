@@ -1313,8 +1313,8 @@ const ViewMember = (props) => {
                                                             },
                                                         ]
                                                     }
-                                                    countQuery={"select count(*) as count from members m,logs o  where  m.id=o.ref_id  and o.log_name='print_profile' and o.ref_id2='" + viewData.member_id + "'"}
-                                                    listQuery={"select m.*,o.log_time,@rownum:=@rownum+1 as row_num from  members m,logs o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where m.id=o.ref_id  and o.log_name='print_profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    countQuery={"select count(*) as count from members m,logs o  where  m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    listQuery={"select m.*,o.log_time,@rownum:=@rownum+1 as row_num from  members m,logs o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "'"}
                                                     itemsPerPage={20}
                                                     userId={userId}
                                                     refresh={refreshPrintedProfiles}
