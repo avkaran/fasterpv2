@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { Button, Card } from 'antd';
-import { Form, Input, Select, InputNumber, Radio, Checkbox, Avatar, Image, Tag, Tabs, Divider, Modal, DatePicker } from 'antd';
+import { Form, Input, Select, InputNumber, Progress, Radio, Checkbox, Avatar, Image, Tag, Tabs, Divider, Modal, DatePicker } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { green, red, cyan, blue, magenta } from '@ant-design/colors';
@@ -61,12 +61,13 @@ const ViewMember = (props) => {
     const [planNames, setPlanNames] = useState(null);
     const [paymentMode, setPaymentMode] = useState(null);
     const [refreshPaymentHistory, setRefreshPaymentHistory] = useState(false);
-    const [refreshPrintedProfiles,setRefreshPrintedProfiles]=useState(0)
+    const [refreshPrintedProfiles, setRefreshPrintedProfiles] = useState(0)
     const [paymentInfo, setPaymentInfo] = useState(null);
     const [viewContactLoader, setViewContactLoader] = useState(false);
     const [isViewContact, setIsViewContact] = useState(true);
     const [isProfileEdit, setIsProfileEdit] = useState(true);
-    const [insufficientBalance, setInsufficientBalance] = useState(false)
+    const [insufficientBalance, setInsufficientBalance] = useState(false);
+
 
     useEffect(() => {
         loadBusinessNames();
@@ -628,7 +629,20 @@ const ViewMember = (props) => {
         </table>
 
     }
-
+    const getProfilePercentage = () => {
+        if (viewData) {
+            var count = 0;
+            Object.entries(viewData).forEach(([key, value])  => {
+                if (value){
+                 
+                    count = count + 1;
+                }  
+               
+            })
+            return parseInt((count / 130) * 100)
+        }
+        else return 0;
+    }
     const getAmsamChart = (item) => {
         var viewValuesAmsam = Array(12).fill('');
         if (item.amsam_chart)
@@ -775,7 +789,14 @@ const ViewMember = (props) => {
 
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }} onClick={() => { onPaymentClick() }}><FontAwesomeIcon icon={faIndianRupeeSign} /> Make Payment</MyButton>
                                         <MyButton type="outlined" shape="round" onClick={() => setVisibleProfilePrintModal(true)}><FontAwesomeIcon icon={faPrint} /> Print</MyButton>
+
                                     </Space>
+                                    <br/>
+                                    <br/>
+                                    Profile Information Filled<br/>
+                                        <Progress percent={getProfilePercentage()} />
+                                    
+
                                     {/* <Space style={{ marginTop: '10px' }}>
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faMessage} /> Send SMS</MyButton>
                                         <MyButton type="outlined" shape="round" style={{ width: '130px' }}><FontAwesomeIcon icon={faWhatsapp} /> Whatsapp</MyButton>
@@ -993,7 +1014,7 @@ const ViewMember = (props) => {
                                                     <FormViewItem label="Laknam">{viewData.laknam}</FormViewItem>
                                                 </Col>
                                                 <Col className='gutter-row' xs={24} xl={12}>
-                                                    <FormViewItem label="Birth Time">{viewData.birth_time}</FormViewItem>
+                                                    <FormViewItem label="Birth Time">{dayjs('2023-01-01 '+ viewData.birth_time,"YYYY-MM-DD hh:mm:ss").format("hh:mm a")}</FormViewItem>
                                                 </Col>
                                                 <Col className='gutter-row' xs={24} xl={12}>
                                                     <FormViewItem label="Birth Place">{viewData.birth_place}</FormViewItem>
@@ -1313,8 +1334,8 @@ const ViewMember = (props) => {
                                                             },
                                                         ]
                                                     }
-                                                    countQuery={"select count(*) as count from members m,logs o  where  m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "'"}
-                                                    listQuery={"select m.*,o.log_time,@rownum:=@rownum+1 as row_num from  members m,logs o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    countQuery={"select count(distinct o.ref_id) as count from members m,logs o  where  m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "'"}
+                                                    listQuery={"select m.*,o.log_time,@rownum:=@rownum+1 as row_num from  members m,logs o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where m.id=o.ref_id  and o.log_name='print-profile' and o.ref_id2='" + viewData.member_id + "' group by o.ref_id"}
                                                     itemsPerPage={20}
                                                     userId={userId}
                                                     refresh={refreshPrintedProfiles}

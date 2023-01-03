@@ -47,6 +47,7 @@ const AddEditMember = (props) => {
     const [visibleChildrenOptions, setvisibleChildrenOptions] = useState(false);
     const [visibleHomeMappillai, setVisibleHomeMappillai] = useState(false);
     const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"));
+    const [selBirthTime,setSelBirthTime]=useState(null)
     const [raasiList,setRaasiList]=useState([]);
     useEffect(() => {
         loadEducation();
@@ -122,7 +123,11 @@ const AddEditMember = (props) => {
                 fieldValue = dayjs(mydata['dob'], "YYYY-MM-DD");
                 setSelDob(dayjs(mydata['dob'], "YYYY-MM-DD"));
             }
-
+            if (fieldName === "birth_time") {
+                fieldValue = dayjs('2023-01-01 '+ mydata['birth_time'], "YYYY-MM-DD HH:mm:ss").format("hh:mm:ss");
+                if(mydata['birth_time'])
+                setSelBirthTime(dayjs('2023-01-01 '+ mydata['birth_time'], "YYYY-MM-DD HH:mm:ss"));
+            }
             if (fieldName === "password")
                 fieldValue = context.psGlobal.decrypt(mydata['password']);
             if (fieldName === "country")
@@ -300,6 +305,8 @@ const AddEditMember = (props) => {
                 }
             });
         }
+        if (values.member_horoscope && values.member_horoscope.birth_time)
+        HoroscopeProcessedValues['birth_time'] = selBirthTime.format('HH:mm:ss');
         if (values.member_horoscope && values.member_horoscope.raasi_chart) {
             var commaSeparatedRaasiValues = [];
             values.member_horoscope.raasi_chart.forEach(cInput => {
@@ -2111,7 +2118,8 @@ const AddEditMember = (props) => {
                 <Space direction="vertical">
                     <TimePicker
                         format='hh:mm a'
-                    //  onChange={onChange}
+                        value={selBirthTime?dayjs(selBirthTime):null}
+                      onChange={(time)=>{setSelBirthTime(dayjs(time));addeditFormMember.setFieldsValue({member_horoscope:{birth_time:dayjs(time)}})}}
                     />
 
                 </Space>

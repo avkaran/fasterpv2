@@ -13,6 +13,7 @@ import { AvatarPaginatedList, FormItem, ImageUpload } from '../../../../../comp'
 //import { useExcelDownloder } from 'react-xls';
 import { memberColumns } from './memberColumns';
 import ProfileViewPrint from './printMembers/profileViewprint';
+import ProfileViewPrintNew from './printMembers/profileViewprintNew';
 import ShortLinePrint from "./printMembers/shortLinePrint";
 import PostalPrint from "./printMembers/postalPrint";
 import PhotoPrint from "./printMembers/printPhoto";
@@ -412,7 +413,7 @@ const ListMemberComponent = (props) => {
         if (values.print_contact) setIsPrintContact(true);
         if (values.print_photo) setIsPrintPhoto(true);
 
-        if (values.print_contact && values.print_type === 'profile-view') {
+        if (values.print_contact && (values.print_type === 'profile-view' || values.print_type === 'profile-view-new')) {
             if (!printingForMemberData) {
                 message.error("Provide for Member Id for Printing");
                 return;
@@ -420,7 +421,7 @@ const ListMemberComponent = (props) => {
         }
 
         printDocument(values.print_type);
-        if (values.print_contact && values.print_type === 'profile-view') {
+        if (values.print_contact && (values.print_type === 'profile-view' || values.print_type === 'profile-view-new')) {
             selMembers.forEach(obj => {
 
                 if (printingForMemberData && printingForMemberData.member_id) {
@@ -600,7 +601,7 @@ const ListMemberComponent = (props) => {
                             countQuery={"select count(*) AS count from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs   where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false)}
 
 
-                            listQuery={"select m.*,row_number() OVER (ORDER BY created_date desc) as row_number,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')) AS age,COALESCE((SELECT package_price FROM orders where member_auto_id=m.id  and order_status='Paid' and is_current_plan=1 limit 1),0) as paid_amount,ec.course_name,cs.caste_name,f.father_status,f.father_occupation,f.mother_status,f.mother_occupation,f.brothers,f.brothers_married,f.sisters,f.sisters_married,f.family_type,f.dowry_jewels,f.dowry_property,f.dowry_cash,hb.eating_habits,hb.drinking_habits,hb.smoking_habits,hr.star,hr.patham,hr.raasi,hr.laknam,hr.birth_time,hr.birth_place,hr.dhosam_type,hr.jadhagam_type,hr.raasi_chart,hr.amsam_chart,hr.dasa,hr.dasa_year,hr.dasa_month,hr.dasa_days,p.height,p.weight,p.body_type,p.complexion,p.physical_status,p.physical_status_description,mp.prefered_eating_habits,mp.prefered_smoking_habits,mp.prefered_drinking_habits,mp.prefered_martial_status,CONCAT(mp.age_from,',',mp.age_to) as pref_age,CONCAT(mp.height_from,',',mp.height_to) as pref_height,CONCAT(mp.weight_from,',',mp.weight_to) as pref_weight,mp.prefered_physical_status,mp.prefered_mother_tongue,mp.prefered_religion,mp.prefered_caste,mp.prefered_education,mp.prefered_job_type,mp.prefered_job,mp.prefered_country,mp.prefered_state,mp.prefered_district,CONCAT(mp.income_from,',',mp.income_to) as pref_income,mp.expectation_notes from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id  and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by created_date desc"}
+                            listQuery={"select m.*,row_number() OVER (ORDER BY created_date desc) as row_number,ROUND(DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')) AS age,COALESCE((SELECT GROUP_CONCAT(package_price SEPARATOR ', ')  FROM orders where member_auto_id=m.id  and order_status='Paid' group by member_auto_id order by is_current_plan),0) as paid_amount,ec.course_name,cs.caste_name,f.father_status,f.father_occupation,f.mother_status,f.mother_occupation,f.brothers,f.brothers_married,f.sisters,f.sisters_married,f.family_type,f.dowry_jewels,f.dowry_property,f.dowry_cash,hb.eating_habits,hb.drinking_habits,hb.smoking_habits,hr.star,hr.patham,hr.raasi,hr.laknam,hr.birth_time,hr.birth_place,hr.dhosam_type,hr.jadhagam_type,hr.raasi_chart,hr.amsam_chart,hr.dasa,hr.dasa_year,hr.dasa_month,hr.dasa_days,p.height,p.weight,p.body_type,p.complexion,p.physical_status,p.physical_status_description,mp.prefered_eating_habits,mp.prefered_smoking_habits,mp.prefered_drinking_habits,mp.prefered_martial_status,CONCAT(mp.age_from,',',mp.age_to) as pref_age,CONCAT(mp.height_from,',',mp.height_to) as pref_height,CONCAT(mp.weight_from,',',mp.weight_to) as pref_weight,mp.prefered_physical_status,mp.prefered_mother_tongue,mp.prefered_religion,mp.prefered_caste,mp.prefered_education,mp.prefered_job_type,mp.prefered_job,mp.prefered_country,mp.prefered_state,mp.prefered_district,CONCAT(mp.income_from,',',mp.income_to) as pref_income,mp.expectation_notes from members m,member_family_details f,member_habits hb,member_horoscope hr,member_physical_attributes p,member_partner_preference mp,education_courses ec,castes cs  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.status=1 and m.member_status='Active' and m.id=f.member_auto_id and m.id=hb.member_auto_id and m.id=hr.member_auto_id and m.id=p.member_auto_id  and m.id=mp.member_auto_id and ec.id=m.educational_qualification and cs.id=m.caste " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by created_date desc"}
                             recordsPerRequestOrPage={100}
                             encryptFields={['mobile_no', 'mobile_alt_no_1', 'mobile_alt_no_2', 'whatsapp_no']}
                             userId={userId}
@@ -710,6 +711,16 @@ const ListMemberComponent = (props) => {
                 isContact={isPrintContact}
                 isPhoto={isPrintPhoto}
             />
+             <ProfileViewPrintNew
+                allData={allData}
+                selMembers={selMembers}
+
+                memberData={printData} //to be removed
+                business={selBusiness}
+                language={printLanguage}
+                isContact={isPrintContact}
+                isPhoto={isPrintPhoto}
+            />
             <PostalPrint
                 allData={allData}
                 selMembers={selMembers}
@@ -775,6 +786,7 @@ const ListMemberComponent = (props) => {
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         >
                             <Select.Option value="profile-view">Profile View</Select.Option>
+                            <Select.Option value="profile-view-new">Profile View 2</Select.Option>
                             <Select.Option value="postal">Postal</Select.Option>
                             <Select.Option value="short-line">Short Line</Select.Option>
                             <Select.Option value="print-photo">Photo Print</Select.Option>

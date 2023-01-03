@@ -28,6 +28,7 @@ const SearchMemberLogsList = (props) => {
     const [curAction, setCurAction] = useState('list');
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [reference, setreference] = useState([]);
+    const [paidTotal,setPaidTotal]=useState(0);
 
     const [actions] = useState([
         { actionLabel: 'New Entry', action: "add-new-member", ref_table_column: 'members.id' },
@@ -44,13 +45,14 @@ const SearchMemberLogsList = (props) => {
         searchForm.setFieldsValue({ log_dates: [dayjs(), dayjs()], action: action, action_by: actionBy })
         onactionChange(actionBy)
         if (context.adminUser(userId).role !== 'admin') {
-            searchForm.setFieldsValue({reference:context.adminUser(userId).id});
+            searchForm.setFieldsValue({ reference: context.adminUser(userId).id });
             resetLogList([dayjs(), dayjs()], action, actionBy, context.adminUser(userId).id);
         }
         else
             resetLogList([dayjs(), dayjs()], action, actionBy)
     }, []);
     const resetLogList = (log_dates, action, actionBy, refUser = null) => {
+        setPaidTotal(0)
         var filter_clauses = [];
         var actionInfo = actions.find(obj => obj.action === action);
         var refUserClause = '';
@@ -67,6 +69,20 @@ const SearchMemberLogsList = (props) => {
             }
             if (actionInfo.ref_table_column === "orders.id") {
                 filter_clauses.push("m.id in (select o.member_auto_id from logs l,orders o where l.ref_id=o.id and date(l.log_time)>='" + dayjs(log_dates[0]).format("YYYY-MM-DD") + "' and date(l.log_time)<='" + dayjs(log_dates[1]).format("YYYY-MM-DD") + "' and l.ref_table_column='orders.id' and l.log_name='" + action + "' and l.logged_type='" + actionBy + "' " + refUserOrderClause + ")")
+
+                //calculate paid total
+                var reqPaidQuery={
+                    type:'query',
+                    query:"select coalesce (sum(o.package_price),0.00) as paid_total from logs l,orders o where l.ref_id=o.id and date(l.log_time)>='" + dayjs(log_dates[0]).format("YYYY-MM-DD") + "' and date(l.log_time)<='" + dayjs(log_dates[1]).format("YYYY-MM-DD") + "' and l.ref_table_column='orders.id' and l.log_name='" + action + "' and l.logged_type='" + actionBy + "' " + refUserOrderClause
+                }
+                context.psGlobal
+                .apiRequest(reqPaidQuery, context.adminUser(userId).mode)
+                .then((res) => {
+                    setPaidTotal(res[0]['paid_total']);
+                })
+                .catch((err) => {
+                    message.error(err);
+                });
             }
         }
         filterColumns.current = filter_clauses;
@@ -241,6 +257,12 @@ const SearchMemberLogsList = (props) => {
 
                                     </Space>
                                 </FormItem>
+                            </Col>
+                            <Col className="gutter-row" xs={24} xl={12}>
+                                {
+                                    parseInt(paidTotal)>0 && (<span style={{color:'green',fontSize:'20px'}}>Total : {paidTotal}</span>)
+                                }
+                                 
                             </Col>
                         </Row>
                         <Row gutter={16}>
