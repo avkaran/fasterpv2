@@ -13,6 +13,7 @@ import MyMatches from "./profiles/myMatches";
 import ExpressInterestProfiles from "./profiles/expressInterestProfiles";
 import ViewedProfiles from "./profiles/viewedProfiles";
 import MyPlan from "./membership/myPlan";
+import MyPaymentBack from './membership/paymentBack';
 const UserLayout = React.lazy(() => import('./layout'));
 const CustomerRoutes = (props) => {
     return (<>
@@ -71,6 +72,13 @@ const CustomerRoutes = (props) => {
                 path='/:userId/customer/myplan'
                 element={<MyPlan />}
                 title='Dashboard'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+             <Route
+                path='/:userId/customer/payment-back'
+                element={<MyPaymentBack />}
+                title='Payment Response back'
                 allowed={CustomerROLES.CUSTOMER}
                 exact={true}
             />
