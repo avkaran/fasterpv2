@@ -122,6 +122,18 @@ const mynav = [
 		allowed: ROLES.AdminAndEmployee
 	},
 	{
+		name: 'Finance',
+		path: '/:userId/admin/finance',
+		icon: 'fa-solid fa-user-tie',
+		exact: false,
+		childrens: [
+			{ name: 'Ledgers', path: '/:userId/admin/finance/ledgers', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.list-ledgers' },
+			
+			
+		],
+		allowed: ROLES.AdminAndEmployee
+	},
+	{
 		name: 'Whatsapp',
 		path: '/:userId/admin/whatsapp',
 		icon: 'fa-solid fa-message',
@@ -129,7 +141,7 @@ const mynav = [
 		childrens: [
 			{ name: 'Whatsapp Reports', path: '/:userId/admin/whatsapp/wapp-reports', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.whatsapp-reports' },
 			{ name: 'Daily Whatsapp', path: '/:userId/admin/whatsapp/daily-whatsapp', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.daily-whatsapp' },
-			{ name: 'Synch Data', path: '/:userId/admin/developer', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.synch-data' },
+			/* { name: 'Synch Data', path: '/:userId/admin/developer', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'whatsapp.synch-data' }, */
 		],
 		allowed: ROLES.AdminAndEmployee
 	},
@@ -142,7 +154,9 @@ const mynav = [
 		childrens: [
 			{ name: 'Business Names', path: '/:userId/admin/business-names', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'business-names.list-business-names' },
 			{ name: 'Caste List', path: '/:userId/admin/castes', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'castes.list-castes' },
-			
+			{ name: 'District List', path: '/:userId/admin/districts', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'districts.list-districts' },
+			{ name: 'Education List', path: '/:userId/admin/education', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'education.list-education' },
+
 
 		],
 		allowed: ROLES.AdminAndEmployee

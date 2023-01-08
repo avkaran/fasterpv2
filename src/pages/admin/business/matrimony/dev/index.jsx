@@ -125,12 +125,7 @@ const DeveloperHome = (props) => {
 
             //remove if already stored,
             var reqDeleteData = [
-                {
-                    query_type: 'delete',
-                    table: 'members',
-                    where: { member_id: item.profile_id }
-
-                },
+                
                 {
                     query_type: 'delete',
                     table: 'member_family_details',
@@ -164,6 +159,12 @@ const DeveloperHome = (props) => {
                 {
                     query_type: 'delete',
                     table: 'orders',
+                    where: { member_id: item.profile_id }
+
+                },
+                {
+                    query_type: 'delete',
+                    table: 'members',
                     where: { member_id: item.profile_id }
 
                 },

@@ -69,7 +69,7 @@ const Layouts = (props) => {
                                         <div className="d-flex justify-content-end ">
                                             <nav className="nav-menu">
                                                 <ul>
-                                                    <li className="nav-item"><Link to="https://rajmatrimony.com" ><a className="nav-link" >Home</a></Link></li>
+                                                    <li className="nav-item"><Link to="/" ><a className="nav-link" >Home</a></Link></li>
                                                     <li className="nav-item"><Link to="/public/search" ><a className="nav-link" >Search</a></Link></li>
                                                     <li className="nav-item"><Link to="/public/register" ><a className="nav-link" >Free Register</a></Link></li>
                                                     <li className="nav-item"><Link to="/public/login" ><a className="nav-link" >Login</a></Link>

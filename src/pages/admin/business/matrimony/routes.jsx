@@ -48,6 +48,9 @@ import SearchMemberLogs from "./members/searchMemberLogs";
 import MemberLogsByAction from "./members/memberLogsByAction";
 import MembersByOrderStatus from "./members/membersByOrderStatus";
 import DeleteMemberReport from "./members/deleteMemberReport";
+import Districts from "./addNewDatails/districts"
+import Education from "./addNewDatails/education";
+import Ledgers from '../../finance/ledgers';
 
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
@@ -340,7 +343,28 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/members/deleted-member'
                 element={< DeleteMemberReport />}
                 title='Deleted Members'
-                allowed={ROLES.ALL}
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+            <Route
+                path='/:userId/admin/districts'
+                element={< Districts />}
+                title='Districts'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/education'
+                element={< Education />}
+                title='Education'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+            <Route
+                path='/:userId/admin/finance/ledgers'
+                element={< Ledgers />}
+                title='Ledgers'
+                allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
         </Route>

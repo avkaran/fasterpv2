@@ -47,8 +47,8 @@ const AddEditMember = (props) => {
     const [visibleChildrenOptions, setvisibleChildrenOptions] = useState(false);
     const [visibleHomeMappillai, setVisibleHomeMappillai] = useState(false);
     const [selDob, setSelDob] = useState(dayjs().subtract(18, "years"));
-    const [selBirthTime,setSelBirthTime]=useState(null)
-    const [raasiList,setRaasiList]=useState([]);
+    const [selBirthTime, setSelBirthTime] = useState(null)
+    const [raasiList, setRaasiList] = useState([]);
     useEffect(() => {
         loadEducation();
         if (editIdOrObject) {
@@ -124,9 +124,9 @@ const AddEditMember = (props) => {
                 setSelDob(dayjs(mydata['dob'], "YYYY-MM-DD"));
             }
             if (fieldName === "birth_time") {
-                fieldValue = dayjs('2023-01-01 '+ mydata['birth_time'], "YYYY-MM-DD HH:mm:ss").format("hh:mm:ss");
-                if(mydata['birth_time'])
-                setSelBirthTime(dayjs('2023-01-01 '+ mydata['birth_time'], "YYYY-MM-DD HH:mm:ss"));
+                fieldValue = dayjs('2023-01-01 ' + mydata['birth_time'], "YYYY-MM-DD HH:mm:ss").format("hh:mm:ss");
+                if (mydata['birth_time'])
+                    setSelBirthTime(dayjs('2023-01-01 ' + mydata['birth_time'], "YYYY-MM-DD HH:mm:ss"));
             }
             if (fieldName === "password")
                 fieldValue = context.psGlobal.decrypt(mydata['password']);
@@ -198,15 +198,15 @@ const AddEditMember = (props) => {
                 fieldValue = amsamValues;
 
             }
-            if (fieldName === "prefered_martial_status" &&  mydata['prefered_martial_status'])
+            if (fieldName === "prefered_martial_status" && mydata['prefered_martial_status'])
                 fieldValue = mydata['prefered_martial_status'].split(",")
-            if (fieldName === "prefered_mother_tongue" &&  mydata['prefered_mother_tongue'])
+            if (fieldName === "prefered_mother_tongue" && mydata['prefered_mother_tongue'])
                 fieldValue = mydata['prefered_mother_tongue'].split(",")
             if (fieldName === "prefered_religion" && mydata['prefered_religion']) {
                 fieldValue = mydata['prefered_religion'].split(",")
                 loadPreferedCastes(mydata['prefered_religion'].split(","));
             }
-            if (fieldName === "prefered_caste" &&  mydata['prefered_caste'])
+            if (fieldName === "prefered_caste" && mydata['prefered_caste'])
                 fieldValue = mydata['prefered_caste'].split(",")
             if (fieldName === "prefered_education" && mydata['prefered_education'])
                 fieldValue = mydata['prefered_education'].split(",")
@@ -225,22 +225,22 @@ const AddEditMember = (props) => {
 
                 })
             }
-            
+
             if (fieldName === "prefered_district" && mydata['prefered_district'])
-            fieldValue = mydata['prefered_district'].split(",")
+                fieldValue = mydata['prefered_district'].split(",")
             //set fieldvalues partner preference for age,height,weight,income
-            if (tableName ==='member_partner_preference' && (fieldName === "age" || fieldName === "height" || fieldName === "weight" || fieldName === "income")) {
+            if (tableName === 'member_partner_preference' && (fieldName === "age" || fieldName === "height" || fieldName === "weight" || fieldName === "income")) {
                 if (fieldName === "age" && mydata['pref_age'])
-                addeditFormMember.setFieldsValue({[tableName]: { age:  mydata['pref_age'].split(",") } })
-                if (fieldName === "height" &&  mydata['pref_height'])
-                addeditFormMember.setFieldsValue({[tableName]: { height:  mydata['pref_height'].split(",") } })
+                    addeditFormMember.setFieldsValue({ [tableName]: { age: mydata['pref_age'].split(",") } })
+                if (fieldName === "height" && mydata['pref_height'])
+                    addeditFormMember.setFieldsValue({ [tableName]: { height: mydata['pref_height'].split(",") } })
                 if (fieldName === "weight" && mydata['pref_weight'])
-                addeditFormMember.setFieldsValue({[tableName]: { weight:  mydata['pref_weight'].split(",") } })
+                    addeditFormMember.setFieldsValue({ [tableName]: { weight: mydata['pref_weight'].split(",") } })
                 if (fieldName === "income" && mydata['pref_income'])
-                addeditFormMember.setFieldsValue({[tableName]: { income:  mydata['pref_income'].split(",") } })
-              
+                    addeditFormMember.setFieldsValue({ [tableName]: { income: mydata['pref_income'].split(",") } })
+
             }
-            else{
+            else {
                 addeditFormMember.setFieldsValue({
                     [tableName]: { [fieldName]: fieldValue }
                 })
@@ -268,7 +268,7 @@ const AddEditMember = (props) => {
             if (values.members.languages_known)
                 processedValues['languages_known'] = values.members.languages_known.join(",");
         }
-      
+
         //family details 
         var FamilyProcessedValues = {};
         if (values.member_family_details) {
@@ -305,8 +305,13 @@ const AddEditMember = (props) => {
                 }
             });
         }
-        if (values.member_horoscope && values.member_horoscope.birth_time)
-        HoroscopeProcessedValues['birth_time'] = selBirthTime.format('HH:mm:ss');
+        if (values.member_horoscope && values.member_horoscope.birth_time){
+            console.log('test',selBirthTime)
+            if(selBirthTime)
+            HoroscopeProcessedValues['birth_time'] = selBirthTime.format('HH:mm:ss');
+            else
+            HoroscopeProcessedValues['birth_time'] = null;
+        }
         if (values.member_horoscope && values.member_horoscope.raasi_chart) {
             var commaSeparatedRaasiValues = [];
             values.member_horoscope.raasi_chart.forEach(cInput => {
@@ -442,20 +447,20 @@ const AddEditMember = (props) => {
                 )
                 context.psGlobal.apiRequest(reqDataInner, context.adminUser(userId).mode).then((resInner) => {
                     context.psGlobal.addLog({
-                        log_name:'add-new-member',
-                        logged_type:context.adminUser(userId).role,
-                        logged_by:context.adminUser(userId).id,
-                        ref_table_column:'members.id',
-                        ref_id:createdId,
-                        ref_id2:padMemberId,
-                        description:'New Member Added ' + padMemberId
-                    }).then(logRes=>{
+                        log_name: 'add-new-member',
+                        logged_type: context.adminUser(userId).role,
+                        logged_by: context.adminUser(userId).id,
+                        ref_table_column: 'members.id',
+                        ref_id: createdId,
+                        ref_id2: padMemberId,
+                        description: 'New Member Added ' + padMemberId
+                    }).then(logRes => {
                         setLoader(false);
                         addeditFormMember.resetFields();
                         message.success(padMemberId + ' Member Added Successfully ');
                         onSaveFinish();
                     })
-                   
+
                     //reset form after added
 
                 }).catch(errInner => {
@@ -526,30 +531,30 @@ const AddEditMember = (props) => {
 
             context.psGlobal.apiRequest(reqDataUpdate, context.adminUser(userId).mode).then((res) => {
                 context.psGlobal.addLog({
-                    log_name:'edit-member',
-                    logged_type:context.adminUser(userId).role,
-                    logged_by:context.adminUser(userId).id,
-                    ref_table_column:'members.id',
-                    ref_id:editId,
-                    ref_id2:editData.member_id,
-                    description:'Member Edited ' + editData.member_id
-                }).then(logRes=>{
+                    log_name: 'edit-member',
+                    logged_type: context.adminUser(userId).role,
+                    logged_by: context.adminUser(userId).id,
+                    ref_table_column: 'members.id',
+                    ref_id: editId,
+                    ref_id2: editData.member_id,
+                    description: 'Member Edited ' + editData.member_id
+                }).then(logRes => {
                     setLoader(false);
                     message.success(heading + ' Saved Successfullly');
                     onSaveFinish();
                 })
-                if(values.members && values.members.photo){
+                if (values.members && values.members.photo) {
                     context.psGlobal.addLog({
-                        log_name:'upload-photo',
-                        logged_type:context.adminUser(userId).role,
-                        logged_by:context.adminUser(userId).id,
-                        ref_table_column:'members.id',
-                        ref_id:editId,
-                        ref_id2:editData.member_id,
-                        description:'Photo updated for ' + editData.member_id
+                        log_name: 'upload-photo',
+                        logged_type: context.adminUser(userId).role,
+                        logged_by: context.adminUser(userId).id,
+                        ref_table_column: 'members.id',
+                        ref_id: editId,
+                        ref_id2: editData.member_id,
+                        description: 'Photo updated for ' + editData.member_id
                     })
                 }
-              
+
 
             }).catch(err => {
                 message.error(err);
@@ -637,7 +642,7 @@ const AddEditMember = (props) => {
         var reqData =
         {
             query_type: 'query',
-            query: "select * from raasi_mapping where status=1  and star='"+star+"'"
+            query: "select * from raasi_mapping where status=1  and star='" + star + "'"
         }
 
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
@@ -907,8 +912,8 @@ const AddEditMember = (props) => {
                     cropRatio="1/1"
                     //  name={name}
                     // defaultImage={defaultValue}
-                   // storeFileName={editData && editData.photo ? editData.photo : 'public/uploads/' + new Date().valueOf() + '.jpg'}
-                    storeFileName={ 'public/uploads/' + new Date().valueOf() + '.jpg'}
+                    // storeFileName={editData && editData.photo ? editData.photo : 'public/uploads/' + new Date().valueOf() + '.jpg'}
+                    storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
                     onFinish={(fileName) => { addeditFormMember.setFieldsValue({ members: { photo: fileName } }) }}
                 />
             </FormItem>
@@ -1099,7 +1104,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Taluk"
                 name={['members', 'taluk']}
-               // rules={[{ required: true, message: 'Please Enter Taluk' }]}
+            // rules={[{ required: true, message: 'Please Enter Taluk' }]}
             >
                 <Input placeholder="Taluk" />
             </FormItem>,
@@ -1123,7 +1128,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Pincode"
                 name={['members', 'pincode']}
-              //  rules={[{ required: true, message: 'Please Enter Pincode' }]}
+            //  rules={[{ required: true, message: 'Please Enter Pincode' }]}
             >
                 <InputNumber placeholder="Pincode" type="number" style={{ width: '100%' }} />
             </FormItem>,
@@ -1424,7 +1429,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Residence Type"
                 name={['members', 'residence_type']}
-                //rules={[{ required: true, message: 'Please Enter Residence Type' }]}
+            //rules={[{ required: true, message: 'Please Enter Residence Type' }]}
             >
 
                 <Select
@@ -1898,7 +1903,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Height"
                 name={['member_physical_attributes', 'height']}
-                //rules={[{ required: true, message: 'Please Enter Height' }]}
+            //rules={[{ required: true, message: 'Please Enter Height' }]}
             >
                 <Select
                     showSearch
@@ -1921,7 +1926,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Weight"
                 name={['member_physical_attributes', 'weight']}
-                //rules={[{ required: true, message: 'Please Enter Weight' }]}
+            //rules={[{ required: true, message: 'Please Enter Weight' }]}
             >
                 <Select
                     showSearch
@@ -2024,7 +2029,7 @@ const AddEditMember = (props) => {
                 <Select
                     showSearch
                     placeholder="Star"
-                    onChange={(value)=>loadRaasiList(value)}
+                    onChange={(value) => loadRaasiList(value)}
                     optionFilterProp="children"
                     //onChange={starOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
@@ -2040,7 +2045,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Patham"
                 name={['member_horoscope', 'patham']}
-               // rules={[{ required: true, message: 'Please Enter Patham' }]}
+            // rules={[{ required: true, message: 'Please Enter Patham' }]}
             >
 
                 <Select
@@ -2063,7 +2068,7 @@ const AddEditMember = (props) => {
             formItem: <FormItem
                 label="Raasi"
                 name={['member_horoscope', 'raasi']}
-              //  rules={[{ required: true, message: 'Please Enter Raasi' }]}
+            //  rules={[{ required: true, message: 'Please Enter Raasi' }]}
             >
 
                 <Select
@@ -2074,7 +2079,7 @@ const AddEditMember = (props) => {
                     //onChange={raasiOnChange}
                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                 >
-                     {
+                    {
                         raasiList.map(item => {
                             return <Select.Option value={item.raasi}>{item.raasi}</Select.Option>
 
@@ -2118,8 +2123,14 @@ const AddEditMember = (props) => {
                 <Space direction="vertical">
                     <TimePicker
                         format='hh:mm a'
-                        value={selBirthTime?dayjs(selBirthTime):null}
-                      onChange={(time)=>{setSelBirthTime(dayjs(time));addeditFormMember.setFieldsValue({member_horoscope:{birth_time:dayjs(time)}})}}
+                        value={selBirthTime ? dayjs(selBirthTime) : null}
+                        onChange={(time) => {
+                            setSelBirthTime(time?dayjs(time):null);
+                            addeditFormMember.setFieldsValue(
+                                { member_horoscope: { birth_time: dayjs(time) } }
+                            )
+                        }
+                        }
                     />
 
                 </Space>
