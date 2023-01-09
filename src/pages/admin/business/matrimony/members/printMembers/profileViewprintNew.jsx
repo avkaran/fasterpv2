@@ -298,7 +298,7 @@ const ProfileViewPrintNew = (props) => {
                                         </tr>
                                         <tr>
                                                 <td style={{fontSize: '18pt'}}>இடம்</td>
-                                                <td style={{fontSize: '18pt'}}>:&nbsp;{item.area.substring(0, 10)}...</td>
+                                                <td style={{fontSize: '18pt'}}>:&nbsp;{item.area ? item.area.substring(0, 10)+'...':''}</td>
                                         </tr>
                                         </table>
                                 </div>

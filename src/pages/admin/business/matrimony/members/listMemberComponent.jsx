@@ -44,6 +44,7 @@ const ListMemberComponent = (props) => {
     const [printForm] = Form.useForm();
     const [isPrintContact, setIsPrintContact] = useState(false);
     const [isPrintPhoto, setIsPrintPhoto] = useState(false);
+    const [selectedPrintType,setSelectedPrintType]=useState(null)
 
     useEffect(() => {
 
@@ -699,37 +700,41 @@ const ListMemberComponent = (props) => {
                 </Col>
             </Row>
             {
-
+                selectedPrintType && selectedPrintType==='profile-view' && (<ProfileViewPrint
+                    allData={allData}
+                    selMembers={selMembers}
+    
+                    memberData={printData} //to be removed
+                    business={selBusiness}
+                    language={printLanguage}
+                    isContact={isPrintContact}
+                    isPhoto={isPrintPhoto}
+                />)
             }
-            <ProfileViewPrint
-                allData={allData}
-                selMembers={selMembers}
-
-                memberData={printData} //to be removed
-                business={selBusiness}
-                language={printLanguage}
-                isContact={isPrintContact}
-                isPhoto={isPrintPhoto}
-            />
-             <ProfileViewPrintNew
-                allData={allData}
-                selMembers={selMembers}
-
-                memberData={printData} //to be removed
-                business={selBusiness}
-                language={printLanguage}
-                isContact={isPrintContact}
-                isPhoto={isPrintPhoto}
-            />
-            <PostalPrint
-                allData={allData}
-                selMembers={selMembers}
-                memberData={printData}
-                business={selBusiness}
-                language={printLanguage}
-                isContact={isPrintContact}
-            />
-            <PhotoPrint
+            {
+                selectedPrintType && selectedPrintType==='profile-view-new' && (<ProfileViewPrintNew
+                    allData={allData}
+                    selMembers={selMembers}
+    
+                    memberData={printData} //to be removed
+                    business={selBusiness}
+                    language={printLanguage}
+                    isContact={isPrintContact}
+                    isPhoto={isPrintPhoto}
+                />)
+            }
+             {
+                selectedPrintType && selectedPrintType==='postal' && ( <PostalPrint
+                    allData={allData}
+                    selMembers={selMembers}
+                    memberData={printData}
+                    business={selBusiness}
+                    language={printLanguage}
+                    isContact={isPrintContact}
+                />)
+             }
+           {
+             selectedPrintType && selectedPrintType==='print-photo' && ( <PhotoPrint
                 allData={allData}
                 selMembers={selMembers}
 
@@ -737,8 +742,10 @@ const ListMemberComponent = (props) => {
                 business={selBusiness}
                 language={printLanguage}
                 isContact={isPrintContact}
-            />
-            <ShortLinePrint
+            />)
+           }
+           {
+            selectedPrintType && selectedPrintType==='short-line' && (<ShortLinePrint
                 allData={allData}
                 selMembers={selMembers}
                 memberData={printData}
@@ -747,7 +754,9 @@ const ListMemberComponent = (props) => {
                 isContact={isPrintContact}
                 isPhoto={isPrintPhoto}
 
-            />
+            />)
+           }
+            
             <Modal
                 visible={visiblePrintModal}
                 zIndex={999}
@@ -780,7 +789,7 @@ const ListMemberComponent = (props) => {
                         <Select
                             showSearch
                             placeholder="Print Type"
-
+                            onChange={(value)=>setSelectedPrintType(value)}
                             optionFilterProp="children"
                             //onChange={businessStatusOnChange}
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
