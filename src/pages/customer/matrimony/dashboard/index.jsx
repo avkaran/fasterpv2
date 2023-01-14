@@ -24,7 +24,7 @@ const CustomerDashboard = (props) => {
   const [loader, setLoader] = useState(false);
   const [countData, setCountData] = useState([]);
 
-  const [paymentInfo,setPaymentInfo]=useState(null)
+  const [paymentInfo, setPaymentInfo] = useState(null)
   const navigate = useNavigate();
   const theme = {
     primaryColor: '#007bff',
@@ -43,39 +43,63 @@ const CustomerDashboard = (props) => {
   }
   useEffect(() => {
     loadCountData()
+    updateLoginLog()
     getPaymentInfo(context.customerUser.id).then(res => {
       setPaymentInfo(res)
-   })
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const loadCountData=()=>{
-    var reqData = [
-      { 
-      query_type: 'query', 
-      query: "select count(distinct to_member_auto_id) as count from member_actions where action='express-interest' and member_auto_id='" + context.customerUser.id + "'"
-      },
-      { 
-          query_type: 'query', 
-          query: "select count(distinct to_member_auto_id) as count from member_actions where action='contact-view' and member_auto_id='" + context.customerUser.id + "'"
-      },
-      { 
-        query_type: 'query', 
-        query: "select count(*)  as count from members m where m.caste=(select caste from members where id='"+context.customerUser.id+"')"
-    },
-  ]
+  const updateLoginLog = () => {
+    //verify logs found for login if not insert it
+    var reqDataLog = {
+      query_type: 'query',
+      query: "select * from logs where date(log_time)='" + dayjs().format("YYYY-MM-DD") + "' and log_name='login' and logged_type='customer' and ref_id='" + context.customerUser.id + "'",
+    }
+    context.psGlobal.apiRequest(reqDataLog, "prod").then((resLog) => {
+      if (resLog.length === 0) {
+        context.psGlobal.addLog({
+          log_name: 'login',
+          logged_type: "customer",
+          logged_by: context.customerUser.id,
+          ref_table_column: 'members.id',
+          ref_id: context.customerUser.id,
+          ref_id2: context.customerUser.member_id,
+          description: 'Customer Login ' + context.customerUser.member_id
+        }).then(logRes => {
 
-  context.psGlobal.apiRequest(reqData,"prod").then((res,error)=>{
-      var cData={
-        express_interest:res[0][0]['count'],
-        viewed:res[1][0]['count'],
-        mymatches:res[2][0]['count'],
+        })
+      }
+    })
+
+  }
+  const loadCountData = () => {
+    var reqData = [
+      {
+        query_type: 'query',
+        query: "select count(distinct to_member_auto_id) as count from member_actions where action='express-interest' and member_auto_id='" + context.customerUser.id + "'"
+      },
+      {
+        query_type: 'query',
+        query: "select count(distinct to_member_auto_id) as count from member_actions where action='contact-view' and member_auto_id='" + context.customerUser.id + "'"
+      },
+      {
+        query_type: 'query',
+        query: "select count(*)  as count from members m where m.caste=(select caste from members where id='" + context.customerUser.id + "')"
+      },
+    ]
+
+    context.psGlobal.apiRequest(reqData, "prod").then((res, error) => {
+      var cData = {
+        express_interest: res[0][0]['count'],
+        viewed: res[1][0]['count'],
+        mymatches: res[2][0]['count'],
       }
       setCountData(cData);
-     
-  }).catch(err => {
+
+    }).catch(err => {
       message.error(err);
       setLoader(false);
-  })
+    })
   }
   return (
     <>
@@ -91,7 +115,7 @@ const CustomerDashboard = (props) => {
                   style={{ maxHeight: 250, background: "rgb(239, 239, 239)" }}
                 />
                 <div className="card-body">
-                 {/*  <div className="user-sidemenu list-group">
+                  {/*  <div className="user-sidemenu list-group">
                     <div className="list-group-item">
                       <a href="/app/my-profile/basic">
                         Basic Details
@@ -145,12 +169,12 @@ const CustomerDashboard = (props) => {
                     Hi, <b>{context.customerUser.name}</b>, Welcome back <br />
                     <span className="font-13">
                       Profile Id : {context.customerUser.member_id}  <i className="icofont-envelope pe-1" />
-                       {context.customerUser.email}
+                      {context.customerUser.email}
                       <i className="icofont-phone pe-1" /> {context.customerUser.mobile_no}
                     </span>
                   </div>
-                  {paymentInfo && (paymentInfo.status!=="Paid" || paymentInfo.availableCredits<=0) && (<div role="alert" className="fade font-13 alert alert-warning show">
-                   [{paymentInfo.status}, Available Credits:{paymentInfo.availableCredits}] Upgrade your plan to get more benefits.
+                  {paymentInfo && (paymentInfo.status !== "Paid" || paymentInfo.availableCredits <= 0) && (<div role="alert" className="fade font-13 alert alert-warning show">
+                    [{paymentInfo.status}, Available Credits:{paymentInfo.availableCredits}] Upgrade your plan to get more benefits.
                     <a
                       className="ms-2"
                       href="/0/customer/membership"
@@ -160,50 +184,50 @@ const CustomerDashboard = (props) => {
                     </a>
                   </div>)}
                   {
-                    paymentInfo && paymentInfo.status==="Paid" && paymentInfo.availableCredits>0 && (<div role="alert" className="fade font-13 alert alert-warning show">
-                    Available Credits : {paymentInfo.availableCredits}
-                   </div>)
+                    paymentInfo && paymentInfo.status === "Paid" && paymentInfo.availableCredits > 0 && (<div role="alert" className="fade font-13 alert alert-warning show">
+                      Available Credits : {paymentInfo.availableCredits}
+                    </div>)
                   }
-                  
+
                 </div>
               </div>
             </div>
-            <br/>
-            <Row gutter={16}>
-                                <Col xs={24} sm={12} md={8}>
-                                    <StatCard
-
-                                        title="My Matches"
-                                        value={countData && countData.mymatches}
-                                        icon={<FontAwesomeIcon icon={faPeoplePulling} />}
-                                        color={theme.primaryColor}
-                                        link={'/0/customer/mymatches'}
-                                    />
-                                </Col>
-                                <Col xs={24} sm={12} md={8}>
-                                    <StatCard
-
-                                        title="Interest Sent"
-                                        value={countData && countData.express_interest}
-                                        icon={<FontAwesomeIcon icon={faHeart} />}
-                                        color={theme.errorColor}
-                                        link={'/0/customer/express-interest/me'}
-                                    />
-                                </Col>
-                                <Col xs={24} sm={12} md={8}>
-                                    <StatCard
-
-                                        title="Viewed Profiles"
-                                        value={countData && countData.viewed}
-                                        icon={<FontAwesomeIcon icon={faUserCheck} />}
-                                        color={theme.successColor}
-                                        link={'/0/customer/profile-views/me'}
-                                    />
-                                </Col>
-                              
-                            </Row>
             <br />
-           
+            <Row gutter={16}>
+              <Col xs={24} sm={12} md={8}>
+                <StatCard
+
+                  title="My Matches"
+                  value={countData && countData.mymatches}
+                  icon={<FontAwesomeIcon icon={faPeoplePulling} />}
+                  color={theme.primaryColor}
+                  link={'/0/customer/mymatches'}
+                />
+              </Col>
+              <Col xs={24} sm={12} md={8}>
+                <StatCard
+
+                  title="Interest Sent"
+                  value={countData && countData.express_interest}
+                  icon={<FontAwesomeIcon icon={faHeart} />}
+                  color={theme.errorColor}
+                  link={'/0/customer/express-interest/me'}
+                />
+              </Col>
+              <Col xs={24} sm={12} md={8}>
+                <StatCard
+
+                  title="Viewed Profiles"
+                  value={countData && countData.viewed}
+                  icon={<FontAwesomeIcon icon={faUserCheck} />}
+                  color={theme.successColor}
+                  link={'/0/customer/profile-views/me'}
+                />
+              </Col>
+
+            </Row>
+            <br />
+
           </div>
         </div>
       </div>

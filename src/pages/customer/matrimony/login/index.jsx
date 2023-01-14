@@ -36,8 +36,20 @@ const Login = (props) => {
                 axios.defaults.headers.common['Api-Token'] = `${res['data'].api}`;
                 context.saveCustomerLogin(res['data'].data, res['data'].api);
                 context.updateCustomerLogged();
-                setLoginLoader(false);
-                navigate('/0/customer/dashboard')
+                context.psGlobal.addLog({
+                    log_name: 'login',
+                    logged_type: "customer",
+                    logged_by: res['data'].data.id,
+                    ref_table_column: 'members.id',
+                    ref_id: res['data'].data['id'],
+                    ref_id2: res['data'].data['member_id'],
+                    description: 'Customer Login ' + res['data'].data['member_id']
+                }).then(logRes => {
+                    setLoginLoader(false);
+                    navigate('/0/customer/dashboard')
+                })
+
+                
             }
             else {
                 message.error(res['data'].message || 'Error');

@@ -54,9 +54,9 @@ const CRMList = (props) => {
   const [selPlanData, setSelPlanData] = useState({})
   const [selCategory, setSelCategory] = useState({})
   const [visibleModal, setVisibleModal] = useState(false);
-  const [heading] = useState('CMS');
+  const [heading] = useState('CRM');
   const [refreshTable, setRefreshTable] = useState(0);
-  const [selType, setSelType] = useState('Lead');
+  const [selType, setSelType] = useState('Phone Enquiry');
   const [planNames, setPlanNames] = useState(null);
   const [categoryNames, setCategoryName] = useState(null);
   const { editIdOrObject, viewIdOrObject, onListClick, userId, ...other } = props;
@@ -281,7 +281,7 @@ const CRMList = (props) => {
         }
 
         {
-          !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List Employees</Button>}>
+          !isModal && (curAction === "add" || curAction === "edit" || curAction === "view") && (<Card title={capitalizeFirst(curAction) + " " + heading} extra={<Button onClick={() => setCurAction("list")}><i className="fa-solid fa-list pe-2" ></i>List Cases</Button>}>
 
             {curAction === "view" && (<ViewCRM viewIdOrObject={viewOrEditData} onListClick={() => setCurAction("list")} userId={userId} />)}
             {curAction === "add" && (<AddEditCRM onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }} userId={userId} />)}

@@ -5,10 +5,10 @@ import { Button, Card } from 'antd';
 import { Form, Input, Select, InputNumber, Radio, Checkbox } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import PsContext from '../../../context';
+import PsContext from '../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
-import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../comp';
-import { capitalizeFirst } from '../../../utils';
+import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../comp';
+import { capitalizeFirst } from '../../../../utils';
 
 const ViewTrans = (props) => {
     const context = useContext(PsContext);

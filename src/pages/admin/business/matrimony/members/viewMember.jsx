@@ -26,6 +26,7 @@ import { getPaymentInfo } from '../models/matrimonyCore';
 import ContactNotice from './viewInfo/contactNotice'
 import ProfileViewPrintSingle from './printMembers/profileViewPrintSingle';
 import { getResellerBalance } from '../models/matrimonyCore';
+import { addFinancialTransaction } from '../../../../../models/core';
 const ViewMember = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -67,13 +68,18 @@ const ViewMember = (props) => {
     const [isViewContact, setIsViewContact] = useState(true);
     const [isProfileEdit, setIsProfileEdit] = useState(true);
     const [insufficientBalance, setInsufficientBalance] = useState(false);
-
+    const [financeAccountPaymentLedgers,setFinanceAccountPaymentLedgers]=useState([]);
 
     useEffect(() => {
         loadBusinessNames();
         loadPlanNames();
         loadCastes()
         loadEducation()
+        loadFinanceAccountPaymentLedgers();
+        paymentForm.setFieldsValue({
+            orders:{paid_date:dayjs().format("YYYY-MM-DD HH:mm:ss")}
+        })
+        
         if (typeof viewIdOrObject === 'object') {
             setViewId(viewIdOrObject.id);
             resetResellerProfileViewOption(viewIdOrObject.member_id)
@@ -95,7 +101,17 @@ const ViewMember = (props) => {
 
 
     }, []);
-
+    const loadFinanceAccountPaymentLedgers=()=>{
+         var reqData = {
+            query_type: 'query', //query_type=insert | update | delete | query
+            query: "select l.* from acc_ledgers l,acc_ledger_categories lc where l.status=1 and l.category=lc.id and lc.category_name in('Cash','Bank','Cheque')"
+        };
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+                setFinanceAccountPaymentLedgers(res);
+        }).catch(err => {
+            message.error(err);
+        })
+    }
     const resetPaymentButton = (id) => {
         getPaymentInfo(id).then(res => {
             setPaymentInfo(res);
@@ -469,12 +485,15 @@ const ViewMember = (props) => {
 
 
         processedValues['package_price'] = getDiscountInfo('final-amount');
-        processedValues['order_date'] = dayjs(values.paid_date).format("YYYY-MM-DD");
-        processedValues['paid_date'] = dayjs(values.paid_date).format("YYYY-MM-DD");
-        processedValues['expiry_date'] = dayjs(values.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD");
+        processedValues['order_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD");
+        processedValues['paid_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD");
+        processedValues['expiry_date'] = dayjs(values.orders.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD");
         processedValues['order_status'] = 'Paid';
 
         processedValues['paid_by'] = context.adminUser(userId).role;
+        //get ledger name
+       // var selLedger=financeAccountPaymentLedgers.find(item=>item.id===values.payment_mode)
+        //processedValues['payment_mode'] = context.adminUser(userId).role;
         processedValues['paid_by_ref'] = context.adminUser(userId).ref_id2;
 
 
@@ -501,10 +520,22 @@ const ViewMember = (props) => {
 
                 //add payment transaction if franchise
                 if (context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker') {
-                    var trDate = dayjs(values.paid_date).format("YYYY-MM-DD");
-
-                    MakeResellerTransaction(trDate, getDiscountInfo('final-amount'), padOrderId,);
+                    var trDate = dayjs(values.orders.paid_date).format("YYYY-MM-DD");
+                    MakeResellerTransaction(trDate, getDiscountInfo('final-amount'), padOrderId);
+                }else{
+                     var trData = {};
+                    trData['tr_date']=dayjs(values.orders.paid_date).format("YYYY-MM-DD hh:mm:ss");
+                    trData['credit_account']=values.orders.payment_mode;
+                    trData['debit_account']=18;
+                    trData['amount']=getDiscountInfo('final-amount');
+                    trData['narration']="New Payment for order "+viewData.name +" " + padOrderId +", "+ values.orders.payment_note;
+                    trData['ref_table_column']="orders.id";
+                    trData['ref_id']=createdId;
+                    trData['ref_id2']=padOrderId;
+                    addFinancialTransaction(trData); 
                 }
+                
+               
                 context.psGlobal.addLog({
                     log_name: 'make-payment',
                     logged_type: context.adminUser(userId).role,
@@ -1657,7 +1688,7 @@ const ViewMember = (props) => {
                                 <Form
                                     name="basic"
                                     colon={false}
-                                    //form={addeditFormPrint}
+                                  
                                     labelAlign="left"
                                     form={paymentForm}
                                     labelCol={{ span: 8 }}
@@ -1718,13 +1749,14 @@ const ViewMember = (props) => {
                                     <FormItem
                                         label="Paid Date"
                                         name={['orders', 'paid_date']}
-                                        rules={[{ required: true, message: 'Please Enter Dob' }]}
+                                        rules={[{ required: true, message: 'Please Enter Date' }]}
                                     >
 
                                         <Space direction="vertical">
                                             <DatePicker
                                                 onChange={paidDateOnChange}
                                                 format='DD/MM/YYYY'
+                                                defaultValue={dayjs()}
                                                 allowClear={false}
                                             />
                                         </Space>
@@ -1745,7 +1777,16 @@ const ViewMember = (props) => {
                                             //onChange={genderOnChange}
                                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                         >
-                                            {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'payment-modes', 'option', context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker' ? ['Cash', 'Cheque', 'Bank Deposit', 'Online'] : ['Main Balance'])}
+                                            {(context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker') && context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'payment-modes', 'option', context.adminUser(userId).role === 'franchise' || context.adminUser(userId).role === 'broker' ? ['Cash', 'Cheque', 'Bank Deposit', 'Online'] : ['Main Balance'])}
+                                            {
+                                                (context.adminUser(userId).role === 'admin' || context.adminUser(userId).role === 'employee') && (<>
+                                                {
+                                                    financeAccountPaymentLedgers.map((item,index)=>{
+                                                        return <Select.Option value={item.id}>{item.ledger_name}</Select.Option>
+                                                    })
+                                                }
+                                                </>)
+                                            }
 
                                         </Select>
 

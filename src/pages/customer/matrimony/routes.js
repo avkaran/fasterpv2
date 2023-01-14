@@ -76,7 +76,7 @@ const CustomerRoutes = (props) => {
                 exact={true}
             />
              <Route
-                path='/:userId/customer/payment-back'
+                path='/:userId/customer/payment-back/:orderNumber'
                 element={<MyPaymentBack />}
                 title='Payment Response back'
                 allowed={CustomerROLES.CUSTOMER}

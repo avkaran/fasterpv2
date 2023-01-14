@@ -66,6 +66,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
                 //  setCheckStatus(currentIds)
                 setInitLoading(false);
                 setCheckedList([])
+                if(onPageChange)
                 onPageChange(page, res['data'].data)
 
             }
@@ -93,7 +94,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
 
         };
         form.append('queries', context.psGlobal.encrypt(JSON.stringify(reqData)))
-        // form.append('mode',"dev")
+         form.append('mode',"dev")
         axios.post('v1/admin/db-query', form).then(res => {
             if (res['data'].status === '1') {
 

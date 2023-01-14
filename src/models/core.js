@@ -160,12 +160,61 @@ export const apiRequest = async (reqData, mode, postForm = false) => {
 }
 export const addLog = async (logData) => {
 	return new Promise((resolve, reject) => {
-		logData['log_time']=dayjs().format('YYYY-MM-DD HH:mm:ss')
+		logData['log_time'] = dayjs().format('YYYY-MM-DD HH:mm:ss')
 		var reqData = {
 			query_type: 'insert',
 			table: 'logs',
 			values: logData
 		};
+		apiRequest(reqData, "prod").then((res) => {
+			resolve(true)
+		}).catch(err => {
+			reject(err)
+		})
+	});
+}
+export const addFinancialTransaction = async (trData) => {
+	return new Promise((resolve, reject) => {
+		var reqData = {
+			query_type: 'insert',
+			table: 'acc_transactions',
+			values: trData
+		};
+		apiRequest(reqData, "dev").then((res) => {
+			resolve(true)
+		}).catch(err => {
+			reject(err)
+		})
+	});
+}
+export const deleteFinancialTransaction = async (id) => {
+	return new Promise((resolve, reject) => {
+		var reqData = {
+			query_type: 'update',
+			table: 'acc_transactions',
+			where: { id: id },
+			values: { status: 0 }
+		};
+		apiRequest(reqData, "prod").then((res) => {
+			resolve(true)
+		}).catch(err => {
+			reject(err)
+		})
+	});
+}
+export const deleteFinancialTransactionByRef = async (ref_table_column, ref_id, ref_id2 = null) => {
+	return new Promise((resolve, reject) => {
+		var reqData = {
+			query_type: 'update',
+			table: 'acc_transactions',
+			//where: { ref_table_column: ref_table_column, ref_id: ref_id },
+			values: { status: 0 }
+		};
+		if (ref_id)
+			reqData['where'] = { ref_table_column: ref_table_column, ref_id: ref_id };
+		else if(ref_id2)
+			reqData['where'] = { ref_table_column: ref_table_column, ref_id2: ref_id2 };
+
 		apiRequest(reqData, "prod").then((res) => {
 			resolve(true)
 		}).catch(err => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { MyButton } from '../../../../comp'
 import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button } from 'antd';
@@ -16,9 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../../utils';
 
-const  Ledgers= (props) => {
+const Ledgers = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
+    const { userId } = useParams();
     const { Content } = Layout;
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
@@ -30,10 +30,10 @@ const {userId}=useParams();
     const [heading] = useState('Ledgers');
     const [refreshTable, setRefreshTable] = useState(0);
     useEffect(() => {
-      //  loadData();
+        //  loadData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-   
+
     const tableColumns = [
         {
             title: 'S.NO',
@@ -53,22 +53,22 @@ const {userId}=useParams();
             key: 'ledger_type',
             //render: (text) => <a>{text}</a>,
         },
-        
+
         {
             title: 'Category',
-            dataIndex: 'category',
-            key: 'category',
+            dataIndex: 'category_name',
+            key: 'category_name',
             //render: (text) => <a>{text}</a>,
         },
         {
             title: 'Active Status',
             // dataIndex: 'active_status',
             key: 'active_status',
-            render: (item) => <Tag color={item.active_status === 'Active' ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{item.active_status}</Tag>,
+            render: (item) => <Tag color={parseInt(item.active_status) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{parseInt(item.active_status) === 1 ? 'Active' : 'Inactive'}</Tag>,
             //render: (text) => <a>{text}</a>,
         },
-       
-        
+
+
         {
             title: 'Actions',
             // dataIndex: 'actions',
@@ -79,14 +79,14 @@ const {userId}=useParams();
                 <MyButton type="outlined" size="small" shape="circle" color={blue[7]}
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>
-                <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() =>{ setCurAction("list");setRefreshTable(prev=>prev+1)}}
-                title={heading}
+                <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1) }}
+                    title={heading}
                     table="acc_ledgers"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id,ledger_name:item.ledger_name, ledger_type: item.ledger_type, category: item.category, active_status: item.active_status}}
-                   // avatar={context.baseUrl + item.course_image}
+                    dataItem={{ id: item.id, ledger_name: item.ledger_name, ledger_type: item.ledger_type, category: item.category, active_status: item.active_status }}
+                // avatar={context.baseUrl + item.course_image}
                 />
-    
+
             </Space>,
         },
     ]
@@ -95,7 +95,7 @@ const {userId}=useParams();
 
         if (isModal)
             setVisibleModal(true);
-        
+
     }
     const onEditClick = (item) => {
         setViewOrEditData(item);
@@ -103,7 +103,7 @@ const {userId}=useParams();
 
         if (isModal)
             setVisibleModal(true);
-        
+
     }
     const onViewClick = (item) => {
         setViewOrEditData(item);
@@ -126,7 +126,7 @@ const {userId}=useParams();
                         <HomeOutlined />
                     </Breadcrumb.Item>
                     <Breadcrumb.Item >
-                        <span>{heading+"s"}</span>
+                        <span>{heading + "s"}</span>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>List Ledgers</Breadcrumb.Item>
                 </Breadcrumb>
@@ -158,20 +158,20 @@ const {userId}=useParams();
 
                     </Card>)
                 }
-                <Card title={heading+" List"} extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add {heading}</MyButton>} style={{display:(curAction === "list" || isModal)?'block':'none'}}>
-                   
-                        <PaginatedTable
-                         columns={tableColumns} 
-                         refresh={refreshTable}
-                         ountQuery="select count(*) as count from acc_ledgers where status=1"
-                         listQuery="select *,@rownum:=@rownum+1 as row_num from acc_ledgers CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1"
-                         itemsPerPage={20}
-                        />
-                    
-                </Card>
-                
+                <Card title={heading + " List"} extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add {heading}</MyButton>} style={{ display: (curAction === "list" || isModal) ? 'block' : 'none' }}>
 
-               
+                    <PaginatedTable
+                        columns={tableColumns}
+                        refresh={refreshTable}
+                        countQuery="select count(*) as count from acc_ledgers where status=1"
+                        listQuery="select l.*,c.category_name,@rownum:=@rownum+1 as row_num from acc_ledgers l,acc_ledger_categories c CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where l.status=1 and l.category=c.id"
+                        itemsPerPage={20}
+                    />
+
+                </Card>
+
+
+
             </Content>
 
         </>

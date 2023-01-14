@@ -359,7 +359,7 @@ const ListMemberComponent = (props) => {
                         else if (parseInt(price) === 10000)
                             priceClauses.push(' (sum(package_price)> 5000 AND sum(package_price)<=10000)')
                         else
-                            priceClauses.push(' sum(package_price)>50000')
+                            priceClauses.push(' sum(package_price)>10000')
 
                     })
 

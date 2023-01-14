@@ -17,10 +17,12 @@ import { MyButton, MyTable } from '../../../../../comp';
 import dayjs from 'dayjs';
 const AdminDashboard = (props) => {
     const context = useContext(PsContext);
-    const {userId,...other}=  props;
+    const { userId, ...other } = props;
     const [loader, setLoader] = useState(false);
     const [countData, setCountData] = useState(null);
-    const [tableCountData,setTableCountData]=useState(null)
+    const [tableCountData, setTableCountData] = useState(null);
+    const [lastMemberId, setLastMemberId] = useState('');
+    const [smsBalance,setSmsBalance]=useState(0)
     const theme = {
         primaryColor: '#007bff',
         infoColor: '#1890ff',
@@ -39,9 +41,38 @@ const AdminDashboard = (props) => {
     useEffect(() => {
         //console.log('userdata',context.adminUser(userId))
         // loadMemberCounts();
-        loadCountData();      
-        loadTableCountData()
+        loadCountData();
+        loadTableCountData();
+        loadLastMemberId();
+        loadSMSBalance();
     }, []);
+    const loadLastMemberId = () => {
+        var reqData = [
+            {
+                query_type: 'query',
+                query: "select member_id  from members where status=1 order by id desc limit 1"
+            }
+        ]
+
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+            setLastMemberId(res[0][0]['member_id'])
+
+        }).catch(err => {
+            message.error(err);
+            setLoader(false);
+        })
+    }
+    const loadSMSBalance=()=>{
+       
+
+        context.psGlobal.apiRequest("sms-balance", context.adminUser(userId).mode).then((res) => {
+            setSmsBalance(res)
+
+        }).catch(err => {
+            message.error(err);
+            setLoader(false);
+        })
+    }
     const tableColumns = [
         {
             title: 'Members',
@@ -51,27 +82,27 @@ const AdminDashboard = (props) => {
         },
         {
             title: 'Online',
-           // dataIndex: 'online',
+            // dataIndex: 'online',
             key: 'online',
-            render: (item) => <MyButton type='primary' shape="round" color={red[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/customer"}>{item.online}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={red[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/customer"}>{item.online}</MyButton>,
         },
         {
             title: 'Employee',
             //dataIndex: 'employee',
             key: 'employee',
-            render: (item) => <MyButton type='primary' shape="round" color={green[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/employee"}>{item.employee}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={green[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/employee"}>{item.employee}</MyButton>,
         },
         {
             title: 'Franchise',
-           // dataIndex: 'franchise',
+            // dataIndex: 'franchise',
             key: 'franchise',
-            render: (item) => <MyButton type='primary' shape="round" color={blue[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/franchise"}>{item.franchise}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={blue[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/franchise"}>{item.franchise}</MyButton>,
         },
         {
             title: 'Broker',
-           // dataIndex: 'broker',
+            // dataIndex: 'broker',
             key: 'broker',
-            render: (item) => <MyButton type='primary' shape="round" color={magenta[5]} href={"#/"+userId+"/admin/members/logs-by-action/"+item.action+"/broker"}>{item.broker}</MyButton>,
+            render: (item) => <MyButton type='primary' shape="round" color={magenta[5]} href={"#/" + userId + "/admin/members/logs-by-action/" + item.action + "/broker"}>{item.broker}</MyButton>,
         },
         {
             title: 'Total',
@@ -81,80 +112,80 @@ const AdminDashboard = (props) => {
         },
 
     ]
-    const loadCountData=()=>{
-        
+    const loadCountData = () => {
+
         var reqData = [
-            { 
-            query_type: 'query', 
-            query: "select count(*) as count from members where status=1 and member_status='Active'"
+            {
+                query_type: 'query',
+                query: "select count(*) as count from members where status=1 and member_status='Active'"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(*) as count from employees where status=1"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(*) as count from franchise where status=1"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(*) as count from brokers where status=1"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(distinct member_auto_id) as count from orders where status=1 and order_status in ('Paid','Expired')"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(distinct member_auto_id) as count from orders where status=1 and order_status in ('Payment Tried')"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(distinct member_auto_id) as count from orders where status=1 and order_status in ('Payment Failed')"
             },
-            { 
-                query_type: 'query', 
+            {
+                query_type: 'query',
                 query: "select count(*) as count from case_tasks where status=1 and type='Complaint'"
             },
         ]
 
-        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
-            var cData={
-                members:res[0][0]['count'],
-                employees:res[1][0]['count'],
-                franchise:res[2][0]['count'],
-                brokers:res[3][0]['count'],
-                paid:res[4][0]['count'],
-                payment_tried:res[5][0]['count'],
-                payment_failed:res[6][0]['count'],
-                complaints:res[7][0]['count'],
-               
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+            var cData = {
+                members: res[0][0]['count'],
+                employees: res[1][0]['count'],
+                franchise: res[2][0]['count'],
+                brokers: res[3][0]['count'],
+                paid: res[4][0]['count'],
+                payment_tried: res[5][0]['count'],
+                payment_failed: res[6][0]['count'],
+                complaints: res[7][0]['count'],
+
             }
             setCountData(cData);
-           
+
         }).catch(err => {
             message.error(err);
             setLoader(false);
         })
     }
-    const loadTableCountData=()=>{
+    const loadTableCountData = () => {
         var reqData = [
-            { 
-            query_type: 'query', 
-            query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='"+dayjs().format("YYYY-MM-DD")+"' GROUP by log_name,logged_type"
+            {
+                query_type: 'query',
+                query: "SELECT log_name,logged_type,count(distinct ref_id) as count FROM logs where date(log_time)='" + dayjs().format("YYYY-MM-DD") + "' GROUP by log_name,logged_type"
             },
         ]
-        context.psGlobal.apiRequest(reqData,context.adminUser(userId).mode).then((res)=>{
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var tCountData = [
-                {actionLabel:'New Entry',action:"add-new-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Edit',action:"edit-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Delete',action:"delete-member",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Photo Upload',action:"upload-photo",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Profile Print',action:"print-profile",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Paid',action:"make-payment",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Visit/Login',action:"login",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Payment Tried',action:"payment-tried",online:0,employee:0,franchise:0,broker:0,total:0},
-                {actionLabel:'Payment Failed',action:"payment-failed",online:0,employee:0,franchise:0,broker:0,total:0},
+                { actionLabel: 'New Entry', action: "add-new-member", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Profile Edit', action: "edit-member", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Profile Delete', action: "delete-member", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Photo Upload', action: "upload-photo", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Profile Print', action: "print-profile", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Paid', action: "make-payment", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Visit/Login', action: "login", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Payment Tried', action: "payment-tried", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
+                { actionLabel: 'Payment Failed', action: "payment-failed", online: 0, employee: 0, franchise: 0, broker: 0, total: 0 },
             ];
             tCountData.forEach((item, index) => {
                 var total = 0;
@@ -162,7 +193,7 @@ const AdminDashboard = (props) => {
                 var fEmployee = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "employee");
                 var fFranchise = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "franchise");
                 var fBroker = res[0].find(obj => obj.log_name === item.action && obj.logged_type === "broker");
-               
+
 
                 if (fOnline) {
                     tCountData[index].online = fOnline.count;
@@ -171,7 +202,7 @@ const AdminDashboard = (props) => {
                 if (fEmployee) {
                     tCountData[index].employee = fEmployee.count;
                     total = total + parseInt(fEmployee.count);
-                   // console.log('test',item.actionLabel,fEmployee.count,index,tCountData[index].employee)
+                    // console.log('test',item.actionLabel,fEmployee.count,index,tCountData[index].employee)
                 }
                 if (fFranchise) {
                     tCountData[index].franchise = fFranchise.count;
@@ -185,7 +216,7 @@ const AdminDashboard = (props) => {
             })
             console.log(tCountData)
             setTableCountData(tCountData);
-           
+
         }).catch(err => {
             message.error(err);
             setLoader(false);
@@ -194,98 +225,105 @@ const AdminDashboard = (props) => {
     }
     return (
         <>
-            
-                <Spin spinning={loader} >
 
-                    <Row gutter={16}>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+            <Spin spinning={loader} >
+                <Row style={{ border: '2px solid green', borderRadius: '10px',fontSize:'20px',fontWeight:'bold', marginBottom: '20px', padding: '5px 5px 5px 5px' }}>
+                    <Col xs={24} md={6}>
+                        SMS Balance : {smsBalance}
+                    </Col>
+                    <Col xs={24} md={6}>
+                        Last Member Id : {lastMemberId}
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="All Members"
-                                value={countData && countData.members}
-                                icon={<FontAwesomeIcon icon={faUser} />}
-                                color={theme.primaryColor}
-                                link={"/"+userId+"/admin/members"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="All Members"
+                            value={countData && countData.members}
+                            icon={<FontAwesomeIcon icon={faUser} />}
+                            color={theme.primaryColor}
+                            link={"/" + userId + "/admin/members"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Employees"
-                                value={countData && countData.employees}
-                                icon={<FontAwesomeIcon icon={faUserTie} />}
-                                color={theme.errorColor}
-                                link={"/"+userId+"/admin/employees"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Employees"
+                            value={countData && countData.employees}
+                            icon={<FontAwesomeIcon icon={faUserTie} />}
+                            color={theme.errorColor}
+                            link={"/" + userId + "/admin/employees"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Franchise"
-                                value={countData && countData.franchise}
-                                icon={<FontAwesomeIcon icon={faPeopleRoof} />}
-                                color={theme.successColor}
-                                link={"/"+userId+"/admin/franchise"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Franchise"
+                            value={countData && countData.franchise}
+                            icon={<FontAwesomeIcon icon={faPeopleRoof} />}
+                            color={theme.successColor}
+                            link={"/" + userId + "/admin/franchise"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Brokers"
-                                value={countData && countData.brokers}
-                                icon={<FontAwesomeIcon icon={faPeopleRobbery} />}
-                                color="#fadb14"
-                                link={"/"+userId+"/admin/broker"}
-                            />
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Brokers"
+                            value={countData && countData.brokers}
+                            icon={<FontAwesomeIcon icon={faPeopleRobbery} />}
+                            color="#fadb14"
+                            link={"/" + userId + "/admin/broker"}
+                        />
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Paid Members"
-                                value={countData && countData.paid}
-                                icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
-                                color="#fa8c16"
-                                link={"/"+userId+"/admin/members/orders-by-status/Paid"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Paid Members"
+                            value={countData && countData.paid}
+                            icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
+                            color="#fa8c16"
+                            link={"/" + userId + "/admin/members/orders-by-status/Paid"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Payment Tried"
-                                value={countData && countData.payment_tried}
-                                icon={<FontAwesomeIcon icon={faUserTag} />}
-                                color="#006d75"
-                                link={"/"+userId+"/admin/members/orders-by-status/Payment Tried"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Payment Tried"
+                            value={countData && countData.payment_tried}
+                            icon={<FontAwesomeIcon icon={faUserTag} />}
+                            color="#006d75"
+                            link={"/" + userId + "/admin/members/orders-by-status/Payment Tried"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Payment Failed"
-                                value={countData && countData.payment_failed}
-                                icon={<FontAwesomeIcon icon={faUserXmark} />}
-                                color="#10239e"
-                                link={"/"+userId+"/admin/members/orders-by-status/Payment Failed"}
-                            />
-                        </Col>
-                        <Col xs={24} sm={12} md={6}>
-                            <StatCard
+                            title="Payment Failed"
+                            value={countData && countData.payment_failed}
+                            icon={<FontAwesomeIcon icon={faUserXmark} />}
+                            color="#10239e"
+                            link={"/" + userId + "/admin/members/orders-by-status/Payment Failed"}
+                        />
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                        <StatCard
 
-                                title="Complaints"
-                                value={countData && countData.complaints}
-                                icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
-                                color="#d4380d"
-                                link={"/"+userId+"/admin/crm/crm-list"}
-                            />
-                        </Col>
-                    </Row>
-                    {
-                        tableCountData && (<MyTable columns={tableColumns} dataSource={tableCountData} />)
-                    }
-                    
-                </Spin>
+                            title="Complaints"
+                            value={countData && countData.complaints}
+                            icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
+                            color="#d4380d"
+                            link={"/" + userId + "/admin/crm/crm-list"}
+                        />
+                    </Col>
+                </Row>
+                {
+                    tableCountData && (<MyTable columns={tableColumns} dataSource={tableCountData} />)
+                }
+
+            </Spin>
         </>
     );
 };

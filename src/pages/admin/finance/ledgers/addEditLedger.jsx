@@ -25,10 +25,10 @@ const AddEditLedger = (props) => {
     const [country, setCountry] = useState('');
     const [districts, setDistricts] = useState([]);
     const [districtLoading, setDistrictLoading] = useState(false)
-    const [planNames, setPlanNames] = useState(null);
+    const [ledgerCategories, setLedgerCategories] = useState(null);
     useEffect(() => {
 
-        loadPlanNames();
+        loadLedgerCategories();
         if (editIdOrObject) {
             if (typeof editIdOrObject === 'object') {
                 setCurAction("edit");
@@ -46,11 +46,12 @@ const AddEditLedger = (props) => {
         } else {
             setCurAction("add");
             addeditFormBranch.setFieldsValue({
+                acc_ledgers:{active_status:'Active'}
             });
             //addForm.setFieldsValue({ category: 'Plan', package_for: 'Customer(Online)', package_status: 'Active' })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [editIdOrObject]);
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
@@ -79,7 +80,7 @@ const AddEditLedger = (props) => {
 
                 category: mydata.category,
 
-                active_status: mydata.active_status,
+                active_status: parseInt(mydata.active_status)===1?'Active':'Inactive',
               
             }
         });
@@ -134,14 +135,14 @@ const AddEditLedger = (props) => {
             })
         }
     };
-    const loadPlanNames = () => {
+    const loadLedgerCategories = () => {
         var reqData = {
             query_type: 'query', //query_type=insert | update | delete | query
 
-            query: "select * from acc_ledgers where status=1 "
+            query: "select * from acc_ledger_categories where status=1 "
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            setPlanNames(res);
+            setLedgerCategories(res);
         }).catch(err => {
             message.error(err);
         })
@@ -189,11 +190,7 @@ const AddEditLedger = (props) => {
                                     //onChange={businessStatusOnChange}
                                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                 >
-                                    {
-                                        planNames && planNames.map(item => {
-                                            return <Select.Option value={item.id} >{item.ledger_type}</Select.Option>
-                                        })
-                                    }
+                                    {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'ledger-types')}
                                 </Select>
                             </FormItem>
                 </Col>
@@ -215,8 +212,8 @@ const AddEditLedger = (props) => {
                                     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                 >
                                     {
-                                        planNames && planNames.map(item => {
-                                            return <Select.Option value={item.id} >{item.category}</Select.Option>
+                                        ledgerCategories && ledgerCategories.map(item => {
+                                            return <Select.Option value={item.id} >{item.category_name}</Select.Option>
                                         })
                                     }
                                 </Select>
@@ -228,7 +225,7 @@ const AddEditLedger = (props) => {
                             <FormItem
                                 label="Status"
                                 name={['acc_ledgers', 'active_status']}
-                            // rules={[{ required: true, message: 'Please Enter ' }]}
+                                rules={[{ required: true, message: 'Please Select Status' }]}
                             >
                                 <Radio.Group defaultValue="Active" optionType="default" >
                                     {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'active-inactive', 'radio')}

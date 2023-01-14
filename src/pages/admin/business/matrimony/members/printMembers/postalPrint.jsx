@@ -78,10 +78,8 @@ const PostalPrint = (props) => {
       <div style={{ display: "none" }}>
         <div id="postal" style={{ fontSize: "12pt !important" }}>
           <table width="100%" border="0" cellpadding="0">
-            {business &&
-              memberData &&
-              memberData.length > 0 &&
-              getAddressPrintData(memberData)}
+            {business &&  allData && selMembers.length > 0 && 
+              getAddressPrintData(getMemberData())}
           </table>
         </div>
       </div>

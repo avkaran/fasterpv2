@@ -20,6 +20,7 @@ import '../assets/css/custom.css';
 import logo from '../assets/images/logo_600.png'
 import OtpVerification from '../profile/otpVerification';
 import { Spinner } from 'react-bootstrap';
+import dayjs from 'dayjs'
 const Layouts = (props) => {
     const context = useContext(PsContext);
     const [updateStatus, setUpdateState] = useState(false)
@@ -68,6 +69,9 @@ const Layouts = (props) => {
         }
         );
 
+       
+
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -84,6 +88,7 @@ const Layouts = (props) => {
     const onSideBarBackClick = () => {
         $("#sidebar").css("visibility", "hidden");
     }
+   
 
     if (context.customerLogged !== 'yes') {
         return (<Navigate to="/public/login" />);

@@ -128,7 +128,7 @@ const mynav = [
 		exact: false,
 		childrens: [
 			{ name: 'Ledgers', path: '/:userId/admin/finance/ledgers', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.list-ledgers' },
-			
+			{ name: 'Transactions', path: '/:userId/admin/finance/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.list-transactions' },
 			
 		],
 		allowed: ROLES.AdminAndEmployee

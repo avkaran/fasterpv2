@@ -22,7 +22,7 @@ const AddEditCRM = (props) => {
     const [curAction, setCurAction] = useState('add');
     const [addeditFormEmployee] = Form.useForm();
     const [editData, setEditData] = useState(null);
-    const [heading] = useState('Branch');
+    const [heading] = useState('CRM');
     const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
     const [editId, setEditId] = useState(null);
     const [country, setCountry] = useState('');
@@ -332,7 +332,7 @@ const AddEditCRM = (props) => {
         //  console.log('dchange', date)
         setSelData(date);
         addeditFormCms.setFieldsValue({
-            employees: { dob: dayjs(date).format('YYYY-MM-DD') }
+            case_tasks: { due_date: dayjs(date).format('YYYY-MM-DD') }
         })
 
     };

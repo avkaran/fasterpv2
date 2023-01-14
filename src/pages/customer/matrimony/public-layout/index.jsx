@@ -69,14 +69,14 @@ const Layouts = (props) => {
                                         <div className="d-flex justify-content-end ">
                                             <nav className="nav-menu">
                                                 <ul>
-                                                    <li className="nav-item"><Link to="/" ><a className="nav-link" >Home</a></Link></li>
-                                                    <li className="nav-item"><Link to="/public/search" ><a className="nav-link" >Search</a></Link></li>
-                                                    <li className="nav-item"><Link to="/public/register" ><a className="nav-link" >Free Register</a></Link></li>
-                                                    <li className="nav-item"><Link to="/public/login" ><a className="nav-link" >Login</a></Link>
+                                                    <li className="nav-item"><a className="nav-link" href="https://rajmatrimony.com/" style={{fontWeight:'bold'}}>Home</a></li>
+                                                    <li className="nav-item"><Link to="/public/search" ><a className="nav-link" style={{fontWeight:'bold'}}>Search</a></Link></li>
+                                                    <li className="nav-item"><Link to="/public/register" ><a className="nav-link" style={{fontWeight:'bold'}}>Free Register</a></Link></li>
+                                                    <li className="nav-item"><Link to="/public/login" ><a className="nav-link" style={{fontWeight:'bold'}}>Login</a></Link>
                                                     </li>
-                                                    <li className="nav-item"><Link to="/public/membership" ><a className="nav-link" >Membership</a></Link>
+                                                    <li className="nav-item"><Link to="/public/membership" ><a className="nav-link" style={{fontWeight:'bold'}}>Membership</a></Link>
                                                     </li>
-                                                    <li className="nav-item"><Link to="/contact-us" ><a className="nav-link" >Contact Us</a></Link></li>
+                                                    <li className="nav-item"><a className="nav-link" href="https://rajmatrimony.com/contact-us" style={{fontWeight:'bold'}}>Contact Us</a></li>
 
                                                 </ul>
                                             </nav>

@@ -59,7 +59,7 @@ const EmployeeProfile = (props) => {
         "select e.* ,u.username,u.password,u.active_status from employees e,vi_users u where e.status=1 and u.status=1 and u.ref_table_column='employees.id' and e.id=u.ref_id and u.ref_id=" +
         id,
     };
-
+    console.log('test',reqData)
     context.psGlobal
       .apiRequest(reqData, context.adminUser(userId).mode)
       .then((res) => {

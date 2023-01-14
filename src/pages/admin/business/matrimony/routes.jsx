@@ -51,7 +51,7 @@ import DeleteMemberReport from "./members/deleteMemberReport";
 import Districts from "./addNewDatails/districts"
 import Education from "./addNewDatails/education";
 import Ledgers from '../../finance/ledgers';
-
+import FinancialTransactions from '../../finance/transactions';
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
 import MyResellerTransactions from './reseller/myresellerTransactions';
@@ -363,6 +363,13 @@ const AuthRoutes = (props) => {
             <Route
                 path='/:userId/admin/finance/ledgers'
                 element={< Ledgers />}
+                title='Ledgers'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/finance/transactions'
+                element={< FinancialTransactions />}
                 title='Ledgers'
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}

@@ -64,7 +64,7 @@ const Register = (props) => {
         Object.entries(values.members).forEach(([key, value]) => {
             if (value) processedValues[key] = value;
         });
-        processedValues['educational_qualification'] ='93';
+        processedValues['educational_qualification'] = '93';
         processedValues['password'] = context.psGlobal.encrypt(processedValues['password']);
         // processedValues['mobile_otp'] = otp;
         var form = new FormData();
@@ -78,9 +78,22 @@ const Register = (props) => {
                 context.saveCustomerLogin(res['data'].data, res['data'].api);
                 context.updateCustomerLogged();
 
-                setRegisterLoader(false);
-                // processSms(processedValues.name, processedValues.mobile_no, otp)
-                navigate('/0/customer/dashboard')
+
+                context.psGlobal.addLog({
+                    log_name: 'add-new-member',
+                    logged_type: "customer",
+                    logged_by: res['data'].data.id,
+                    ref_table_column: 'members.id',
+                    ref_id: res['data'].data['id'],
+                    ref_id2: res['data'].data['member_id'],
+                    description: 'New Member Added ' + res['data'].data['member_id']
+                }).then(logRes => {
+                    setRegisterLoader(false);
+                    // processSms(processedValues.name, processedValues.mobile_no, otp)
+                    navigate('/0/customer/dashboard')
+                })
+
+
             }
             else {
                 message.error(res['data'].message || 'Error');
@@ -123,7 +136,7 @@ const Register = (props) => {
 
                 <Col className='gutter-row' xs={24} xl={12}>
                     <Spin spinning={registerLoader}>
-                        <Card title="Register"  extra={<Button type="text" href="/public/login">Already Member? Login</Button>}>
+                        <Card title="Register" extra={<Button type="text" href="/public/login">Already Member? Login</Button>}>
 
                             <Form
                                 name="basic"

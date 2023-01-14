@@ -2,18 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { Button, Card } from 'antd';
-import { Form, Input, Select, InputNumber, Radio, Checkbox } from 'antd';
-import { Breadcrumb, Layout, Spin, DatePicker } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import PsContext from '../../../context';
-import { Editor } from '@tinymce/tinymce-react';
-import { ImageUpload, FormItem, MyButton } from '../../../comp';
-import { capitalizeFirst } from '../../../utils';
-import PhoneInput from 'react-phone-input-2'
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { Form, Input, Select, InputNumber, Radio, Checkbox, Spin, DatePicker } from 'antd';
+
+import PsContext from '../../../../context';
 import TextArea from 'antd/lib/input/TextArea';
 import dayjs from 'dayjs';
-
+import { FormItem, MyButton } from '../../../../comp';
 const AddEditTrans = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -24,15 +18,13 @@ const AddEditTrans = (props) => {
     const [heading] = useState('Transaction');
     const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
     const [editId, setEditId] = useState(null);
-    const [country, setCountry] = useState('');
-    const [districts, setDistricts] = useState([]);
-    const [selType, setSelType] = useState('payment in');
-    const [districtLoading, setDistrictLoading] = useState(false)
-    const [refreshTable, setRefreshTable] = useState(0);
-    const [planNames, setPlanNames] = useState(null);
-    const [selData, setSelData] = useState({})
+    const [selType, setSelType] = useState('payment-in');
+    const [byAccounts, setByAccounts] = useState([]);
+    const [toAccounts, setToAccounts] = useState([])
+    const [ledgers, setLedgers] = useState([]);
+    const [selTransactionDate, setSelTransactionDate] = useState(null)
     useEffect(() => {
-        loadPlanNames();
+        loadLedgers();
         if (editIdOrObject) {
             if (typeof editIdOrObject === 'object') {
                 setCurAction("edit");
@@ -48,11 +40,17 @@ const AddEditTrans = (props) => {
         } else {
             setCurAction("add");
             addeditFormBranch.setFieldsValue({
+                acc_transactions: { tr_date: dayjs() }
             });
+            setSelTransactionDate(dayjs());
+           
             //addForm.setFieldsValue({ category: 'Plan', package_for: 'Customer(Online)', package_status: 'Active' })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [editIdOrObject]);
+    useEffect(() => {
+        changeByToAccounts(selType)
+    }, [ledgers]);
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
@@ -74,7 +72,7 @@ const AddEditTrans = (props) => {
         addeditFormBranch.setFieldsValue({
 
             acc_transactions: {
-                tr_date: mydata.tr_date,
+                tr_date: dayjs(mydata.tr_date),
 
                 credit_account: mydata.credit_account,
 
@@ -84,13 +82,28 @@ const AddEditTrans = (props) => {
 
                 amount: mydata.amount,
 
-                tr_status: mydata.tr_status
+                // tr_status: mydata.tr_status
 
             }
         });
-      
+        setSelTransactionDate(dayjs(mydata.tr_date));
+        //verify type of transaction
+        if((mydata.credit_account_category_name==='Cash' || mydata.credit_account_category_name==='Bank' || mydata.credit_account_category_name==='Cheque') && (mydata.debit_account_category_name==='Cash' || mydata.debit_account_category_name==='Bank' || mydata.debit_account_category_name==='Cheque')){
+            setSelType('contra')
+        }
+        else if(mydata.credit_account_category_name==='Cash' || mydata.credit_account_category_name==='Bank' || mydata.credit_account_category_name==='Cheque'){
+            setSelType('payment-in')
+        }
+        else if(mydata.debit_account_category_name==='Cash' || mydata.debit_account_category_name==='Bank' || mydata.debit_account_category_name==='Cheque'){
+            setSelType('payment-out')
+        }
+        else{
+            setSelType('journal')
+        }
+        
     }
-    const addeditFormBranchOnFinish = (values) => {
+    
+    const addeditFormAddEditTransactionOnFinish = (values) => {
         setLoader(true);
         var processedValues = {};
         Object.entries(values.acc_transactions).forEach(([key, value]) => {
@@ -98,11 +111,8 @@ const AddEditTrans = (props) => {
 
                 processedValues[key] = value;
             }
-            if (values.acc_transactions.tr_status === 'Active')
-                processedValues['tr_status'] = 1;
-            else
-                processedValues['tr_status'] = 0;
-            processedValues['tr_date'] = dayjs(values.acc_transactions.tr_status).format("YYYY-MM-DD");
+
+            processedValues['tr_date'] = dayjs(selTransactionDate).format("YYYY-MM-DD hh:mm:ss");
         });
         if (curAction === "add") {
             var reqDataInsert = {
@@ -142,28 +152,42 @@ const AddEditTrans = (props) => {
     };
     const onTypeChange = ({ target: { value } }) => {
         setSelType(value);
-        setRefreshTable(prev => prev + 1)
+        changeByToAccounts(value)
     }
-    const loadPlanNames = () => {
+    const changeByToAccounts = (value) => {
+        var byAcc = [];
+        var toAcc = [];
+
+        if (value === 'payment-in') {
+            byAcc = ledgers.filter(item => item.category_name === 'Cash' || item.category_name === 'Bank' || item.category_name === 'Cheque')
+            toAcc = ledgers.filter(item => item.category_name !== 'Cash' && item.category_name !== 'Bank' && item.category_name !== 'Cheque')
+        }
+        else if (value === 'payment-out') {
+            toAcc = ledgers.filter(item => item.category_name === 'Cash' || item.category_name === 'Bank' || item.category_name === 'Cheque')
+            byAcc = ledgers.filter(item => item.category_name !== 'Cash' && item.category_name !== 'Bank'  && item.category_name !== 'Cheque')
+        }
+        else if (value === 'contra') {
+            byAcc = ledgers.filter(item => item.category_name === 'Cash' || item.category_name === 'Bank' || item.category_name === 'Cheque')
+            toAcc = ledgers.filter(item => item.category_name === 'Cash' || item.category_name === 'Bank' || item.category_name === 'Cheque')
+        }
+        else if (value === 'journal') {
+            byAcc = ledgers;
+            toAcc = ledgers;
+        }
+        setByAccounts(byAcc);
+        setToAccounts(toAcc);
+    }
+    const loadLedgers = () => {
         var reqData = {
             query_type: 'query', //query_type=insert | update | delete | query
-
-            query: "select * from acc_ledgers where status=1 "
+            query: "select l.*,c.category_name from acc_ledgers l,acc_ledger_categories c where l.status=1 and l.category=c.id"
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            setPlanNames(res);
+            setLedgers(res);
         }).catch(err => {
             message.error(err);
         })
     }
-    // const dobOnChange = (date) => {
-    //     //  console.log('dchange', date)
-    //     setSelData(date);
-    //     addeditFormBranch.setFieldsValue({
-    //         employees: { dob: dayjs(date).format('YYYY-MM-DD') }
-    //     })
-
-    // };
     return (
         <>
             <Spin spinning={loader} >
@@ -174,120 +198,95 @@ const AddEditTrans = (props) => {
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 20 }}
                     initialValues={{ remember: true }}
-                    onFinish={addeditFormBranchOnFinish}
+                    onFinish={addeditFormAddEditTransactionOnFinish}
                     autoComplete="off"
                 >
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="Transaction Date"
-                                name={['acc_transactions', 'tr_date']}
-                            // rules={[{ required: true, message: 'Please Enter template' }]}
-                            > <DatePicker defaultValue={dayjs()} />
-                                {/* <Input placeholder="Transfer Date" /> */}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="Voucher Type"
-                                name={['acc_ledgers', 'ledger_type']}
-                            > <Radio.Group defaultValue="a" buttonStyle="solid">
-                                    <Radio.Button value="a">Payment In</Radio.Button>
-                                    <Radio.Button value="c">Payment Out</Radio.Button>
-                                </Radio.Group>
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="By Account"
-                                name={['acc_transactions', 'credit_account']}
-                                // onFinish={addeditFormBranchOnFinish}
-                                rules={[{ required: true, message: 'Please Enter Plan Name' }]}
-                            >
-                                <Select
-                                    showSearch
-                                    placeholder="By Account"
-                                    // onChange={onPlanChange}
-                                    optionFilterProp="children"
-                                    //onChange={businessStatusOnChange}
-                                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                                >
-                                    {
-                                        planNames && planNames.map(item => {
-                                            return <Select.Option value={item.id} >{item.ledger_name}</Select.Option>
-                                        })
-                                    }
-                                </Select>
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="To Account"
-                                name={['acc_transactions', 'debit_account']}
-                                // onFinish={addeditFormBranchOnFinish}
-                                rules={[{ required: true, message: 'Please Enter Plan Name' }]}
-                            >
-                                <Select
-                                    showSearch
-                                    placeholder="To Account"
-                                    // onChange={onPlanChange}
-                                    optionFilterProp="children"
-                                    //onChange={businessStatusOnChange}
-                                    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                                >
-                                    {
-                                        planNames && planNames.map(item => {
-                                            return <Select.Option value={item.id} >{item.ledger_name}</Select.Option>
-                                        })
-                                    }
-                                </Select>
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="Description"
-                                name={['acc_transactions', 'narration']}
-                                rules={[{ required: true, message: 'Please Enter To narration ' }]}
-                            >
-                                <TextArea placeholder="narration" />
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
 
-                            <FormItem
-                                label="Amount"
-                                name={['acc_transactions', 'amount']}
-                                rules={[{ required: true, message: 'Please Enter To amount' }]}
-                            >
-                                <Input placeholder="amount" />
-                            </FormItem>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col className='gutter-row' xs={24} xl={20}>
-                            <FormItem
-                                label="Status"
-                                name={['acc_transactions', 'tr_status']}
-                            // rules={[{ required: true, message: 'Please Enter ' }]}
-                            >
-                                <Radio.Group defaultValue="Active" optionType="default" >
-                                    {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'active-inactive', 'radio')}
-                                </Radio.Group>
-                            </FormItem>
-                        </Col>
-                        <Col className='gutter-row' xs={24} xl={12}>
-                        </Col>
-                    </Row>
+                    <FormItem
+                        label="Transaction Date"
+                        name={['acc_transactions', 'tr_date']}
+                    // rules={[{ required: true, message: 'Please Enter template' }]}
+                    > <DatePicker value={selTransactionDate} format="DD/MM/YYYY" allowClear={false} 
+                    onChange={(date)=>{setSelTransactionDate(date)}}
+                    />
+                        {/* <Input placeholder="Transfer Date" /> */}
+                    </FormItem>
+
+
+                    <FormItem
+                        label="Voucher Type"
+                    //  name={['acc_ledgers', 'voucher_type']}
+                    > <Radio.Group value={selType} buttonStyle="solid" onChange={onTypeChange}>
+                            <Radio.Button value="payment-in">Payment In</Radio.Button>
+                            <Radio.Button value="payment-out">Payment Out</Radio.Button>
+                            <Radio.Button value="contra">Contra</Radio.Button>
+                            <Radio.Button value="journal">Journal</Radio.Button>
+                        </Radio.Group>
+                    </FormItem>
+
+                    <FormItem
+                        label="By Account"
+                        name={['acc_transactions', 'credit_account']}
+                        // onFinish={addeditFormAddEditTransactionOnFinish}
+                        rules={[{ required: true, message: 'Please Enter Plan Name' }]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="By Account"
+                            // onChange={onPlanChange}
+                            optionFilterProp="children"
+                            //onChange={businessStatusOnChange}
+                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        >
+                            {
+                                byAccounts.map(item => {
+                                    return <Select.Option value={item.id} >{item.ledger_name}</Select.Option>
+                                })
+                            }
+                        </Select>
+                    </FormItem>
+
+                    <FormItem
+                        label="To Account"
+                        name={['acc_transactions', 'debit_account']}
+                        // onFinish={addeditFormAddEditTransactionOnFinish}
+                        rules={[{ required: true, message: 'Please Enter Plan Name' }]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="To Account"
+                            // onChange={onPlanChange}
+                            optionFilterProp="children"
+                            //onChange={businessStatusOnChange}
+                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        >
+                            {
+                                toAccounts.map(item => {
+                                    return <Select.Option value={item.id} >{item.ledger_name}</Select.Option>
+                                })
+                            }
+                        </Select>
+                    </FormItem>
+
+
+                    <FormItem
+                        label="Narration"
+                        name={['acc_transactions', 'narration']}
+                        rules={[{ required: true, message: 'Please Enter To narration ' }]}
+                    >
+                        <TextArea placeholder="narration" />
+                    </FormItem>
+
+
+                    <FormItem
+                        label="Amount"
+                        name={['acc_transactions', 'amount']}
+                        rules={[{ required: true, message: 'Please Enter To amount' }]}
+                    >
+                        <Input placeholder="amount" />
+                    </FormItem>
+
+
                     <FormItem wrapperCol={{ offset: 10, span: 24 }}>
                         <Space>
                             <Button size="large" type="outlined" onClick={onListClick}>

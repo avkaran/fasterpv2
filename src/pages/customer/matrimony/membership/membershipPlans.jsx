@@ -104,7 +104,7 @@ const MembershipPlans = (props) => {
                 onOk() {
 
                     setBuyLoader(true);
-                    console.log(context.customerUser.member_id)
+                    //console.log(context.customerUser.member_id)
                     var processedValues = {};
                     processedValues['member_auto_id'] = context.customerUser.id;
                     processedValues['member_id'] = context.customerUser.member_id;
@@ -123,7 +123,7 @@ const MembershipPlans = (props) => {
                     processedValues['order_date'] = dayjs().format("YYYY-MM-DD");
                     processedValues['paid_date'] = dayjs().format("YYYY-MM-DD");
                     processedValues['expiry_date'] = dayjs().add(parseInt(item.validity_months) * 30, "days").format("YYYY-MM-DD");
-                    processedValues['order_status'] = 'Ordered';
+                    processedValues['order_status'] = 'Payment Tried';
                     processedValues['payment_mode'] = 'Online';
 
                     processedValues['paid_by'] = 'customer';
@@ -148,8 +148,23 @@ const MembershipPlans = (props) => {
 
                         };
                         context.psGlobal.apiRequest(reqDataInner, "prod").then(resInner => {
-                            setBuyLoader(false)
-                            window.location.replace('https://rajmatrimony.com/api/v2_0/make-payment/' + padOrderId)
+                             context.psGlobal.addLog({
+                                log_name: 'payment-tried',
+                                logged_type: "customer",
+                                logged_by: context.customerUser.id,
+                                ref_table_column: 'orders.id',
+                                ref_id: createdId,
+                                ref_id2: padOrderId,
+                                description: 'New Payment Initiate ' + context.customerUser.member_id
+                            }).then(logRes => {
+                                message.success("moving")
+                                setBuyLoader(false)
+                                window.location.replace('https://rajmatrimony.com/api/v2_0/make-payment/' + padOrderId)
+                            }).catch(err=>{
+                                message.error(err)
+                            })
+                          
+                           
                         }).catch(err => {
                             message.error(err);
                             setBuyLoader(false);
