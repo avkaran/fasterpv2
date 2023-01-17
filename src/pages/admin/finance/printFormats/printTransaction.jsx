@@ -31,7 +31,7 @@ const PrintFinancialTransactions = (props) => {
             message.success(res.length + " " + currentFetchedRecords.current + " " + currentTotalRecords.current)
             if (currentFetchedRecords.current < recordsPerRequestOrPage) {
                 //hasMoreData.current = false;
-up
+
                 setVisibleProgressModal(false);
                 viewPrintPreview()
                 return;

@@ -27,6 +27,7 @@ import Branches from "../../branches";
 import WhatsappReports from "../../whatsapp";
 import dailyWhatsapp from "./whatsapp/dailyWhatsapp";
 import Employees from "../../employees";
+import EmployeeAttendance from './employee-attendance';
 
 import Broker from "./addNewDatails/broker";
 import Franchise from "./addNewDatails/franchise";
@@ -186,7 +187,7 @@ const AuthRoutes = (props) => {
             <Route
                 path='/:userId/admin/employee-designations'
                 element={< EmployeeDesignations />}
-                title='Caste List'
+                title='Employee Designations'
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
@@ -201,6 +202,13 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/employees'
                 element={< Employees />}
                 title='Employees'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+            <Route
+                path='/:userId/admin/employee-attendance'
+                element={< EmployeeAttendance />}
+                title='Employee Attendance'
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
@@ -374,6 +382,7 @@ const AuthRoutes = (props) => {
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
+          
         </Route>
     </>
     );

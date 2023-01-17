@@ -1,31 +1,9 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 2, name: 'matrimony' };
+export const currentInstance = { index: 0, name: 'matrimony' };
+
 export const businesses = [
-  { //0
-    key: 'association',
-    name: '24 MTC',
-    shortName: '24 MTC',
-    apiUrl: 'https://24stardoctors.com/api/v2_0/',
-    dbName: 'stardoctor_mtc-24',
-    smsUrl: 'http://bulksms.resellerindia.in/api/sendhttp.php',
-    smsAuthKey: '381030A28N8hyoMib630063c4P1',
-    smsSenderId: 'TCADOC',
-    cmsContentListType: 'table',//list or table
-    companies: [{ id: '1', name: '24 MTC', logo: '' }]
-  },
-  { //1
-    key: 'university',
-    name: 'World Tamil Music University',
-    shortName: 'WTMU',
-    apiUrl: 'https://worldtamilmusicuniversity.com/api/v2_0/',
-    //apiUrl: 'https://24stardoctors.com/wtmu-api/v2_0/',
-    dbName: 'wtmuusa_wtmu',
-    multilingual: ['en', 'ta'],
-    activeModels: ['dashboard', 'members', 'contents',],
-    companies: [{ id: '1', name: 'World Tamil Music University', logo: '' }]
-  }
-  ,
+ 
   { //2
     key: 'matrimony',
     name: 'Raj Matrimony',
@@ -35,17 +13,6 @@ export const businesses = [
     activeModels: ['dashboard', 'members', 'contents',],
     companies: [{ id: '1', name: 'Raj Matrimony', logo: '' }],
     //responsive: { isMobile: true, }
-  },
-  { //3
-    key: 'nhboard',
-    name: 'IMA HB',
-    shortName: 'IMA HB',
-    apiUrl: 'https://imanhb.org//nhboard/api/v2_0/',
-    dbName: 'imanhbor_nhboard',
-
-    activeModels: ['dashboard', 'members', 'contents',],
-    cmsContentListType: 'table',
-    companies: [{ id: '1', name: 'NHBoard', logo: '' }]
   },
   { //4
     key: 'mywatch',
@@ -63,23 +30,7 @@ export const businesses = [
     },
     responsive: { isMobile: true, }
   },
-  { //5
-    key: 'esboss',
-    name: 'ES Boss',
-    shortName: 'ES Boss',
-    apiUrl: 'https://www.esboss.in/api/v3_0/',
-    dbName: 'esboss',
-    multilingual: ['en', 'ta', 'ml', 'hi'],
-    activeModels: ['dashboard', 'members', 'contents',],
-    //cmsContentListType:'table',
-    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
-    theme: {
-      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
-      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
-    },
-    responsive: { isMobile: false, }
-  }
-
+ 
 ]
 export const baseUrl = businesses[currentInstance.index].apiUrl;
 export const CardFixedTop = ({ title, children }) => {

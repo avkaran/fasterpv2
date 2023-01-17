@@ -82,6 +82,8 @@ const mynav = [
 		childrens: [
 			{ name: 'Employees', path: '/:userId/admin/employees', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.list-employees'}, //
 			{ name: 'Employee Designations', path: '/:userId/admin/employee-designations', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'designations.list-designations' },
+			{ name: 'Employee Attendance', path: '/:userId/admin/employee-attendance', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.add-edit-employee-attendance' },
+		
 		],
 		allowed: ROLES.AdminAndEmployee
 	},
