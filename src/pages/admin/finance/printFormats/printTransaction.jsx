@@ -6,20 +6,27 @@ import { heightList } from '../../../..//models/core';
 import { faBarsProgress, faL } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { printDocument } from '../../../../utils';
-const PrintFinancialTransactions = (props) => {
+export const PrintFinancialTransactions = React.forwardRef((props, ref) => {
     const context = useContext(PsContext);
     const currentTotalRecords = useRef(0);
     const currentFetchedRecords = useRef(0);
     const [visibleProgressModal, setVisibleProgressModal] = useState(false);
     const [data, setData] = useState([]);
-
-
-    const { listHeading, recordsPerRequestOrPage, countQuery, listQuery, refresh, userId, onPreviewFinish, ...other } = props;
+    const { listHeading, recordsPerRequestOrPage, countQuery, listQuery, refresh, userId, onDataLoadFinish,onPrintCancel, ...other } = props;
+    const [started,setStarted]=useState(false)
     useEffect(() => {
         resetResult();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh]);
+    useEffect(() => {
+        if (data.length === currentTotalRecords.current && started){
+            setVisibleProgressModal(false);
+            onDataLoadFinish()
+        }
+           
+    }, [data])
     const loadMoreData = () => {
+        setStarted(true)
         var reqData = {
             query_type: "query", //query_type=insert | update | delete | query
             query: listQuery + " LIMIT " + currentFetchedRecords.current + "," + recordsPerRequestOrPage,
@@ -28,24 +35,22 @@ const PrintFinancialTransactions = (props) => {
 
             setData(prev => [...prev, ...res]);
             currentFetchedRecords.current = currentFetchedRecords.current + res.length;
-            message.success(res.length + " " + currentFetchedRecords.current + " " + currentTotalRecords.current)
             if (currentFetchedRecords.current < recordsPerRequestOrPage) {
                 //hasMoreData.current = false;
 
-                setVisibleProgressModal(false);
-                viewPrintPreview()
-                return;
+                
+                // viewPrintPreview()
+                // return;
             }
 
             if (currentTotalRecords.current > currentFetchedRecords.current) {
                 // hasMoreData.current = true;
-
                 loadMoreData();
             }
             else {
-                setVisibleProgressModal(false);
-                
-                    viewPrintPreview();
+              //  setVisibleProgressModal(false);
+
+                // viewPrintPreview();
 
             }
 
@@ -55,11 +60,6 @@ const PrintFinancialTransactions = (props) => {
             message.error(err);
         });
     }
-    const viewPrintPreview = () => {
-        printDocument('transaction-print');
-        setVisibleProgressModal(false);
-        onPreviewFinish();
-    }
     const resetResult = () => {
         setVisibleProgressModal(true);
         var reqData = {
@@ -67,7 +67,7 @@ const PrintFinancialTransactions = (props) => {
             query: countQuery
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            message.success(" count" + res[0].count)
+
             currentTotalRecords.current = parseInt(res[0].count);
             currentFetchedRecords.current = 0;
             data.length = null
@@ -78,18 +78,23 @@ const PrintFinancialTransactions = (props) => {
     }
     return (
         <>{
-            (<><div style={{ display: 'none' }}>
-                <div id="transaction-print" style={{ fontSize: '9pt !important' }}>
+            (<><div style={{ display: 'none' }} >
+                <div ref={ref} id="transaction-print" style={{ fontSize: '9pt !important',padding:'20px 20px 20px 20px' }} >
 
                     <h5>Raj Matrimony , Transactions Report {listHeading} <span style={{ float: 'right' }}> Count: {currentTotalRecords.current}</span></h5>
                     <table width="100%" border="1" cellpadding="3" style={{ borderCollapse: 'collapse' }}>
-                        <tr>
+                        <thead>
+                          <tr>
                             <td>S.No</td>
                             <td>Date</td>
                             <td>Particulars</td>
                             <td>Credit</td>
                             <td>Debit</td>
                         </tr>
+                        </thead>
+                        <tbody>
+
+                       
                         {
                             data.map((item, index) => {
                                 return <tr key={item.id}>
@@ -108,6 +113,7 @@ const PrintFinancialTransactions = (props) => {
                                 </tr>
                             })
                         }
+                         </tbody>
                     </table>
 
                 </div>
@@ -124,7 +130,7 @@ const PrintFinancialTransactions = (props) => {
                 //style={{ marginTop: '20px' }}
                 width={600}
                 // footer={null}
-                onCancel={() => { setVisibleProgressModal(false) }}
+                onCancel={() => { setVisibleProgressModal(false);onPrintCancel() }}
                 title={<span style={{ color: 'green' }} ><FontAwesomeIcon icon={faBarsProgress} /> &nbsp; Printing...</span>}
             >
                 <h5>Printing Progress</h5>
@@ -136,5 +142,4 @@ const PrintFinancialTransactions = (props) => {
         </>
     );
 
-}
-export default PrintFinancialTransactions;
+});

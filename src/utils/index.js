@@ -1,10 +1,10 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 0, name: 'matrimony' };
+export const currentInstance = { index: 1, name: 'classpro' };
 
 export const businesses = [
- 
-  { //2
+
+  { //0
     key: 'matrimony',
     name: 'Raj Matrimony',
     shortName: 'RAJ',
@@ -13,10 +13,28 @@ export const businesses = [
     activeModels: ['dashboard', 'members', 'contents',],
     companies: [{ id: '1', name: 'Raj Matrimony', logo: '' }],
     //responsive: { isMobile: true, }
+    hasCustomerPortal: true,
   },
-  { //4
+  { //1
+    key: 'classpro',
+    name: 'Test T',
+    shortName: 'Test',
+    apiUrl: 'https://24stardoctors.com/nermai/api/v3_0/',
+    dbName: 'stardoctor_nermai',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    // responsive: { isMobile: true, }
+    hasCustomerPortal: false,
+  },
+  { //2
     key: 'mywatch',
-    name: 'Test',
+    name: 'Test M',
     shortName: 'Test',
     apiUrl: 'https://rajmatrimony.com/mywatch/api/v3_0/',
     dbName: 'rajmatrimony_watch',
@@ -28,9 +46,78 @@ export const businesses = [
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
-    responsive: { isMobile: true, }
+    responsive: { isMobile: true, },
+    hasCustomerPortal: false,
   },
- 
+  { //3
+    key: 'tourism',
+    name: 'Test T',
+    shortName: 'Test',
+    apiUrl: 'https://azizatourism.com/api/v3_0/',
+    dbName: 'azizatourism',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    //  responsive: { isMobile: true, }
+    hasCustomerPortal: false,
+  },
+  { //4
+    key: 'shopy',
+    name: 'Test S',
+    shortName: 'Test',
+    apiUrl: 'https://mobbicare.com/api/v3_0/',
+    dbName: 'mobbicare',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    // responsive: { isMobile: true, }
+    hasCustomerPortal: false,
+  },
+  { //5
+    key: 'jewel',
+    name: 'Test J',
+    shortName: 'Test',
+    apiUrl: 'https://avkaran.com/aik/api/v3_0/',
+    dbName: 'mobbicare',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    // responsive: { isMobile: true, }
+    hasCustomerPortal: false,
+  },
+  { //6
+    key: 'estimate',
+    name: 'Test E',
+    shortName: 'Test',
+    apiUrl: 'https://avkaran.com/aik-es/api/v3_0/',
+    dbName: 'mobbicare',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    // responsive: { isMobile: true, }
+    hasCustomerPortal: false,
+  },
+
 ]
 export const baseUrl = businesses[currentInstance.index].apiUrl;
 export const CardFixedTop = ({ title, children }) => {

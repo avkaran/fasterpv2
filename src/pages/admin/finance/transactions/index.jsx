@@ -17,7 +17,9 @@ import { capitalizeFirst } from "../../../../utils";
 import AddEditTrans from "./addEditTrans";
 import ViewBusinessName from './viewTrans';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
-import PrintFinancialTransactions from "../printFormats/printTransaction";
+import {PrintFinancialTransactions} from "../printFormats/printTransaction";
+import { useReactToPrint } from 'react-to-print';
+
 const FinancialTransactions = (props) => {
   const context = useContext(PsContext);
   const { userId } = useParams();
@@ -42,6 +44,11 @@ const FinancialTransactions = (props) => {
     " date(tr_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
     " date(tr_date)>='" + dayjs().format("YYYY-MM-DD") + "'",
   ]);
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  //  onAfterPrint:()=>setIsPrint(false),
+  });
   useEffect(() => {
     LoadCategories();
 
@@ -100,6 +107,7 @@ const FinancialTransactions = (props) => {
     },
   ];
   const onFinishSearch = (values) => {
+    //setIsPrint(false)
     var filter_clauses = [];
     filter_clauses.push(
       " date(tr_date)>='" + dayjs(values.tr_date[0]).format("YYYY-MM-DD") + "'"
@@ -162,6 +170,7 @@ const FinancialTransactions = (props) => {
   const onPrintClick=()=>{
     setIsPrint(true);
     setRefreshPrintData(prev=>prev+1);
+    
   }
   return (
     <>
@@ -324,14 +333,17 @@ const FinancialTransactions = (props) => {
       </Content>
       {
         isPrint && (<PrintFinancialTransactions 
+          ref={componentRef}
     
           listHeading={"Transactions"}
           countQuery={"select count(*) as count from acc_transactions t where t.status=1 " + context.psGlobal.getWhereClause(filterColumns.current, false)}
           listQuery={"select t.*,lc.ledger_name as credit_account_name,ld.ledger_name as debit_account_name,cc.category_name as credit_account_category_name,cd.category_name as debit_account_category_name,row_number() OVER (ORDER BY t.tr_date) as row_num from acc_transactions t,acc_ledgers lc,acc_ledgers ld,acc_ledger_categories cc,acc_ledger_categories cd where t.status=1 and t.credit_account=lc.id and t.debit_account=ld.id and lc.category=cc.id and ld.category=cd.id " + context.psGlobal.getWhereClause(filterColumns.current, false)}
           userId={userId}
-          recordsPerRequestOrPage={50}
+          recordsPerRequestOrPage={10}
           refresh={refreshPrintData}
-          onPreviewFinish={()=>{}}
+          onDataLoadFinish={()=>{handlePrint()}}
+          onPrintCancel={()=>setIsPrint(false)}
+         
           />)
       }
      
