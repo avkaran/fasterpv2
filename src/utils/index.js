@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 1, name: 'classpro' };
+export const currentInstance = { index: 2, name: 'mywatch' };
 
 export const businesses = [
 
@@ -36,12 +36,12 @@ export const businesses = [
     key: 'mywatch',
     name: 'Test M',
     shortName: 'Test',
-    apiUrl: 'https://rajmatrimony.com/mywatch/api/v3_0/',
+    apiUrl: 'https://www.avkaran.com/api/v3_0/',
     dbName: 'rajmatrimony_watch',
     multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
     //cmsContentListType:'table',
-    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    companies: [{ id: '1', name: 'AvKaran', logo: '' }],
     theme: {
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
@@ -53,7 +53,7 @@ export const businesses = [
     key: 'tourism',
     name: 'Test T',
     shortName: 'Test',
-    apiUrl: 'https://azizatourism.com/api/v3_0/',
+    apiUrl: 'https://www.azizatourism.com/api/v3_0/',
     dbName: 'azizatourism',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
@@ -70,7 +70,7 @@ export const businesses = [
     key: 'shopy',
     name: 'Test S',
     shortName: 'Test',
-    apiUrl: 'https://mobbicare.com/api/v3_0/',
+    apiUrl: 'https://www.mobbicare.com/api/v3_0/',
     dbName: 'mobbicare',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
@@ -84,10 +84,10 @@ export const businesses = [
     hasCustomerPortal: false,
   },
   { //5
-    key: 'jewel',
+    key: 'jewels',
     name: 'Test J',
     shortName: 'Test',
-    apiUrl: 'https://avkaran.com/aik/api/v3_0/',
+    apiUrl: 'https://www.avkaran.com/aikjewels/api/v3_0/',
     dbName: 'mobbicare',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
@@ -104,7 +104,7 @@ export const businesses = [
     key: 'estimate',
     name: 'Test E',
     shortName: 'Test',
-    apiUrl: 'https://avkaran.com/aik-es/api/v3_0/',
+    apiUrl: 'https://www.avkaran.com/aikestimate/api/v3_0/',
     dbName: 'mobbicare',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
