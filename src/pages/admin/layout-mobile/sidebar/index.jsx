@@ -51,7 +51,7 @@ const Sidebar = (props) => {
 			item.childrens.forEach(obj => {
 				var path = obj.path.replace(":userId", props.user)
 				subMenus.push(<li>
-					<a href={'#' + path} className="item">
+					<a href={'#' + path} className="item" style={{textDecoration:'none'}}>
 						<div className="icon-box bg-primary">
 							<i className={obj.icon}></i>
 
@@ -74,12 +74,12 @@ const Sidebar = (props) => {
 			return (<>
 				<ul className="listview flush transparent no-line image-listview">
 					<li>
-						<a href={'#' + path} className="item">
+						<a href={'#' + path} className="item" >
 							<div className="icon-box bg-primary">
 								<i className={item.icon}></i>
 
 							</div>
-							<div className="in">
+							<div className="in" >
 								{item.name}
 								{/* <span className="badge badge-primary">10</span> */}
 							</div>

@@ -31,6 +31,7 @@ import {
 import { green, red, cyan, blue, magenta } from "@ant-design/colors";
 import dayjs from "dayjs";
 import EditEmployee from "./editEmployee";
+import ResponsiveLayout from '../../../admin/layout'
 const EmployeeProfile = (props) => {
   const context = useContext(PsContext);
   const {userId}=useParams()
@@ -59,7 +60,7 @@ const EmployeeProfile = (props) => {
         "select e.* ,u.username,u.password,u.active_status from employees e,vi_users u where e.status=1 and u.status=1 and u.ref_table_column='employees.id' and e.id=u.ref_id and u.ref_id=" +
         id,
     };
-    console.log('test',reqData)
+
     context.psGlobal
       .apiRequest(reqData, context.adminUser(userId).mode)
       .then((res) => {
@@ -111,22 +112,19 @@ const EmployeeProfile = (props) => {
   };
   return (
     <>
-      <Content
-        className="site-layout-background"
-        style={{
-          padding: "5px 24px 0px 24px",
-          margin: 0,
-        }}
-      >
-        <Breadcrumb style={{ margin: "0", padding: "8px 0px 8px 0px" }}>
-          <Breadcrumb.Item href="">
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <span>{heading + "s"}</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>List Employee</Breadcrumb.Item>
-        </Breadcrumb>
+    <ResponsiveLayout
+
+userId={userId}
+customHeader={null}
+bottomMenues={null}
+showNav={null}
+breadcrumbs={[
+  { name: 'My Account', link: null },
+
+]}
+>
+
+      
         {viewData && curAction === "edit" && (
           <Card title="My Account">
             <EditEmployee
@@ -320,7 +318,7 @@ const EmployeeProfile = (props) => {
             </Spin>
           </Card>
         )}
-      </Content>
+      </ResponsiveLayout>
       <Modal
         visible={visiblePasswordModal}
         zIndex={10000}
@@ -342,7 +340,7 @@ const EmployeeProfile = (props) => {
         <Spin spinning={passwordLoader}>
           <Form
             name="basic"
-            labelCol={{ span: 8 }}
+            labelCol={{ span: context.isMobile?24:8 }}
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={ChangePassOnFinish}

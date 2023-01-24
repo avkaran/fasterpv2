@@ -10,17 +10,16 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
-import { green, blue, red, cyan, grey } from '@ant-design/colors';
-const AddEditProject = (props) => {
+const AddEditJewelProduct = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const [addForm] = Form.useForm();
+    const [addeditFormProducts] = Form.useForm();
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
-    const [heading] = useState('Project');
-    const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
+    const [heading] = useState('Product');
+    const { editIdOrObject, onListClick, onSaveFinish, userId,formItemLayout, ...other } = props;
     const [editId, setEditId] = useState(null);
     useEffect(() => {
 
@@ -40,15 +39,17 @@ const AddEditProject = (props) => {
 
         } else {
             setCurAction("add");
-            // addForm.setFieldsValue({ category: 'Plan', project_for: 'Customer(Online)', project_status: 'Active' })
+            addeditFormProducts.setFieldsValue(
+                { products: { active_status: '1' } }
+            )
         }
 
-    }, []);
+    }, [editIdOrObject]);
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from projects where status=1 and id=" + id
+            query: "SELECT * from products where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setEditData(res[0]);
@@ -63,30 +64,25 @@ const AddEditProject = (props) => {
         })
     }
     const setEditValues = (mydata) => {
+        addeditFormProducts.setFieldsValue({
 
-        addForm.setFieldsValue({
+            products: {
+                product_code: mydata.product_code,
 
-            projects: {
-                project_name: mydata.project_name,
+                metal_type: mydata.metal_type,
 
-                category: mydata.category,
+                product_name: mydata.product_name,
 
-                api_url: mydata.api_url,
+                weight: mydata.weight,
 
-                api_password: mydata.api_password,
-
-                database_name: mydata.database_name,
-
-                database_username: mydata.database_username,
-
-                database_password: mydata.database_password,
+                active_status: mydata.active_status.toString(),
             }
         });
     }
     const onFinish = (values) => {
         setLoader(true);
         var processedValues = {};
-        Object.entries(values.projects).forEach(([key, value]) => {
+        Object.entries(values.products).forEach(([key, value]) => {
             if (value) {
                 processedValues[key] = value;
             }
@@ -96,7 +92,7 @@ const AddEditProject = (props) => {
         if (curAction === "add") {
             var reqDataInsert = {
                 query_type: 'insert',
-                table: 'projects',
+                table: 'products',
                 values: processedValues
 
             };
@@ -112,7 +108,7 @@ const AddEditProject = (props) => {
         } else if (curAction === "edit") {
             var reqDataUpdate = {
                 query_type: 'update',
-                table: 'projects',
+                table: 'products',
                 where: { id: editId },
                 values: processedValues
 
@@ -136,106 +132,86 @@ const AddEditProject = (props) => {
                 {
                     (curAction === "add" || (curAction === "edit" && editData)) && (<Form
                         name="basic"
-                        form={addForm}
+                        form={addeditFormProducts}
                         labelAlign="left"
-                        labelCol={context.isMobile ? null : { span: 8 }}
-                        wrapperCol={context.isMobile ? null : { span: 20 }}
+                        labelCol={{ span: formItemLayout==='two-column' || formItemLayout==='one-column'?8:24 }}
+                        wrapperCol={{ span: 24 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         autoComplete="off"
-                        layout={context.isMobile ? "vertical" : 'horizontal'}
                     >
                         <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
 
                                 <FormItem
-                                    label="Project Name"
-                                    name={['projects', 'project_name']}
-                                    rules={[{ required: true, message: 'Please Enter Project Name' }]}
+                                    label="Product Code"
+                                    name={['products', 'product_code']}
+                                    rules={[{ required: true, message: 'Please Enter Product Code' }]}
                                 >
-                                    <Input placeholder="Project Name" />
+                                    <Input placeholder="Product Code" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
 
                                 <FormItem
-                                    label="Category"
-                                    name={['projects', 'category']}
-                                    rules={[{ required: true, message: 'Please Enter Category' }]}
+                                    label="Metal Type"
+                                    name={['products', 'metal_type']}
+                                    rules={[{ required: true, message: 'Please Enter Metal Type' }]}
                                 >
 
                                     <Select
                                         showSearch
-                                        placeholder="Category"
+                                        placeholder="Metal Type"
 
                                         optionFilterProp="children"
-                                        //onChange={categoryOnChange}
+                                        //onChange={metalTypeOnChange}
                                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                     >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'project-categories')}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'metal-types')}
                                     </Select>
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
 
                                 <FormItem
-                                    label="Api Url"
-                                    name={['projects', 'api_url']}
-                                    rules={[{ required: true, message: 'Please Enter Api Url' }]}
+                                    label="Product Name"
+                                    name={['products', 'product_name']}
+                                    rules={[{ required: true, message: 'Please Enter Product Name' }]}
                                 >
-                                    <Input placeholder="Api Url" />
+                                    <Input placeholder="Product Name" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
 
                                 <FormItem
-                                    label="Api Password"
-                                    name={['projects', 'api_password']}
-                                    rules={[{ required: true, message: 'Please Enter Api Password' }]}
+                                    label="Weight"
+                                    name={['products', 'weight']}
+                                    rules={[{ required: true, message: 'Please Enter Weight' }]}
                                 >
-                                    <Input placeholder="Api Password" />
+                                    <InputNumber placeholder="Weight" type="number" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
 
                                 <FormItem
-                                    label="Database Name"
-                                    name={['projects', 'database_name']}
-                                    rules={[{ required: true, message: 'Please Enter Database Name' }]}
+                                    label="Active Status"
+                                    name={['products', 'active_status']}
+                                    rules={[{ required: true, message: 'Please Enter Active Status' }]}
                                 >
-                                    <Input placeholder="Database Name" />
+                                    <Radio.Group defaultValue="1" optionType="default" >
+                                      <Radio.Button value="1">Active</Radio.Button>
+                                      <Radio.Button value="0">Inactive</Radio.Button>
+                                    </Radio.Group>
                                 </FormItem>
-
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Database Username"
-                                    name={['projects', 'database_username']}
-                                    rules={[{ required: true, message: 'Please Enter Database Username' }]}
-                                >
-                                    <Input placeholder="Database Username" />
-                                </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Database Password"
-                                    name={['projects', 'database_password']}
-                                    rules={[{ required: true, message: 'Please Enter Database Password' }]}
-                                >
-                                    <Input.Password placeholder="Database Password" />
-                                </FormItem>
-
-                            </Col>
-
                         </Row>
-                        <FormItem wrapperCol={context.isMobile ? null : { offset: 10, span: 24 }}
+                       
+
+                        <FormItem wrapperCol={context.isMobile ? null : { offset: 8, span: 24 }}
                         >
                             {
                                 !context.isMobile && (
@@ -268,7 +244,6 @@ const AddEditProject = (props) => {
                         </FormItem>
 
 
-
                     </Form>)
                 }
 
@@ -280,4 +255,4 @@ const AddEditProject = (props) => {
     );
 
 }
-export default AddEditProject;
+export default AddEditJewelProduct;

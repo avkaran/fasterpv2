@@ -1,9 +1,8 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 2, name: 'mywatch' };
+export const currentInstance = { index: 6, name: 'estimate' };
 
 export const businesses = [
-
   { //0
     key: 'matrimony',
     name: 'Raj Matrimony',
@@ -102,8 +101,8 @@ export const businesses = [
   },
   { //6
     key: 'estimate',
-    name: 'Test E',
-    shortName: 'Test',
+    name: 'AIK Estimate',
+    shortName: 'AIK',
     apiUrl: 'https://www.avkaran.com/aikestimate/api/v3_0/',
     dbName: 'mobbicare',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
@@ -114,7 +113,7 @@ export const businesses = [
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
-    // responsive: { isMobile: true, }
+    responsive: { isMobile: true, },
     hasCustomerPortal: false,
   },
 
