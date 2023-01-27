@@ -54,6 +54,7 @@
     "react-router-dom": "^6.4.4",
     "react-scripts": "^5.0.1",
     "react-sortablejs": "^6.1.4",
+    "react-to-print": "^2.14.11",
     "sortablejs": "^1.15.0",
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.6",
