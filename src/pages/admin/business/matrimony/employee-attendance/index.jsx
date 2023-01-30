@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import AddPermission from './addPermission';
 import ViewBusinessName from './viewattendance';
 import dayjs from 'dayjs';
+
 const EmployeeAttendance = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -81,7 +82,6 @@ const EmployeeAttendance = (props) => {
         console.log(from_time, to_time, hours);
         return <>{parseInt(minutes / 60)} Hours {minutes % 60} Minutes</>;
     }
-
     useEffect(() => {
 
 
@@ -128,14 +128,20 @@ const EmployeeAttendance = (props) => {
         if (e.key)
             var curEmp = employeeData.find(item => item.id == e.key);
         setSelEmployee(curEmp);
+        setRefreshTable(prev=>prev+1)
         //load attendance for current date or selected date
         var reqData = {
             query_type: 'query',
             query: "select * from attendance where status=1 AND employee_id='" + e.key + "' and att_date='" + dayjs(selDate).format("YYYY-MM-DD") + "'",
         };
         apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            if (res.length > 0)
-                setAttendanceData(res[0])
+            if (res.length > 0){
+                setAttendanceData(res[0]);
+                attendanceForm.setFieldsValue({attendance:res[0].attendance.toString(),notes:res[0].notes})
+            }else{
+                attendanceForm.setFieldsValue({attendance:null,notes:null})
+            }
+                
         }).catch(err => {
             message.error(err)
         })
@@ -160,8 +166,37 @@ const EmployeeAttendance = (props) => {
     }
     const onDateChange = (date) => {
         setSelDate(dayjs(date));
+        setRefreshTable(prev=>prev+1);
     }
-    const attendanceFormOnFinish=(values)=>{
+    const attendanceFormOnFinish = (values) => {
+        var processedValues = {};
+        Object.entries(values).forEach(([key, value]) => {
+            if (value) {
+                processedValues[key] = value;
+            }
+        });
+        processedValues['employee_id'] = selEmployee.id;
+        processedValues['att_date'] = dayjs(selDate).format('YYYY-MM-DD');
+        var reqDataInsert = [{
+            query_type: 'delete',
+            table: 'attendance',
+            where: { employee_id: selEmployee.id, att_date: dayjs(selDate).format('YYYY-MM-DD') },
+            values: { status: '0' }
+
+        }, {
+            query_type: 'insert',
+            table: 'attendance',
+            values: processedValues
+        }];
+        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
+
+            message.success('Attendance Updated');
+
+
+        }).catch(err => {
+            message.error(err);
+
+        })
         console.log(values)
     }
     return (
@@ -185,20 +220,7 @@ const EmployeeAttendance = (props) => {
                     <Breadcrumb.Item>Attendance</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Modal
-                    visible={visibleModal}
-                    zIndex={999}
-                    footer={null}
-                    closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
-                    centered={false}
-                    closable={true}
-                    width={600}
-                    onCancel={() => { setVisibleModal(false) }}
-                    title={capitalizeFirst(curAction) + " " + heading}
-                >
-
-                    <AddPermission onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} />
-                </Modal>
+          
 
                 <Row gutter={16}>
                     <Col className="gutter-row" span={6}>
@@ -266,7 +288,7 @@ const EmployeeAttendance = (props) => {
                                         </FormItem>
                                     </Col>
                                     <Col className="gutter-row" xs={24} xl={8}>
-                                        <Button type="primary" style={{ width: '50%' }} onClick={() => onViewClick()}>View</Button>
+                                       
 
                                     </Col>
                                 </Row>
@@ -277,7 +299,7 @@ const EmployeeAttendance = (props) => {
                                     labelCol={{ span: 8 }}
                                     wrapperCol={{ span: 20 }}
                                     initialValues={{ remember: true }}
-                                     onFinish={attendanceFormOnFinish}
+                                    onFinish={attendanceFormOnFinish}
                                     autoComplete="off"
                                 >
                                     <Row gutter={16}
@@ -289,8 +311,8 @@ const EmployeeAttendance = (props) => {
                                                 rules={[{ required: true, message: 'Select Present/Absent' }]}
                                             >
                                                 <Radio.Group name="radiogroup" defaultValue={null}>
-                                                    <Radio value={1} style={{ marginTop: '4px' }}>Present</Radio>
-                                                    <Radio value={2} style={{ marginTop: '4px' }}>Absent</Radio>
+                                                    <Radio value="1" style={{ marginTop: '4px' }}>Present</Radio>
+                                                    <Radio value="0" style={{ marginTop: '4px' }}>Absent</Radio>
                                                 </Radio.Group>
                                             </FormItem>
                                         </Col>
@@ -315,28 +337,41 @@ const EmployeeAttendance = (props) => {
 
                             </Card>
 
-                            <Row>
-                                <Card title={heading} extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add {heading}</MyButton>} >
+                           
+                                <Card title={"Permission on " + dayjs(selDate).format("DD/MM/YYYY")} extra={<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add {heading}</MyButton>} >
 
                                     <PaginatedTable
                                         columns={tableColumns}
                                         refresh={refreshTable}
                                         countQuery={
-                                            "select count(*) as count from attendance_permissions where status=1 and employee_id='" + selEmployee.id + "'"
+                                            "select count(*) as count from attendance_permissions where status=1 and employee_id='" + selEmployee.id + "' and att_date='" + dayjs(selDate).format("YYYY-MM-DD") + "'"
                                         }
                                         listQuery={
-                                            "select *,@col_num :=@col_num +1 as col_num from attendance_permissions CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and employee_id='" + selEmployee.id + "'"
+                                            "select *,@col_num :=@col_num +1 as col_num from attendance_permissions CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and employee_id='" + selEmployee.id + "'  and att_date='" + dayjs(selDate).format("YYYY-MM-DD") + "'"
                                         }
                                         itemsPerPage={10}
                                     />
 
                                 </Card>
-                            </Row>
+                         
                         </Col>)
                     }
 
                 </Row>
+                    {selEmployee && (      <Modal
+                    open={visibleModal}
+                    zIndex={999}
+                    footer={null}
+                    closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
+                    centered={false}
+                    closable={true}
+                    width={600}
+                    onCancel={() => { setVisibleModal(false) }}
+                    title={capitalizeFirst(curAction) + " " + heading}
+                >
 
+                    <AddPermission onListClick={() => setCurAction("list")} onSaveFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); setVisibleModal(false); }} userId={userId} attDate={selDate} employeeId={selEmployee.id}/>
+                </Modal>)}
             </Content>
 
 

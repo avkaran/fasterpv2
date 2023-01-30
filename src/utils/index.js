@@ -1,6 +1,10 @@
 import moment from 'moment';
 import React from 'react';
+<<<<<<< HEAD
 export const currentInstance = { index: 3, name: 'tourism' };
+=======
+export const currentInstance = { index: 0, name: 'matrimony' };
+>>>>>>> 7671fc9d7ad8c0a4439b393dbe092e2d3fa29c16
 
 export const businesses = [
   { //0

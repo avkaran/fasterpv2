@@ -21,7 +21,7 @@ const AddPermission = (props) => {
     const format = 'HH:mm';
     // const {onListClick ,onSaveFinish,editIdOrObject} = props;
     // const [addFormPermission] = Form.useForm();
-    const { editIdOrObject, onListClick, onSaveFinish, ...other } = props;
+    const { editIdOrObject, onListClick, onSaveFinish,attDate,employeeId, ...other } = props;
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
@@ -103,6 +103,8 @@ const AddPermission = (props) => {
             processedValues['to_time'] = dayjs(values.attendance_permissions.time[1]).format("HH:mm:ss");
             delete processedValues['time'];
         }
+        processedValues['employee_id'] = employeeId;
+        processedValues['att_date'] = dayjs(attDate).format('YYYY-MM-DD');
         if (curAction === "add") {
             // console.log('test', processedValues)
             var reqDataInsert = {
