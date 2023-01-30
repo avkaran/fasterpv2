@@ -10,17 +10,16 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
-import { green, blue, red, cyan, grey } from '@ant-design/colors';
-const AddEditProject = (props) => {
+const AddEditTourPackage = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const [addForm] = Form.useForm();
+    const [addeditFormTourPackages] = Form.useForm();
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
-    const [heading] = useState('Project');
-    const { editIdOrObject, onListClick, onSaveFinish, userId, ...other } = props;
+    const [heading] = useState('Tour Package');
+    const { editIdOrObject, onListClick, onSaveFinish, userId, formItemLayout, ...other } = props;
     const [editId, setEditId] = useState(null);
     useEffect(() => {
 
@@ -40,15 +39,17 @@ const AddEditProject = (props) => {
 
         } else {
             setCurAction("add");
-            // addForm.setFieldsValue({ category: 'Plan', project_for: 'Customer(Online)', project_status: 'Active' })
+            addeditFormTourPackages.setFieldsValue(
+                { tour_packages: { active_status: '1' } }
+            )
         }
 
-    }, []);
+    }, [editIdOrObject]);
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from projects where status=1 and id=" + id
+            query: "SELECT * from tour-packages where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setEditData(res[0]);
@@ -63,30 +64,27 @@ const AddEditProject = (props) => {
         })
     }
     const setEditValues = (mydata) => {
+        addeditFormTourPackages.setFieldsValue({
 
-        addForm.setFieldsValue({
+            tour_packages: {
+                package_name: mydata.package_name,
 
-            projects: {
-                project_name: mydata.project_name,
+                package_image: mydata.package_image,
 
-                category: mydata.category,
+                description: mydata.description,
 
-                api_url: mydata.api_url,
+                active_status: mydata.active_status,
 
-                api_password: mydata.api_password,
+                categories: mydata.categories,
 
-                database_name: mydata.database_name,
-
-                database_username: mydata.database_username,
-
-                database_password: mydata.database_password,
+                price: mydata.price,
             }
         });
     }
     const onFinish = (values) => {
         setLoader(true);
         var processedValues = {};
-        Object.entries(values.projects).forEach(([key, value]) => {
+        Object.entries(values.tour_packages).forEach(([key, value]) => {
             if (value) {
                 processedValues[key] = value;
             }
@@ -96,7 +94,7 @@ const AddEditProject = (props) => {
         if (curAction === "add") {
             var reqDataInsert = {
                 query_type: 'insert',
-                table: 'projects',
+                table: 'tour_packages',
                 values: processedValues
 
             };
@@ -112,7 +110,7 @@ const AddEditProject = (props) => {
         } else if (curAction === "edit") {
             var reqDataUpdate = {
                 query_type: 'update',
-                table: 'projects',
+                table: 'tour_packages',
                 where: { id: editId },
                 values: processedValues
 
@@ -136,106 +134,106 @@ const AddEditProject = (props) => {
                 {
                     (curAction === "add" || (curAction === "edit" && editData)) && (<Form
                         name="basic"
-                        form={addForm}
+                        form={addeditFormTourPackages}
                         labelAlign="left"
-                        labelCol={context.isMobile ? null : { span: 8 }}
-                        wrapperCol={context.isMobile ? null : { span: 20 }}
+                        labelCol={{ span: formItemLayout === 'two-column' || formItemLayout === 'one-column' ? 8 : 24 }}
+                        wrapperCol={{ span: 24 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         autoComplete="off"
-                        layout={context.isMobile ? "vertical" : 'horizontal'}
                     >
                         <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Project Name"
-                                    name={['projects', 'project_name']}
-                                    rules={[{ required: true, message: 'Please Enter Project Name' }]}
+                                    label="Package Name"
+                                    name={['tour_packages', 'package_name']}
+                                    rules={[{ required: true, message: 'Please Enter Package Name' }]}
                                 >
-                                    <Input placeholder="Project Name" />
+                                    <Input placeholder="Package Name" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Category"
-                                    name={['projects', 'category']}
-                                    rules={[{ required: true, message: 'Please Enter Category' }]}
+                                    label="Categories"
+                                    name={['tour_packages', 'categories']}
+                                    rules={[{ required: true, message: 'Please Enter Categories' }]}
                                 >
 
                                     <Select
                                         showSearch
-                                        placeholder="Category"
+                                        placeholder="Categories"
 
                                         optionFilterProp="children"
-                                        //onChange={categoryOnChange}
+                                        //onChange={categoriesOnChange}
                                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                     >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'project-categories')}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'tour-package-categories')}
                                     </Select>
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Api Url"
-                                    name={['projects', 'api_url']}
-                                    rules={[{ required: true, message: 'Please Enter Api Url' }]}
+                                    label="Package Image"
+                                    name={['tour_packages', 'package_image']}
+                                    rules={[{ required: true, message: 'Please Enter Package Image' }]}
                                 >
-                                    <Input placeholder="Api Url" />
+
+                                    <ImageUpload
+                                        cropRatio="4/3"
+                                        defaultImage={editIdOrObject && editIdOrObject.photo ? editIdOrObject.photo : null}
+                                        storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
+                                        onFinish={(fileName) => { addeditFormTourPackages.setFieldsValue({ tour_packages: { package_image: fileName } }) }}
+                                    />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Api Password"
-                                    name={['projects', 'api_password']}
-                                    rules={[{ required: true, message: 'Please Enter Api Password' }]}
+                                    label="Price"
+                                    name={['tour_packages', 'price']}
+                                    rules={[{ required: true, message: 'Please Enter Price' }]}
                                 >
-                                    <Input placeholder="Api Password" />
+                                    <InputNumber placeholder="Price" type="number" />
                                 </FormItem>
+
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Database Name"
-                                    name={['projects', 'database_name']}
-                                    rules={[{ required: true, message: 'Please Enter Database Name' }]}
+                                    label="Description"
+                                    name={['tour_packages', 'description']}
+                                    rules={[{ required: true, message: 'Please Enter Description' }]}
                                 >
-                                    <Input placeholder="Database Name" />
+                                    <Input.TextArea rows={3} />
                                 </FormItem>
+
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Database Username"
-                                    name={['projects', 'database_username']}
-                                    rules={[{ required: true, message: 'Please Enter Database Username' }]}
+                                    label="Active Status"
+                                    name={['tour_packages', 'active_status']}
+                                    rules={[{ required: true, message: 'Please Enter Active Status' }]}
                                 >
-                                    <Input placeholder="Database Username" />
+                                    <Radio.Group defaultValue="1" optionType="default" >
+                                        <Radio.Button value="1">Active</Radio.Button>
+                                        <Radio.Button value="0">Inactive</Radio.Button>
+                                    </Radio.Group>
                                 </FormItem>
-
-                            </Col>
-                            <Col className='gutter-row' xs={24} xl={12}>
-
-                                <FormItem
-                                    label="Database Password"
-                                    name={['projects', 'database_password']}
-                                    rules={[{ required: true, message: 'Please Enter Database Password' }]}
-                                >
-                                    <Input.Password placeholder="Database Password" />
-                                </FormItem>
-
                             </Col>
 
                         </Row>
-                        <FormItem wrapperCol={context.isMobile ? null : { offset: 10, span: 24 }}
+
+
+                        <FormItem wrapperCol={context.isMobile ? null : { offset: 8, span: 24 }}
                         >
                             {
                                 !context.isMobile && (
@@ -268,7 +266,6 @@ const AddEditProject = (props) => {
                         </FormItem>
 
 
-
                     </Form>)
                 }
 
@@ -280,4 +277,4 @@ const AddEditProject = (props) => {
     );
 
 }
-export default AddEditProject;
+export default AddEditTourPackage;

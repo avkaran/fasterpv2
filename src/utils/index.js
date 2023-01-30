@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 6, name: 'estimate' };
+export const currentInstance = { index: 3, name: 'tourism' };
 
 export const businesses = [
   { //0
@@ -50,8 +50,8 @@ export const businesses = [
   },
   { //3
     key: 'tourism',
-    name: 'Test T',
-    shortName: 'Test',
+    name: 'Aziza',
+    shortName: 'Aziza',
     apiUrl: 'https://www.azizatourism.com/api/v3_0/',
     dbName: 'azizatourism',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
@@ -62,6 +62,7 @@ export const businesses = [
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
+    fileStorage:{type:'aws',},
     //  responsive: { isMobile: true, }
     hasCustomerPortal: false,
   },

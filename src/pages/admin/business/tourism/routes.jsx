@@ -6,32 +6,28 @@ import { currentInstance, businesses } from '../../../../utils';
 
 //this project components
 import Dashboard from "./dashboard";
-import AddContent from "../../contents/addContent";
-import ListContents from "../../contents"
-import EditContent from "../../contents/editContent";
-import ViewContent from "../../contents/viewContent";
+
+import AddContent from "../../cms/addContent";
+import ListContents from "../../cms"
+import EditContent from "../../cms/editContent";
+import ViewContent from "../../cms/viewContent";
+
 import Collections from "../../collections";
-import Docs from "../../../../docs";
-import Database from "../../../../devTools/database";
-import Coder from "../../../../devTools/coder";
+
 import EmployeeDesignations from "../../employee-designations";
 import Branches from "../../branches";
 import Employees from "../../employees";
 import MyAdminProfile from "../../my-accounts";
 import EmployeeProfile from "../../my-accounts/employee/employeeProfile";
-import SmsTemplate from "../../sms-templates";
-import Logs from "../../logs";
+
 import PermissionError from "../../error-pages/permissionError";
-import CrmCategoryList from "../../crm/categories";
-import MemberCRM from "./crm/memberCrm";
-import Translations from "../../translations";
-import Advertisement from "../../advertisements";
-import WhatsappReports from "../../whatsapp";
-import SoftwareProjects from './projects';
-import CodeGenerator from './coder';
+
+import TourPackages from './tour-packages';
+
+
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
-import ViewProject from './projects/viewProject';
+
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 
@@ -107,13 +103,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                <Route
-                    path='/:userId/admin/sms-templates'
-                    element={<SmsTemplate />}
-                    title='SmsTemplate'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
+             
                 <Route
                     path='/:userId/admin/myaccounts/account-profile'
                     element={<MyAdminProfile />}
@@ -128,41 +118,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                <Route
-                    path='/:userId/admin/logs'
-                    element={<Logs />}
-                    title='Logs'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/advertisements'
-                    element={<Advertisement/>}
-                    title='Advertisements'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/whatsapp/wapp-reports'
-                    element={<WhatsappReports />}
-                    title='Whatsapp Reports'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/crm/crm-list'
-                    element={<MemberCRM />}
-                    title='Franchise Transactions'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/crm/categories'
-                    element={<CrmCategoryList />}
-                    title='Franchise Transactions'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
+               
                 <Route
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
@@ -170,55 +126,16 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                <Route
-                    path='/:userId/admin/docs'
-                    element={<Docs />}
-                    title='Documentation'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/database'
-                    element={<Database />}
-                    title='Database'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/coder'
-                    element={<Coder />}
-                    title='Coder'
-                    allowed={ ROLES.ALL }
-                    exact={ true}
-                />
-                <Route
-                    path='/:userId/admin/translations'
-                    element={<Translations />}
-                    title='Translations'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
+               
                  <Route
-                    path='/:userId/admin/projects'
-                    element={<SoftwareProjects />}
-                    title='Translations'
+                    path='/:userId/admin/tour-packages'
+                    element={<TourPackages />}
+                    title='Tour Packages'
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                 <Route
-                    path='/:userId/admin/project/view/:projectId'
-                    element={<ViewProject />}
-                    title='View Project'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/code-generator'
-                    element={<CodeGenerator />}
-                    title='Translations'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
+               
+               
             </Route>
 
         </>
