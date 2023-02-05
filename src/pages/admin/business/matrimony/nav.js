@@ -23,7 +23,7 @@ const mynav = [
 			{ name: 'All Members', path: '/:userId/admin/members', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL},
 			{ name: 'Add Member', path: '/:userId/admin/members/add-member', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'matrimony-members.add-new-member' },
 			{ name: 'Member Logs', path: '/:userId/admin/members/member-logs', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL },
-			{ name: 'Deleted Members', path: '/:userId/admin/members/deleted-member', icon: 'bx fa-gear', exact: true, allowed: ROLES.ALL,resourceName:'matrimony-members.list-deleted-members' },
+			{ name: 'Deleted Members', path: '/:userId/admin/members/deleted-member', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'matrimony-members.list-deleted-members' },
 		],
 		allowed: ROLES.ALL
 	},
@@ -83,6 +83,8 @@ const mynav = [
 			{ name: 'Employees', path: '/:userId/admin/employees', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.list-employees'}, //
 			{ name: 'Employee Designations', path: '/:userId/admin/employee-designations', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'designations.list-designations' },
 			{ name: 'Employee Attendance', path: '/:userId/admin/employee-attendance', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.add-edit-employee-attendance' },
+			{ name: 'Attendance Report', path: '/:userId/admin/employee-attendance-report', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'employees.view-employee-attendance' },
+		
 		
 		],
 		allowed: ROLES.AdminAndEmployee

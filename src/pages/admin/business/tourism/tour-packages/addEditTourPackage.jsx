@@ -21,6 +21,7 @@ const AddEditTourPackage = (props) => {
     const [heading] = useState('Tour Package');
     const { editIdOrObject, onListClick, onSaveFinish, userId, formItemLayout, ...other } = props;
     const [editId, setEditId] = useState(null);
+    const [editorValue, setEditorValue] = useState('');
     useEffect(() => {
 
         if (editIdOrObject) {
@@ -73,13 +74,14 @@ const AddEditTourPackage = (props) => {
 
                 description: mydata.description,
 
-                active_status: mydata.active_status,
+                active_status: mydata.active_status.toString(),
 
-                categories: mydata.categories,
+                categories: mydata.categories ? mydata.categories.split(",") : [],
 
                 price: mydata.price,
             }
         });
+        setEditorValue(mydata.description);
     }
     const onFinish = (values) => {
         setLoader(true);
@@ -89,16 +91,18 @@ const AddEditTourPackage = (props) => {
                 processedValues[key] = value;
             }
         });
+        if (processedValues['categories'])
+            processedValues['categories'] = processedValues['categories'].join(",");
 
+
+
+        var form = new FormData();
+        Object.entries(processedValues).forEach(([key, value], index) => {
+            form.append(key, value)
+        })
 
         if (curAction === "add") {
-            var reqDataInsert = {
-                query_type: 'insert',
-                table: 'tour_packages',
-                values: processedValues
-
-            };
-            context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
+            context.psGlobal.apiRequest('admin/tour-packages/save', context.adminUser(userId).mode, form).then((res) => {
                 setLoader(false);
                 message.success(heading + ' Added Successfullly');
                 onSaveFinish();
@@ -108,14 +112,15 @@ const AddEditTourPackage = (props) => {
                 setLoader(false);
             })
         } else if (curAction === "edit") {
-            var reqDataUpdate = {
-                query_type: 'update',
-                table: 'tour_packages',
-                where: { id: editId },
-                values: processedValues
-
-            };
-            context.psGlobal.apiRequest(reqDataUpdate, context.adminUser(userId).mode).then((res) => {
+            form.append('id', editData.id);
+            if (processedValues['package_image'] !== editData.package_image) {
+                if (editData.package_image)
+                    form.append('old_package_image', editData.package_image);
+            }
+            else {
+                form.delete('package_image');
+            }
+            context.psGlobal.apiRequest('admin/tour-packages/update', context.adminUser(userId).mode, form).then((res) => {
                 setLoader(false);
                 message.success(heading + ' Saved Successfullly');
                 onSaveFinish();
@@ -126,7 +131,15 @@ const AddEditTourPackage = (props) => {
             })
         }
 
+
     };
+    const handleEditorChange = (content) => {
+        setEditorValue(content);
+        addeditFormTourPackages.setFieldsValue({
+            tour_packages: { description: content }
+        })
+        setEditorValue(content);
+    }
     return (
         <>
 
@@ -166,9 +179,8 @@ const AddEditTourPackage = (props) => {
                                         showSearch
                                         placeholder="Categories"
 
-                                        optionFilterProp="children"
-                                        //onChange={categoriesOnChange}
-                                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                                        mode="multiple"
+                                        optionLabelProp="label"
                                     >
                                         {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'tour-package-categories')}
                                     </Select>
@@ -185,7 +197,7 @@ const AddEditTourPackage = (props) => {
 
                                     <ImageUpload
                                         cropRatio="4/3"
-                                        defaultImage={editIdOrObject && editIdOrObject.photo ? editIdOrObject.photo : null}
+                                        defaultImage={editData && editData.package_image ? '/cloud-file/' + encodeURIComponent(encodeURIComponent(editData.package_image)) : null}
                                         storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
                                         onFinish={(fileName) => { addeditFormTourPackages.setFieldsValue({ tour_packages: { package_image: fileName } }) }}
                                     />
@@ -204,18 +216,7 @@ const AddEditTourPackage = (props) => {
 
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
-                                <FormItem
-                                    label="Description"
-                                    name={['tour_packages', 'description']}
-                                    rules={[{ required: true, message: 'Please Enter Description' }]}
-                                >
-                                    <Input.TextArea rows={3} />
-                                </FormItem>
-
-
-                            </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
@@ -227,6 +228,42 @@ const AddEditTourPackage = (props) => {
                                         <Radio.Button value="1">Active</Radio.Button>
                                         <Radio.Button value="0">Inactive</Radio.Button>
                                     </Radio.Group>
+                                </FormItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
+                                <FormItem
+                                    label="Description"
+                                    labelCol={{ span: 24, offset: 0 }}
+                                    name={['tour_packages', 'description']}
+                                    rules={[{ required: true, message: 'Please Enter Description' }]}
+                                >
+                                    <div className="editor-wrapper">
+                                        <Editor
+
+                                            init={{
+                                                height: '500',
+                                                auto_focus: false,
+                                                menubar: false,
+                                                statusbar: false,
+                                                plugins: 'hr lists table textcolor code link image',
+                                                toolbar: 'bold italic forecolor link image| alignleft aligncenter alignright | hr bullist numlist table | subscript superscript | removeformat code',
+
+                                                // allow custom url in link? nah just disabled useless dropdown..
+                                                anchor_top: false,
+                                                anchor_bottom: false,
+                                                draggable_modal: true,
+                                                table_default_attributes: {
+                                                    border: '0',
+                                                },
+                                            }}
+                                            // initialValue={viewData.content_html}
+                                            value={editorValue}
+
+
+                                            onEditorChange={handleEditorChange}
+                                        // onChange={handleEditorChange}
+                                        />
+                                    </div>
                                 </FormItem>
                             </Col>
 

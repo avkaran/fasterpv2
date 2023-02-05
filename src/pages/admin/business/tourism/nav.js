@@ -18,9 +18,10 @@ const mynav = [
 		exact: false,
 		childrens: [
 			{ name: 'List Pages', path: '/:userId/admin/contents/page/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'pages.list-pages' },
-			{ name: 'List Announcements', path: '/:userId/admin/contents/announcement/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'announcements.list-announcement' },
+			{ name: 'List Sliders', path: '/:userId/admin/contents/slider/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'sliders.list-slider' },
+		/* 	{ name: 'List Announcements', path: '/:userId/admin/contents/announcement/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'announcements.list-announcement' }, */
 			{ name: 'List Gallery', path: '/:userId/admin/contents/gallery/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL ,resourceName:'gallery.list-gallery'},
-			{ name: 'List Events', path: '/:userId/admin/contents/event/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL },
+			/* { name: 'List Events', path: '/:userId/admin/contents/event/list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL }, */
 		],
 		allowed: ROLES.ALL
 	},

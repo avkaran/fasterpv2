@@ -56,6 +56,7 @@ import FinancialTransactions from '../../finance/transactions';
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
 import MyResellerTransactions from './reseller/myresellerTransactions';
+import EmployeeAttendanceReports from './employee-attendance/attendanceReport';
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 const AuthRoutes = (props) => {
@@ -209,6 +210,13 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/employee-attendance'
                 element={< EmployeeAttendance />}
                 title='Employee Attendance'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/employee-attendance-report'
+                element={< EmployeeAttendanceReports />}
+                title='Attendance'
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
@@ -382,6 +390,7 @@ const AuthRoutes = (props) => {
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
+           
           
         </Route>
     </>

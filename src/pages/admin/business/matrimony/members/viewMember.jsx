@@ -71,6 +71,7 @@ const ViewMember = (props) => {
     const [financeAccountPaymentLedgers,setFinanceAccountPaymentLedgers]=useState([]);
 
     useEffect(() => {
+        
         loadBusinessNames();
         loadPlanNames();
         loadCastes()
@@ -368,12 +369,19 @@ const ViewMember = (props) => {
             title: 'Order Date',
             dataIndex: 'order_date',
             //  key: 'order_data',
-            render: (text, record) => <strong>{dayjs(record.order_date).format("DD/MM/YYYY h:m a")}</strong>,
+            render: (text, record) => <strong>{dayjs(record.order_date).format("DD/MM/YYYY hh:mm a")}</strong>,
         },
         {
             title: 'Order Id',
             dataIndex: 'order_id',
             key: 'order_id',
+            //render: (item) => <strong>{item}</strong>,
+        },
+        {
+            title: 'Employee',
+           // dataIndex: 'paid_by_ref ',
+            key: 'paid_by_ref ',
+            render: (item) => <strong>{item.employee_name}</strong>,
             //render: (item) => <strong>{item}</strong>,
         },
         {
@@ -394,6 +402,7 @@ const ViewMember = (props) => {
             key: 'order_status',
             //render: (item) => <strong>{item}</strong>,
         },
+        
         {
             title: 'Plan Status',
             // dataIndex: 'order_status',
@@ -485,9 +494,9 @@ const ViewMember = (props) => {
 
 
         processedValues['package_price'] = getDiscountInfo('final-amount');
-        processedValues['order_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD");
-        processedValues['paid_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD");
-        processedValues['expiry_date'] = dayjs(values.orders.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD");
+        processedValues['order_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD HH:mm:ss");
+        processedValues['paid_date'] = dayjs(values.orders.paid_date).format("YYYY-MM-DD HH:mm:ss");
+        processedValues['expiry_date'] = dayjs(values.orders.paid_date).add(parseInt(selPlanData.validity_months) * 30, "days").format("YYYY-MM-DD HH:mm:ss");
         processedValues['order_status'] = 'Paid';
 
         processedValues['paid_by'] = context.adminUser(userId).role;
@@ -496,7 +505,7 @@ const ViewMember = (props) => {
         //processedValues['payment_mode'] = context.adminUser(userId).role;
         processedValues['paid_by_ref'] = context.adminUser(userId).ref_id2;
 
-
+ 
         var reqDataInsert = [
             {
                 query_type: 'insert',
@@ -1270,7 +1279,7 @@ const ViewMember = (props) => {
                                             <PaginatedTable
                                                 columns={tableColumns}
                                                 countQuery={"select count(*) as count from orders where status=1 and member_auto_id =" + viewData.id}
-                                                listQuery={"select *,@rownum:=@rownum+1 as row_num from orders CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 and member_auto_id =" + viewData.id}
+                                                listQuery={"select o.*,(select name from employees where employee_code=o.paid_by_ref) as employee_name,@rownum:=@rownum+1 as row_num from orders o CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where o.status=1 and o.member_auto_id =" + viewData.id}
                                                 itemsPerPage={20}
                                                 refresh={refreshPaymentHistory}
                                             />
