@@ -16,6 +16,7 @@ import { capitalizeFirst } from '../../../../../utils';
 import dayjs from 'dayjs'
 
 const EmployeeAttendanceReports = (props) => {
+   
     const context = useContext(PsContext);
 const {userId}=useParams();
     const { Content } = Layout;
@@ -272,8 +273,8 @@ const {userId}=useParams();
                         <td>{total(item.id)}</td>
                         {totalpermission(item.id)}
                         {tableHeading.map((items, j)=>{
-                            return <td> {getAttendenceDay(item.id,(j+1))==='Present' && <FontAwesomeIcon icon={faCheck} style={{color:'green',fontSize:'medium'}}/>}
-                                        {getAttendenceDay(item.id,(j+1))==='Absent' && <FontAwesomeIcon icon={faXmark} style={{color:'red',fontSize:'medium'}}/>}</td>
+                            return <td> {getAttendenceDay(item.id,(j))==='Present' && <FontAwesomeIcon icon={faCheck} style={{color:'green',fontSize:'medium'}}/>}
+                                        {getAttendenceDay(item.id,(j))==='Absent' && <FontAwesomeIcon icon={faXmark} style={{color:'red',fontSize:'medium'}}/>}</td>
                         })}
                     </tr>
                      })}
