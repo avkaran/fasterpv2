@@ -12,7 +12,7 @@ import { faArrowRight, faBars, faMaximize, faSearch } from '@fortawesome/free-so
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
-import { getAllTables } from '../models/devTools';
+import { getAllTables,getReactCode } from '../models/devTools';
 import { ReactSortable } from "react-sortablejs";
 import './sortable.css'
 import { Allotment } from "allotment";
@@ -125,6 +125,17 @@ const ReactCodeGenerator = (props) => {
     var CustomComponent = forwardRef(function (props, ref) {
         return <List ref={ref}>{props.children}</List>;
     });
+    const onCodeGenerateClick=()=>{
+        if(finalColumns && finalColumns.length>0){
+          //  console.log('test',finalColumns,tables)
+            var codeStr=getReactCode(tables,finalColumns)
+            message.success("code clicked")
+        }
+        else{
+            message.error("No Columns/Fields to generate Code")
+        }
+       
+    }
     return (
         <>
             <Spin spinning={loader} >
@@ -193,7 +204,7 @@ const ReactCodeGenerator = (props) => {
 
                                     <Card title="Code"
                                         extra={<><Space>Two Coloumn : <Switch onChange={(checked) => setIsTwoColumn(checked)}
-                                        /> <MyButton type="primary">Code</MyButton></Space>
+                                        /> <MyButton type="primary" onClick={onCodeGenerateClick}>Code</MyButton></Space>
                                         </>}
                                         loading={moveColumnLoading}
                                     >

@@ -1,5 +1,5 @@
 import React, { Suspense, useContext, useEffect, useState } from 'react';
-import { Routes, Route, HashRouter, useParams } from 'react-router-dom';
+import { Routes, Route, HashRouter, useParams,Navigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { businesses, currentInstance } from '../utils';
 import PsContext from '../context';
@@ -45,6 +45,9 @@ const MyRoutes = (props) => {
 
         <Route path="/a" element={props.isMobile && businesses[currentInstance.index].responsive && businesses[currentInstance.index].responsive.isMobile ? <AdminPublicLayoutMobile /> : <AdminPublicLayout />} >
           <Route path="/a/admin-login" element={<AdminLogin />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/a/admin-login"/>} >
+        
         </Route>
 
         {/*  <Route path="/:userId/customer" element={userLayout} />

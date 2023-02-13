@@ -1,8 +1,10 @@
 import { apiRequest } from "../../../../../models/core";
-import { DbTable,TableColumn } from "../../../../../models/dbTable";
+import { DbTable, TableColumn } from "../../../../../models/dbTable";
+import { capitalizeFirst } from "../../../../../utils";
+import { FormItemTemplate, FormTemplate, AddEditModuleTemplate, viewModuleTemplate } from '../../../../../devTools/codeTemplates'
 const getAllTables = async (project) => {
-	const form = new FormData();
-	return new Promise((resolve, reject) => {
+    const form = new FormData();
+    return new Promise((resolve, reject) => {
         var reqData = [
             {
                 query_type: 'query',
@@ -65,10 +67,10 @@ const getAllTables = async (project) => {
 
 
                 resolve({
-                    tables:tNames,
-                    menus:tMenus
+                    tables: tNames,
+                    menus: tMenus
                 })
-              
+
 
             }).catch(err => {
                 reject(err)
@@ -78,11 +80,36 @@ const getAllTables = async (project) => {
 
 
         }).catch(err => {
-           reject(err)
+            reject(err)
         });;
 
-	});
+    });
+}
+const getReactCode = (allTableObjects, selColumns) => {
+    var FormItemsCode = '';
+    var FormViewItemsCode = '';
+    let cnt = 0;
+    selColumns.forEach(selColumn => {
+        // console.log('test2',selColumn.split(".")[0])
+        var curTable = allTableObjects.find(item => item.tableName === selColumn.split(".")[0])
+        var column = curTable.columns.find(item => item.columnName === selColumn.split(".")[1])
+        var template = '';
+        var columnText = capitalizeFirst(column.columnName.replaceAll("_", " "));
+        var columnVar = capitalizeFirst(column.columnName.replaceAll("_", " ")).replaceAll(" ", "");
+        columnVar = columnVar.charAt(0).toLowerCase() + columnVar.slice(1);
+        if (column.column.inputConstraint.template)
+            template = column.inputConstraint.template;
+        template = template.replace("defaultValue={defaultValue}", "");
+        template = template.replace("{placeHolder}", columnText);
+        template = template.replaceAll("{nameVar}", columnVar);
+        template = template.replace("{OptionCollection}", `{context.psGlobal.collectionOptions(context.psGlobal.collectionData, '` + column.column.constraintString + `')}`)
+        let fItemTemplate = FormItemTemplate;
+        fItemTemplate = fItemTemplate.replace("{label}", columnText).replace("{name}", "{['" + column.tableName + "','" + column.columnName + "']}").replace("{placeHolder}", columnText);
+        fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
+
+    })
 }
 export {
-    getAllTables
+    getAllTables,
+    getReactCode
 }
