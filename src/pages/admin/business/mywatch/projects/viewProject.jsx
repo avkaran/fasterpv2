@@ -7,6 +7,8 @@ import PsContext from '../../../../../context';
 import ResponsiveLayout from '../../../layout';
 import ProjectConstraints from './ProjectConstraints';
 import ReactCodeGenerator from './reactCoder';
+import TableDataReformat from './tableDataReformat';
+import PhpApiCoder from './phpApiCoder';
 const ViewProject = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -58,6 +60,7 @@ const ViewProject = (props) => {
                                 <Radio.Button value="constraints">Constraints</Radio.Button>
                                 <Radio.Button value="react-coder"> React Coder</Radio.Button>
                                 <Radio.Button value="php-api-coder"> PHP Api Coder</Radio.Button>
+                                <Radio.Button value="data-re-format"> Data Import/Data Reformat</Radio.Button>
                             </Radio.Group>
                         </Row>
                         {
@@ -67,6 +70,12 @@ const ViewProject = (props) => {
 
                         {
                             viewData && curTab==='react-coder' && (<ReactCodeGenerator userId={userId} projectId={viewData.id} />)
+                        }
+                         {
+                            viewData && curTab==='data-re-format' && (<TableDataReformat userId={userId} projectId={viewData.id} />)
+                        }
+                          {
+                            viewData && curTab==='php-api-coder' && (<PhpApiCoder userId={userId} projectId={viewData.id} />)
                         }
                     </>)
                 }

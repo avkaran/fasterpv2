@@ -177,7 +177,7 @@ const CustomerDashboard = (props) => {
                     [{paymentInfo.status}, Available Credits:{paymentInfo.availableCredits}] Upgrade your plan to get more benefits.
                     <a
                       className="ms-2"
-                      href="/0/customer/membership"
+                      href="#/0/customer/membership"
                       style={{ textDecoration: "underline" }}
                     >
                       Buy a Plan

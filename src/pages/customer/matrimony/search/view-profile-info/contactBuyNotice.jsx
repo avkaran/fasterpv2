@@ -21,7 +21,7 @@ const ContactBuyNotice = (props) => {
                 <span style={{ color: red[6], fontWeight: 'bold' }}> You have no active Credits to view Contact Info?</span>
                 <br />
                 <br />
-                <MyButton type="primary" href="//0/customer/membership">Buy Now</MyButton>
+                <MyButton type="primary" href="#/0/customer/membership">Buy Now</MyButton>
             </Row>
         </>
     );
