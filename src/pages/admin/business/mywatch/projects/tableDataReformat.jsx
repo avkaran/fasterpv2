@@ -242,7 +242,7 @@ const TableDataReformat = (props) => {
                                                                 <td>{index + 1}</td>
                                                                 <td>{item.excelColumnName}</td>
                                                                 <td>{item.excelDataType}</td>
-                                                                <td>{item.originColumnName}</td>
+                                                                <td><Input defaultValue={item.originColumnName} /></td>
                                                                 <td>{item.originDataType}</td>
                                                                 <td>{item.matchType}</td>
                                                             </tr>
