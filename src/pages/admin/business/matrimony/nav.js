@@ -133,6 +133,10 @@ const mynav = [
 		childrens: [
 			{ name: 'Ledgers', path: '/:userId/admin/finance/ledgers', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.list-ledgers' },
 			{ name: 'Transactions', path: '/:userId/admin/finance/transactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.list-transactions' },
+			{ name: 'Ledger Books', path: '/:userId/admin/finance/ledgertransactions', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.ledger-transactions' },
+			{ name: 'P/L Statement', path: '/:userId/admin/finance/plstatement', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.pl-statement' },
+			{ name: 'Balance Sheet', path: '/:userId/admin/finance/balancesheet', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.balance-sheet' },
+			{ name: 'Trial Balance', path: '/:userId/admin/finance/trailbalance', icon: 'bx fa-gear', exact: true, allowed: ROLES.AdminAndEmployee,resourceName:'finance.trial_balance' },
 			
 		],
 		allowed: ROLES.AdminAndEmployee

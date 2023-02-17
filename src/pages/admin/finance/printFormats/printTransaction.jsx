@@ -36,21 +36,19 @@ export const PrintFinancialTransactions = React.forwardRef((props, ref) => {
             setData(prev => [...prev, ...res]);
             currentFetchedRecords.current = currentFetchedRecords.current + res.length;
             if (currentFetchedRecords.current < recordsPerRequestOrPage) {
-                //hasMoreData.current = false;
-
-                
+                //hasMoreData.current = false;                
                 // viewPrintPreview()
                 // return;
             }
 
-            if (currentTotalRecords.current > currentFetchedRecords.current) {
+            if (currentTotalRecords.current > currentFetchedRecords.current) {       
                 // hasMoreData.current = true;
                 loadMoreData();
             }
             else {
-              //  setVisibleProgressModal(false);
-
-                // viewPrintPreview();
+                setVisibleProgressModal(false);
+                onDataLoadFinish()
+              //   viewPrintPreview();
 
             }
 
@@ -76,6 +74,7 @@ export const PrintFinancialTransactions = React.forwardRef((props, ref) => {
             message.error(err);
         });
     }
+    
     return (
         <>{
             (<><div style={{ display: 'none' }} >
@@ -83,7 +82,7 @@ export const PrintFinancialTransactions = React.forwardRef((props, ref) => {
 
                     <h5>Raj Matrimony , Transactions Report {listHeading} <span style={{ float: 'right' }}> Count: {currentTotalRecords.current}</span></h5>
                     <table width="100%" border="1" cellpadding="3" style={{ borderCollapse: 'collapse' }}>
-                        <thead>
+                        <thead style={{ border :'2px solid black',fontWeight :'bold'}}>
                           <tr>
                             <td>S.No</td>
                             <td>Date</td>

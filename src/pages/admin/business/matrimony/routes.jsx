@@ -53,6 +53,10 @@ import Districts from "./addNewDatails/districts"
 import Education from "./addNewDatails/education";
 import Ledgers from '../../finance/ledgers';
 import FinancialTransactions from '../../finance/transactions';
+import FinancialTrialBalance from '../../finance/trialBalance';
+import FinancialBalance from '../../finance/balanceSheet';
+import FinancialPLStatement from '../../finance/plStatement';
+import FinancialLedgerTransactions from '../../finance/ledgerTransactions';
 import { ROLES } from "../../../../utils/data";
 import EditMember from './members/editMember';
 import MyResellerTransactions from './reseller/myresellerTransactions';
@@ -387,6 +391,34 @@ const AuthRoutes = (props) => {
                 path='/:userId/admin/finance/transactions'
                 element={< FinancialTransactions />}
                 title='Ledgers'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+                  <Route
+                path='/:userId/admin/finance/ledgertransactions'
+                element={< FinancialLedgerTransactions />}
+                title='Ledger Transactions'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/finance/trailbalance'
+                element={< FinancialTrialBalance />}
+                title='Trial Balance'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/finance/balancesheet'
+                element={< FinancialBalance />}
+                title='Balance Sheet'
+                allowed={ROLES.AdminAndEmployee}
+                exact={true}
+            />
+             <Route
+                path='/:userId/admin/finance/plstatement'
+                element={< FinancialPLStatement />}
+                title='PL Statement'
                 allowed={ROLES.AdminAndEmployee}
                 exact={true}
             />
