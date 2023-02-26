@@ -26,6 +26,7 @@ class TableColumn {
          this.columnDefault=columnData.COLUMN_DEFAULT;
          this.description = columnData.COLUMN_COMMENT;
          this.orderNo = columnData.ORDINAL_POSITION;
+         this.constraintString = '';
          if (this.description && this.description != '' && this.description.includes(",")) {
             var desElements = this.description.split(",");
             this.dataType = desElements[0];

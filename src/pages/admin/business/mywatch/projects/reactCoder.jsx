@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space, Checkbox, List, Switch } from 'antd';
 import { Card } from 'antd';
-import { Form, Input, Select, Menu, Tag, Typography, Drawer } from 'antd';
+import { Form, Input, Select, Menu, Tag, Typography, Drawer,Modal } from 'antd';
 import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import { FormItem, MyButton } from '../../../../../comp';
 import { green, blue, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faBars, faMaximize, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBars, faMaximize, faSearch,faClose } from '@fortawesome/free-solid-svg-icons';
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
@@ -17,6 +17,7 @@ import { ReactSortable } from "react-sortablejs";
 import './sortable.css'
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
+import { MyCodeBlock } from '../../../../../comp'
 const ReactCodeGenerator = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -36,6 +37,11 @@ const ReactCodeGenerator = (props) => {
     const [finalColumns, setFinalColumns] = useState([])
     const [isTwoColumn, setIsTwoColumn] = useState(false);
     const [moveColumnLoading, setMoveColumnLoading] = useState(false);
+
+    const [visibleCodeModal, setVisibleCodeModal] = useState(false);
+    const [moduleName,setModuleName]=useState('Module');
+    const [moduleType,setModuleType]=useState('add-edit');
+    const [outputCode, setOutputCode] = useState('');
     useEffect(() => {
         loadViewData(projectId);
     }, []);
@@ -128,7 +134,9 @@ const ReactCodeGenerator = (props) => {
     const onCodeGenerateClick=()=>{
         if(finalColumns && finalColumns.length>0){
           //  console.log('test',finalColumns,tables)
-            var codeStr=getReactCode(tables,finalColumns)
+            var codeStr=getReactCode(tables,finalColumns,'add-edit')
+            setOutputCode(codeStr);
+            setVisibleCodeModal(true)
             message.success("code clicked")
         }
         else{
@@ -258,7 +266,25 @@ const ReactCodeGenerator = (props) => {
                 }
 
             </Spin>
-
+            <Modal
+                open={visibleCodeModal}
+                zIndex={10000}
+                footer={null}
+                closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
+                centered={true}
+                closable={true}
+                //style={{ marginTop: '20px' }}
+                width={1000}
+                // footer={null}
+                onCancel={() => { setVisibleCodeModal(false) }}
+                title="Code Generator"
+            >
+                <MyCodeBlock
+                    customStyle={{ height: '500px', overflow: 'auto' }}
+                    text={outputCode}
+                    language="jsx"
+                />
+            </Modal>
         </>
     );
 

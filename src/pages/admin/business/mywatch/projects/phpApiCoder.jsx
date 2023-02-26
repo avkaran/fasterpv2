@@ -271,20 +271,7 @@ const PhpApiCoder = (props) => {
                                         <Row>
                                             <Col> {selTableName}
                                             </Col>
-                                            <Col>(</Col>
-                                            <Col>
-                                                <Spin spinning={tableObjectEditLoading}>
-                                                    <Typography.Paragraph
-                                                        style={{ color: green[7] }}
-                                                        editable={{
-                                                            onChange: onTableObjectChange,
-                                                        }}
-                                                    >
-                                                        {getTableObject(selTableName)}
-                                                    </Typography.Paragraph>
-                                                </Spin>
-                                            </Col>
-                                            <Col>)</Col>
+                                            <Col>({getTableObject(selTableName)})</Col>
                                         </Row>
                                     </>}
                                 >
