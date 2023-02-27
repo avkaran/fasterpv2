@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, message, Space } from 'antd';
+import { Row, Col, message, Space, Button } from 'antd';
 import { Card } from 'antd';
-import { Form, Input, Select, Menu, Tag, Typography, Drawer } from 'antd';
+import { Form, Input, Select, Menu, Tag, Typography, Drawer,Modal } from 'antd';
 import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import { FormItem, MyButton } from '../../../../../comp';
 import { green, blue, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch,faClose } from '@fortawesome/free-solid-svg-icons';
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
 import { getAllTables } from '../models/devTools';
+import { MyCodeBlock } from '../../../../../comp';
+import { capitalizeFirst } from '../../../../../utils';
 const PhpApiCoder = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -27,12 +29,9 @@ const PhpApiCoder = (props) => {
     const [menuItemsView, setMenuItemsView] = useState([]);
     const [tables, setTables] = useState([]);
     const [selTableName, setSelTableName] = useState(null);
-    const [selColumn, setSelColumn] = useState(null);
-    const [tableObjectEditLoading, setTableObjectEditLoading] = useState(false);
-    const [constraintEditLoading, setConstraintEditLoading] = useState(false)
-    const [visibleEditConstraint, setVisibleEditConstraint] = useState(false);
-    const [selInputType, setSelInputType] = useState('');
-    const [selConstraint, setSelConstraint] = useState('None');
+    const [visibleCodeModal, setVisibleCodeModal] = useState(false);
+    const [outputCode, setOutputCode] = useState('');
+    const [moduleName,setModuleName]=useState('Module');
     useEffect(() => {
         loadViewData(projectId);
     }, []);
@@ -54,13 +53,15 @@ const PhpApiCoder = (props) => {
         })
     }
     const LoadTables = (project) => {
-
+        setLoader(true)
         getAllTables(project).then(res => {
             setTables(res.tables);
             setMenuItems(res.menus);
             setMenuItemsView(res.menus);
+            setLoader(false)
         }).catch(err => {
             message.error(err)
+            setLoader(false)
         });
 
 
@@ -71,25 +72,7 @@ const PhpApiCoder = (props) => {
         setMenuItemsView(filteredMenus);
 
     }
-    const onEditConstraint = (table, column) => {
-        setSelColumn(column);
-        if (column.description) {
-            addForm.setFieldsValue({
-                input_type: column.dataType,
-                constraint: column.constraint,
-                constraint_str: column.constraintString
-            })
-
-            if (column.dataType)
-                setSelInputType(column.dataType);
-            if (column.constraint) {
-                setSelConstraint(column.constraint)
-            }
-        }
-
-        setVisibleEditConstraint(true)
-        // message.success("edit click" + column.columnName)
-    }
+   
     const getTableColumns = (selTable) => {
         var tRows = [];
         var tableObject = tables.find(item => item.tableName === selTable);
@@ -102,9 +85,7 @@ const PhpApiCoder = (props) => {
                     <td><Tag color={column.isNullable ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{column.isNullable ? 'Yes' : 'No'}</Tag></td>
                     <td>{column.columnDefault}</td>
                     <td>{column.description}</td>
-                    <td><MyButton type="outlined" size="small" shape="circle" color={blue[7]}
-                        onClick={() => onEditConstraint(tableObject, column)}
-                    ><i class="fa-solid fa-pencil"></i></MyButton></td>
+                  
                 </tr>;
                 tRows.push(tRow)
             })
@@ -116,110 +97,311 @@ const PhpApiCoder = (props) => {
         var tableObject = tables.find(item => item.tableName === selTable);
         return tableObject && tableObject.tableObject;
     }
-    const onTableObjectChange = (value) => {
-        if (value && value !== getTableObject()) {
-            setTableObjectEditLoading(true)
-            var reqData = [
-                {
-                    query_type: 'delete',
-                    table: 'project_tables',
-                    where: { project_id: viewData.id, table_name: selTableName },
-                    //values: processedValues
-
-                },
-                {
-                    query_type: 'insert',
-                    table: 'project_tables',
-                    values: { project_id: viewData.id, table_name: selTableName, table_object: value }
-
-                }
-            ];
-            context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-                setTableObjectEditLoading(false);
-                var tmpTables = tables;
-                var changeIndex = tables.findIndex(item => item.tableName === selTableName);
-                tmpTables[changeIndex].tableObject = value;
-                setTables(tmpTables);
-                message.success('Table Object Name Changed');
-            }).catch(err => {
-                message.error(err);
-                setTableObjectEditLoading(false);
-            })
+    
+   const onCodeClick=(selTable)=>{
+    var tableObject = tables.find(item => item.tableName === selTable);
+    var controllerTemplate=`<?php
+    namespace yourNameSpace;
+    use App\TheYak\Controller;
+    class {pageName}Controller extends Controller {
+        public function __construct() {
+            
+            parent::__construct();
         }
-
-    }
-    const onFinishConstraintEdit = (values) => {
-        setConstraintEditLoading(true);
-        var processedValues = {};
-        processedValues['project_id'] = viewData.id;
-        processedValues['table_name'] = selTableName;
-        processedValues['column_name'] = selColumn.columnName;
-        var curDescription = values.input_type + "," + values.constraint + "," + (values.constraint_str ? values.constraint_str : '')
-        processedValues['description'] = curDescription;
-
-        var reqDataInsert = [{
-            query_type: 'delete',
-            table: 'project_table_columns',
-            where: { project_id: viewData.id, table_name: selTableName, column_name: selColumn.columnName }
-
-        },
+        public function xpostAdd(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostSave();
+        }
+        public function xpostUpdate(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostUpdate();
+        }
+        public function xpostList(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostList();
+        }
+         public function xpostTotalRecords(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostTotalRecords();
+        }
+        public function xpostDelete(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostDelete();
+        }
+    }`;
+    var modalTemplate=`<?php
+    namespace App\Models\WebsiteCMS;
+    use App\TheYak\Model;
+    use Rakit\Validation\Validator;
+    class {pageName}Model extends Model
+    {
+        public function __construct()
         {
-            query_type: 'insert',
-            table: 'project_table_columns',
-            values: processedValues
-
+            parent::__construct();
+            $this->api(true);
         }
-        ]
-            ;
-        context.psGlobal.apiRequest(reqDataInsert, context.adminUser(userId).mode).then((res) => {
-
-
-            var tmpTables = tables;
-            var changeTableIndex = tables.findIndex(item => item.tableName === selTableName);
-            var changeColumnIndex = tables[changeTableIndex].columns.findIndex(item => item.columnName === selColumn.columnName);
-            var tmpColumnData = tmpTables[changeTableIndex].columns[changeColumnIndex].columnData;
-            tmpColumnData.COLUMN_COMMENT = curDescription;
-            tmpTables[changeTableIndex].columns[changeColumnIndex].parseColumn(tmpColumnData);
-            setTables(tmpTables)
-            setVisibleEditConstraint(false);
-            setConstraintEditLoading(false)
-            message.success('Constraint Updated');
-            //update in table column description.
-
-
-        }).catch(err => {
-            message.error(err);
-            setConstraintEditLoading(false);
-        })
-    }
-    const getPossibleConstraints = (inputType) => {
-        var possibleConstraints = dataTypeConstraints.find(item => item.dataType === inputType);
-        if (possibleConstraints)
-            return possibleConstraints.possibleConstraints.split(",");
-        else return []
-    }
-    const getConstraintStrings = (constraint) => {
-        if (constraint === 'Collections') {
-            let items = [];
-            context.psGlobal.collectionData.forEach(item => {
-                items.push(item.name)
-            })
-            return items;
+        public function xpostAdd()
+        {
+            try {
+    
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'type'        	  	=>	'required',
+                    'title'				=>	'required',
+                ]);
+    
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $pdata = array(
+                    'idate'				        =>	$this->dateTime(),
+                    'type'						=>	$this->request->get('type'),
+                    'category'					=>	$this->request->get('category'),
+                    'title'						=>	$this->request->get('title'),
+                    'add_by'					=>	$this->token->id,
+                    'ip'						=>	$this->request->getClientIp(),
+                );
+                if ($this->request->get('content'))
+                    $pdata['content'] = $this->request->get('content');
+                if ($this->request->get('content_html'))
+                    $pdata['content_html'] = $this->request->get('content_html');
+                if ($this->request->get('feature_image')) {
+    
+                    //store in cdn and delete file in cms_tmp
+    
+                    $filePath = $this->request->get('feature_image');
+                    $fileNameOnly = str_replace('public/cms_tmp/', '', $filePath);
+                    $aws_file_path = $_ENV['UPLOAD_PATH'] . 'website_cms_img/' . $fileNameOnly;
+                    $this->space->putObject([
+                        'Bucket' => $_ENV['AWS_BUCKET_NAME'],
+                        'Key'    => $aws_file_path,
+                        'Body'   => fopen($filePath, 'rb'),
+                        'ACL'    => 'private',
+                        'Metadata'   => array(
+                            'x-amz-meta-created-key' => 'createByCMS_Program'
+                        )
+                    ]);
+                    // to remove the uploaded profile photo from our server
+                    unlink($filePath);
+                    $pdata['feature_image'] = $fileNameOnly;
+                }
+    
+                if ($this->request->get('active_from_date'))
+                    $pdata['active_from_date'] = $this->request->get('active_from_date');
+                if ($this->request->get('active_to_date'))
+                    $pdata['active_to_date'] = $this->request->get('active_to_date');
+                if ($this->request->get('seo_slug'))
+                    $pdata['seo_slug'] = $this->request->get('seo_slug');
+                if ($this->request->get('seo_meta_title'))
+                    $pdata['seo_meta_title'] = $this->request->get('seo_meta_title');
+                if ($this->request->get('seo_meta_description'))
+                    $pdata['seo_meta_description'] = $this->request->get('seo_meta_description');
+                if ($this->request->get('seo_meta_keywords'))
+                    $pdata['seo_meta_keywords'] = $this->request->get('seo_meta_keywords');
+                if ($this->request->get('content'))
+                    $pdata['seo_tags'] = $this->request->get('seo_tags');
+    
+    
+                $this->db->table($this->tables['v2_contents'])->insert($pdata);
+                $insId = $this->db->insertId();
+    
+                if (!$insId) throw new \Exception('Error on Insert');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Saved',
+                    'data'			=>	$insId
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
         }
-        else if (constraint === 'ForeignKey' || constraint === 'ForeignKey2') {
-            let items = [];
-            tables.forEach(table => {
-                table.columns.forEach(column => {
-                    if (column.isPrimryKey || column.isPrimryKey2) {
-                        items.push(column.tableName + "." + column.columnName)
-                    }
-                })
-            })
-            return items;
+    
+    
+        public function xpostList()
+        {
+            try {
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'type'        	  	=>	'required',
+                ]);
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $query = "select c.*,cc.category_name,cc.image_ratio from {$this->tables['v2_content_categories']} cc,{$this->tables['v2_contents']} c where c.status=1 AND c.category=cc.id AND c.type='{$this->request->get('type')}'";
+    
+                if ($this->request->get('id')) $query .= " AND c.id='{$this->request->get('id')}'";
+                if ($this->request->get('category')) $query .= " AND c.category='{$this->request->get('category')}'";
+    
+                $query .= "  ORDER BY idate desc";
+    
+                if ($this->request->get('length'))
+                    $query .= " LIMIT {$this->request->get('start')},{$this->request->get('length')}";
+    
+                $sql = $this->db->query($query)->fetchAll();
+    
+                if (sizeof($sql) < 1) throw new \Exception('No data');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Success',
+                    'data'			=>	$sql,
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
         }
-        else
-            return [];
-    }
+        public function xpostTotalRecords()
+        {
+            try {
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'type'        	  	=>	'required',
+                ]);
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $query = "select count(*) as count from {$this->tables['v2_content_categories']} cc,{$this->tables['v2_contents']} c where c.status=1 AND c.category=cc.id AND c.type='{$this->request->get('type')}'";
+    
+                if ($this->request->get('id')) $query .= " AND c.id='{$this->request->get('id')}'";
+                if ($this->request->get('category')) $query .= " AND c.category='{$this->request->get('category')}'";
+    
+                $sql = $this->db->query($query)->fetchAll();
+    
+                if (sizeof($sql) < 1) throw new \Exception('No data');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Success',
+                    'data'			=>	$sql[0]->count,
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
+        }
+        public function xpostDelete()
+        {
+            try {
+    
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'id'        	  	=>	'required',
+                ]);
+    
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $up = $this->db->table($this->tables['v2_contents'])->where([
+                    'id'				=>	$this->request->get('id'),
+                    // 'company_id'		=>	$this->token->master_id,
+                ])->update([
+                    'status'			=>	'0',
+                ]);
+    
+                if (!$up) throw new \Exception('Error on Update');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Updated',
+                    'data'			=>	[]
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
+        }
+    
+        public function xpostUpdate()
+        {
+            try {
+    
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'id' 			       	  	=>	'required',
+                    'title' 			       	=>	'required',
+                ]);
+    
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                /* $sql = $this->db->table($this->tables['subjects'])->where([
+                    'status'					=>	'1',
+                    'subject_code'					=>	$this->request->get('subject_code'),
+                ])->notWhere('id', $this->request->get('id'))->get();
+                if ($sql) throw new \Exception('subjects already exist');
+     */
+                $pdata = array(
+    
+                    //'type'						=>	$this->request->get('type'),
+                    //'category'					=>	$this->request->get('category'),
+                    'title'						=>	$this->request->get('title'),
+                );
+                if ($this->request->get('content'))
+                    $pdata['content'] = $this->request->get('content');
+                if ($this->request->get('content_html'))
+                    $pdata['content_html'] = $this->request->get('content_html');
+                if ($this->request->get('feature_image')) {
+    
+                    $filePath = $this->request->get('feature_image');
+                    $fileNameOnly = str_replace('public/cms_tmp/', '', $filePath);
+                    $aws_file_path = $_ENV['UPLOAD_PATH'] . 'website_cms_img/' . $fileNameOnly;
+                    $this->space->putObject([
+                        'Bucket' => $_ENV['AWS_BUCKET_NAME'],
+                        'Key'    => $aws_file_path,
+                        'Body'   => fopen($filePath, 'rb'),
+                        'ACL'    => 'private',
+                        'Metadata'   => array(
+                            'x-amz-meta-created-key' => 'createByCMS_Program'
+                        )
+                    ]);
+                    // to remove the uploaded profile photo from our server
+                    unlink($filePath);
+                    $pdata['feature_image'] = $fileNameOnly;
+                }
+    
+                if ($this->request->get('active_from_date'))
+                    $pdata['active_from_date'] = $this->request->get('active_from_date');
+                if ($this->request->get('active_to_date'))
+                    $pdata['active_to_date'] = $this->request->get('active_to_date');
+                if ($this->request->get('seo_slug'))
+                    $pdata['seo_slug'] = $this->request->get('seo_slug');
+                if ($this->request->get('seo_meta_title'))
+                    $pdata['seo_meta_title'] = $this->request->get('seo_meta_title');
+                if ($this->request->get('seo_meta_description'))
+                    $pdata['seo_meta_description'] = $this->request->get('seo_meta_description');
+                if ($this->request->get('seo_meta_keywords'))
+                    $pdata['seo_meta_keywords'] = $this->request->get('seo_meta_keywords');
+                if ($this->request->get('seo_tags'))
+                    $pdata['seo_tags'] = $this->request->get('seo_tags');
+                if ($this->request->get('content_status'))
+                    $pdata['content_status'] = $this->request->get('content_status');
+                $upRowCount = $this->db->table($this->tables['v2_contents'])->where([
+                    'id'						=>	$this->request->get('id'),
+                ])->update($pdata);
+    
+                if (!$upRowCount) throw new \Exception('Error on Update');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Updated',
+                    'data'			=>	[]
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
+        }
+          
+    }`;
+    controllerTemplate=controllerTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
+   
+    setOutputCode(template);
+    setVisibleCodeModal(true);
+    console.log('test',tableObject)
+   }
     return (
         <>
             <Spin spinning={loader} >
@@ -274,6 +456,8 @@ const PhpApiCoder = (props) => {
                                             <Col>({getTableObject(selTableName)})</Col>
                                         </Row>
                                     </>}
+                                extra={<Button type="primary" onClick={()=>onCodeClick(selTableName)}>Code</Button>}    
+                                
                                 >
                                     <Table striped bordered hover>
                                         <thead>
@@ -284,7 +468,7 @@ const PhpApiCoder = (props) => {
                                                 <th>is NULL?</th>
                                                 <th>Default</th>
                                                 <th>Contraint</th>
-                                                <th>Manage</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -302,114 +486,25 @@ const PhpApiCoder = (props) => {
                 }
 
             </Spin>
-            <Drawer width="500" title={selColumn && selColumn.columnName} placement="right" onClose={() => setVisibleEditConstraint(false)} open={visibleEditConstraint}>
-
-                <Form
-                    name="basic"
-                    form={addForm}
-                    labelAlign="left"
-                    labelCol={context.isMobile ? null : { span: 8 }}
-                    wrapperCol={context.isMobile ? null : { span: 20 }}
-                    initialValues={{ remember: true }}
-                    onFinish={onFinishConstraintEdit}
-                    autoComplete="off"
-                    layout={context.isMobile ? "vertical" : 'horizontal'}
-                >
-                    <FormItem
-                        label="Input Type"
-                        name="input_type"
-                        rules={[{ required: true, message: 'Please Select Input Type' }]}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Input Type"
-
-                            optionFilterProp="children"
-                            onChange={(value) => setSelInputType(value)}
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                        >
-                            {
-                                dataTypeConstraints.map(item => {
-                                    return <Select.Option value={item.dataType}>{item.dataType}</Select.Option>
-                                })
-                            }
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        label="Constraint"
-                        name="constraint"
-                        rules={[{ required: true, message: 'Please Select Constraint' }]}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Constraint"
-
-                            optionFilterProp="children"
-                            onChange={(value) => setSelConstraint(value)}
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                        >
-                            {
-                                getPossibleConstraints(selInputType).map(item => {
-                                    return <Select.Option value={item}>{item}</Select.Option>
-                                })
-                            }
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        label="Constraint Str"
-                        name="constraint_str"
-                    // rules={[{ required: true, message: 'Please Select Constraint' }]}
-                    >
-                        <Select
-                            showSearch
-                            placeholder="Constraint Str"
-
-                            optionFilterProp="children"
-                            //onChange={designationIdOnChange}
-                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                        >
-                            {
-                                getConstraintStrings(selConstraint).map(item => {
-                                    return <Select.Option value={item}>{item}</Select.Option>
-                                })
-                            }
-                        </Select>
-                    </FormItem>
-                    <FormItem wrapperCol=
-                        {context.isMobile ? null : { offset: 10, span: 24 }}
-                    >
-                        {
-                            !context.isMobile && (
-                                <Space>
-                                    <MyButton size="large" type="outlined" style={{}} onClick={() => setVisibleEditConstraint(false)}>
-                                        Cancel
-                                    </MyButton>
-                                    <MyButton size="large" type="primary" htmlType="submit" style={{}} loading={constraintEditLoading}>
-                                        Save
-                                    </MyButton>
-                                </Space>
-
-                            )
-                        }
-                        {
-                            context.isMobile && (<Row gutter={2}>
-                                <Col span={12}>
-                                    <MButton block color='primary' size='small' fill='outline' onClick={() => setVisibleEditConstraint(false)}>
-                                        Cancel
-                                    </MButton>
-                                </Col>
-                                <Col span={12}>
-                                    <MButton block type='submit' color='primary' size='small' loading={constraintEditLoading}>
-                                        Save
-                                    </MButton>
-                                </Col>
-                            </Row>)
-                        }
-
-                    </FormItem>
-
-                </Form>
-            </Drawer>
+            <Modal
+                open={visibleCodeModal}
+                zIndex={10000}
+                footer={null}
+                closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
+                centered={true}
+                closable={true}
+                //style={{ marginTop: '20px' }}
+                width={1000}
+                // footer={null}
+                onCancel={() => { setVisibleCodeModal(false) }}
+                title="Code Generator"
+            >
+                <MyCodeBlock
+                    customStyle={{ height: '500px', overflow: 'auto' }}
+                    text={outputCode}
+                    language="jsx"
+                />
+            </Modal>
         </>
     );
 
