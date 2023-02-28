@@ -12,7 +12,7 @@ import { faSearch,faClose } from '@fortawesome/free-solid-svg-icons';
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
-import { getAllTables } from '../models/devTools';
+import { getAllTables,getPHPApiModalFunctionCode } from '../models/devTools';
 import { MyCodeBlock } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 const PhpApiCoder = (props) => {
@@ -32,6 +32,7 @@ const PhpApiCoder = (props) => {
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
     const [outputCode, setOutputCode] = useState('');
     const [moduleName,setModuleName]=useState('Module');
+    const [functionSuffixName,setFunctionSuffixName]=useState('exam')
     useEffect(() => {
         loadViewData(projectId);
     }, []);
@@ -397,9 +398,10 @@ const PhpApiCoder = (props) => {
           
     }`;
     controllerTemplate=controllerTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
-   
-    setOutputCode(template);
-    setVisibleCodeModal(true);
+    
+    console.log('test',getPHPApiModalFunctionCode('update',tableObject,functionSuffixName))
+    //setOutputCode(controllerTemplate);
+    //setVisibleCodeModal(true);
     console.log('test',tableObject)
    }
     return (

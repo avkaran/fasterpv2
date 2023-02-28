@@ -259,7 +259,113 @@ const getReactCode = (allTableObjects, selColumns,moduleType,moduleName='test') 
         // generateEditQuery(selColumns);
          return(pageCode)
 }
+const getPHPApiModalFunctionCode=(functionType,tableObject,functionSuffixName='')=>{
+    var resultStr='';
+    if(functionType=='add'){
+        var addValidationItemsCode='';
+        var addPdoItemsCode='';
+        var addPdoIfItemsCode='';
+        tableObject.columns.forEach(column=>{
+            if(!column.isNullable && column.columnName!='id' && !column.columnDefault){
+                addValidationItemsCode=addValidationItemsCode+`
+                '${column.columnName}' =>	'required',`;
+                 addPdoItemsCode=addPdoItemsCode+`
+                 '${column.columnName}' =>	$this->request->get('${column.columnName}'),
+                `;
+            }else{
+                //use other items in the if condition.
+                if(column.columnName!='id'){
+                    addPdoIfItemsCode=addPdoIfItemsCode+`
+                    if ($this->request->get('${column.columnName}'))
+                        $pdata['${column.columnName}'] = $this->request->get('${column.columnName}');`;
+                }
+            }
+        })
+        var addModelCode=`
+        public function xpostAdd`+capitalizeFirst(functionSuffixName).replaceAll(' ','')+`()
+        {
+            try {
+    
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    ${addValidationItemsCode}
+                ]);
+    
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $pdata = array(
+                    ${addPdoItemsCode}
+                );
+                ${addPdoIfItemsCode}
+                $this->db->table('${tableObject.tableName}')->insert($pdata);
+                $insId = $this->db->insertId();
+    
+                if (!$insId) throw new \Exception('Error on Insert');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Saved',
+                    'data'			=>	$insId
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
+        }`;
+        resultStr=addModelCode;
+    }else if(functionType='update'){
+
+            var updatePdoIfItemsCode='';
+            tableObject.columns.forEach(column=>{
+
+                    //use other items in the if condition.
+                    if(column.columnName!='id'){
+                        updatePdoIfItemsCode=updatePdoIfItemsCode+`
+                        if ($this->request->get('${column.columnName}'))
+                            $pdata['${column.columnName}'] = $this->request->get('${column.columnName}');`;
+                    }
+                
+            })
+            var updateModalCode=`
+            public function xpostUpdate`+capitalizeFirst(functionSuffixName).replaceAll(' ','')+`()
+            {
+                try {
+        
+                    $post = $_REQUEST;
+                    $validator = new Validator;
+                    $validation = $validator->make($post, [
+                        'id' 			       	  	=>	'required',
+                    ]);
+        
+                    $validation->validate();
+                    if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+        
+                    $pdata = array();
+                    ${updatePdoIfItemsCode}
+                    $upRowCount = $this->db->table('${tableObject.tableName}')->where([
+                        'id'						=>	$this->request->get('id'),
+                    ])->update($pdata);
+        
+                    if (!$upRowCount) throw new \Exception('No Changes made to update');
+        
+                    $this->jsonOutput([
+                        'status'		=>	'1',
+                        'message'		=>	'Updated',
+                        'data'			=>	$this->request->get('id')
+                    ]);
+                } catch (\Exception $ex) {
+                    $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+                }
+            }`;
+            resultStr=updateModalCode;
+        
+    }
+    return resultStr;
+   
+}
 export {
     getAllTables,
-    getReactCode
+    getReactCode,
+    getPHPApiModalFunctionCode,
 }
