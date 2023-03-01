@@ -442,17 +442,10 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                     $query = "select ${tableObjectForQuery}.* from ${tableObject.tableName} ${tableObjectForQuery} where ${tableObjectForQuery}.status=1";
         
                     ${ifWhereClauseItemsCode}
-
                     
-
-                    if ($this->request->get('order_by_array') && is_array( json_decode($this->request->get('order_by_array')) )){
-                        $orderbyClauses=array();
-                        $orderByArray=json_decode($this->request->get('order_by_array'));
-                        foreach($orderByArray as  $item){
-                            $orderbyClauses[]=$item->field.' '.$item->order_by;
-                        }
-                        $query .= "  ORDER BY ". implode($orderbyClauses,',');
-                    }
+                    if ($this->request->get('order_by') )
+                        $query .= "  ORDER BY ". $this->request->get('order_by');
+                    
                     
                     
         
@@ -473,6 +466,40 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                 }
             }`;
         resultStr = listModalCode;
+    } else if (functionType === 'delete') {
+        var deleteModalCode = `
+        public function xpostDelete`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `()
+        {
+            try {
+
+                $post = $_REQUEST;
+                $validator = new Validator;
+                $validation = $validator->make($post, [
+                    'id'        	  	=>	'required',
+                ]);
+    
+                $validation->validate();
+                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
+    
+                $up = $this->db->table('${tableObject.tableName}')->where([
+                    'id'				=>	$this->request->get('id'),
+                    // 'company_id'		=>	$this->token->master_id,
+                ])->update([
+                    'status'			=>	'0',
+                ]);
+    
+                if (!$up) throw new \Exception('Error on Update');
+    
+                $this->jsonOutput([
+                    'status'		=>	'1',
+                    'message'		=>	'Deleted',
+                    'data'			=>	$this->request->get('id')
+                ]);
+            } catch (\Exception $ex) {
+                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
+            }
+        }`;
+        resultStr = deleteModalCode;
 
     }
     return resultStr;

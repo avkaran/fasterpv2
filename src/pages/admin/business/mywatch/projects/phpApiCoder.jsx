@@ -30,7 +30,7 @@ const PhpApiCoder = (props) => {
     const [tables, setTables] = useState([]);
     const [selTableName, setSelTableName] = useState(null);
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
-    const [outputCode, setOutputCode] = useState('');
+    const [outputCode, setOutputCode] = useState({});
     const [moduleName,setModuleName]=useState('Module');
     const [functionSuffixName,setFunctionSuffixName]=useState('exam')
     useEffect(() => {
@@ -109,29 +109,35 @@ const PhpApiCoder = (props) => {
             
             parent::__construct();
         }
-        public function xpostAdd(){
+        public function xpostAdd`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
             $model = new \App\Models\WebsiteCMS\ContentModel();
             $model->xpostSave();
         }
-        public function xpostUpdate(){
+        public function xpostUpdate`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
             $model = new \App\Models\WebsiteCMS\ContentModel();
             $model->xpostUpdate();
         }
-        public function xpostList(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostList();
-        }
-         public function xpostTotalRecords(){
+        public function xpostTotalRecords`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
             $model = new \App\Models\WebsiteCMS\ContentModel();
             $model->xpostTotalRecords();
         }
-        public function xpostDelete(){
+        public function xpostList`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
+            $model = new \App\Models\WebsiteCMS\ContentModel();
+            $model->xpostList();
+        }
+        public function xpostDelete`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
             $model = new \App\Models\WebsiteCMS\ContentModel();
             $model->xpostDelete();
         }
     }`;
+    let addModalCode=getPHPApiModalFunctionCode('add',tableObject,functionSuffixName);
+    let updateModalCode=getPHPApiModalFunctionCode('update',tableObject,functionSuffixName);
+    let totalRecordsModalCode=getPHPApiModalFunctionCode('total-records',tableObject,functionSuffixName);
+    let listModalCode=getPHPApiModalFunctionCode('list',tableObject,functionSuffixName);
+    let deleteModalCode=getPHPApiModalFunctionCode('delete',tableObject,functionSuffixName);
+   
     var modalTemplate=`<?php
-    namespace App\Models\WebsiteCMS;
+    namespace App\Models\YourNameSpace;
     use App\TheYak\Model;
     use Rakit\Validation\Validator;
     class {pageName}Model extends Model
@@ -141,267 +147,20 @@ const PhpApiCoder = (props) => {
             parent::__construct();
             $this->api(true);
         }
-        public function xpostAdd()
-        {
-            try {
-    
-                $post = $_REQUEST;
-                $validator = new Validator;
-                $validation = $validator->make($post, [
-                    'type'        	  	=>	'required',
-                    'title'				=>	'required',
-                ]);
-    
-                $validation->validate();
-                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
-    
-                $pdata = array(
-                    'idate'				        =>	$this->dateTime(),
-                    'type'						=>	$this->request->get('type'),
-                    'category'					=>	$this->request->get('category'),
-                    'title'						=>	$this->request->get('title'),
-                    'add_by'					=>	$this->token->id,
-                    'ip'						=>	$this->request->getClientIp(),
-                );
-                if ($this->request->get('content'))
-                    $pdata['content'] = $this->request->get('content');
-                if ($this->request->get('content_html'))
-                    $pdata['content_html'] = $this->request->get('content_html');
-                if ($this->request->get('feature_image')) {
-    
-                    //store in cdn and delete file in cms_tmp
-    
-                    $filePath = $this->request->get('feature_image');
-                    $fileNameOnly = str_replace('public/cms_tmp/', '', $filePath);
-                    $aws_file_path = $_ENV['UPLOAD_PATH'] . 'website_cms_img/' . $fileNameOnly;
-                    $this->space->putObject([
-                        'Bucket' => $_ENV['AWS_BUCKET_NAME'],
-                        'Key'    => $aws_file_path,
-                        'Body'   => fopen($filePath, 'rb'),
-                        'ACL'    => 'private',
-                        'Metadata'   => array(
-                            'x-amz-meta-created-key' => 'createByCMS_Program'
-                        )
-                    ]);
-                    // to remove the uploaded profile photo from our server
-                    unlink($filePath);
-                    $pdata['feature_image'] = $fileNameOnly;
-                }
-    
-                if ($this->request->get('active_from_date'))
-                    $pdata['active_from_date'] = $this->request->get('active_from_date');
-                if ($this->request->get('active_to_date'))
-                    $pdata['active_to_date'] = $this->request->get('active_to_date');
-                if ($this->request->get('seo_slug'))
-                    $pdata['seo_slug'] = $this->request->get('seo_slug');
-                if ($this->request->get('seo_meta_title'))
-                    $pdata['seo_meta_title'] = $this->request->get('seo_meta_title');
-                if ($this->request->get('seo_meta_description'))
-                    $pdata['seo_meta_description'] = $this->request->get('seo_meta_description');
-                if ($this->request->get('seo_meta_keywords'))
-                    $pdata['seo_meta_keywords'] = $this->request->get('seo_meta_keywords');
-                if ($this->request->get('content'))
-                    $pdata['seo_tags'] = $this->request->get('seo_tags');
-    
-    
-                $this->db->table($this->tables['v2_contents'])->insert($pdata);
-                $insId = $this->db->insertId();
-    
-                if (!$insId) throw new \Exception('Error on Insert');
-    
-                $this->jsonOutput([
-                    'status'		=>	'1',
-                    'message'		=>	'Saved',
-                    'data'			=>	$insId
-                ]);
-            } catch (\Exception $ex) {
-                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
-            }
-        }
-    
-    
-        public function xpostList()
-        {
-            try {
-                $post = $_REQUEST;
-                $validator = new Validator;
-                $validation = $validator->make($post, [
-                    'type'        	  	=>	'required',
-                ]);
-                $validation->validate();
-                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
-    
-                $query = "select c.*,cc.category_name,cc.image_ratio from {$this->tables['v2_content_categories']} cc,{$this->tables['v2_contents']} c where c.status=1 AND c.category=cc.id AND c.type='{$this->request->get('type')}'";
-    
-                if ($this->request->get('id')) $query .= " AND c.id='{$this->request->get('id')}'";
-                if ($this->request->get('category')) $query .= " AND c.category='{$this->request->get('category')}'";
-    
-                $query .= "  ORDER BY idate desc";
-    
-                if ($this->request->get('length'))
-                    $query .= " LIMIT {$this->request->get('start')},{$this->request->get('length')}";
-    
-                $sql = $this->db->query($query)->fetchAll();
-    
-                if (sizeof($sql) < 1) throw new \Exception('No data');
-    
-                $this->jsonOutput([
-                    'status'		=>	'1',
-                    'message'		=>	'Success',
-                    'data'			=>	$sql,
-                ]);
-            } catch (\Exception $ex) {
-                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
-            }
-        }
-        public function xpostTotalRecords()
-        {
-            try {
-                $post = $_REQUEST;
-                $validator = new Validator;
-                $validation = $validator->make($post, [
-                    'type'        	  	=>	'required',
-                ]);
-                $validation->validate();
-                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
-    
-                $query = "select count(*) as count from {$this->tables['v2_content_categories']} cc,{$this->tables['v2_contents']} c where c.status=1 AND c.category=cc.id AND c.type='{$this->request->get('type')}'";
-    
-                if ($this->request->get('id')) $query .= " AND c.id='{$this->request->get('id')}'";
-                if ($this->request->get('category')) $query .= " AND c.category='{$this->request->get('category')}'";
-    
-                $sql = $this->db->query($query)->fetchAll();
-    
-                if (sizeof($sql) < 1) throw new \Exception('No data');
-    
-                $this->jsonOutput([
-                    'status'		=>	'1',
-                    'message'		=>	'Success',
-                    'data'			=>	$sql[0]->count,
-                ]);
-            } catch (\Exception $ex) {
-                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
-            }
-        }
-        public function xpostDelete()
-        {
-            try {
-    
-                $post = $_REQUEST;
-                $validator = new Validator;
-                $validation = $validator->make($post, [
-                    'id'        	  	=>	'required',
-                ]);
-    
-                $validation->validate();
-                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
-    
-                $up = $this->db->table($this->tables['v2_contents'])->where([
-                    'id'				=>	$this->request->get('id'),
-                    // 'company_id'		=>	$this->token->master_id,
-                ])->update([
-                    'status'			=>	'0',
-                ]);
-    
-                if (!$up) throw new \Exception('Error on Update');
-    
-                $this->jsonOutput([
-                    'status'		=>	'1',
-                    'message'		=>	'Updated',
-                    'data'			=>	[]
-                ]);
-            } catch (\Exception $ex) {
-                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
-            }
-        }
-    
-        public function xpostUpdate()
-        {
-            try {
-    
-                $post = $_REQUEST;
-                $validator = new Validator;
-                $validation = $validator->make($post, [
-                    'id' 			       	  	=>	'required',
-                    'title' 			       	=>	'required',
-                ]);
-    
-                $validation->validate();
-                if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
-    
-                /* $sql = $this->db->table($this->tables['subjects'])->where([
-                    'status'					=>	'1',
-                    'subject_code'					=>	$this->request->get('subject_code'),
-                ])->notWhere('id', $this->request->get('id'))->get();
-                if ($sql) throw new \Exception('subjects already exist');
-     */
-                $pdata = array(
-    
-                    //'type'						=>	$this->request->get('type'),
-                    //'category'					=>	$this->request->get('category'),
-                    'title'						=>	$this->request->get('title'),
-                );
-                if ($this->request->get('content'))
-                    $pdata['content'] = $this->request->get('content');
-                if ($this->request->get('content_html'))
-                    $pdata['content_html'] = $this->request->get('content_html');
-                if ($this->request->get('feature_image')) {
-    
-                    $filePath = $this->request->get('feature_image');
-                    $fileNameOnly = str_replace('public/cms_tmp/', '', $filePath);
-                    $aws_file_path = $_ENV['UPLOAD_PATH'] . 'website_cms_img/' . $fileNameOnly;
-                    $this->space->putObject([
-                        'Bucket' => $_ENV['AWS_BUCKET_NAME'],
-                        'Key'    => $aws_file_path,
-                        'Body'   => fopen($filePath, 'rb'),
-                        'ACL'    => 'private',
-                        'Metadata'   => array(
-                            'x-amz-meta-created-key' => 'createByCMS_Program'
-                        )
-                    ]);
-                    // to remove the uploaded profile photo from our server
-                    unlink($filePath);
-                    $pdata['feature_image'] = $fileNameOnly;
-                }
-    
-                if ($this->request->get('active_from_date'))
-                    $pdata['active_from_date'] = $this->request->get('active_from_date');
-                if ($this->request->get('active_to_date'))
-                    $pdata['active_to_date'] = $this->request->get('active_to_date');
-                if ($this->request->get('seo_slug'))
-                    $pdata['seo_slug'] = $this->request->get('seo_slug');
-                if ($this->request->get('seo_meta_title'))
-                    $pdata['seo_meta_title'] = $this->request->get('seo_meta_title');
-                if ($this->request->get('seo_meta_description'))
-                    $pdata['seo_meta_description'] = $this->request->get('seo_meta_description');
-                if ($this->request->get('seo_meta_keywords'))
-                    $pdata['seo_meta_keywords'] = $this->request->get('seo_meta_keywords');
-                if ($this->request->get('seo_tags'))
-                    $pdata['seo_tags'] = $this->request->get('seo_tags');
-                if ($this->request->get('content_status'))
-                    $pdata['content_status'] = $this->request->get('content_status');
-                $upRowCount = $this->db->table($this->tables['v2_contents'])->where([
-                    'id'						=>	$this->request->get('id'),
-                ])->update($pdata);
-    
-                if (!$upRowCount) throw new \Exception('Error on Update');
-    
-                $this->jsonOutput([
-                    'status'		=>	'1',
-                    'message'		=>	'Updated',
-                    'data'			=>	[]
-                ]);
-            } catch (\Exception $ex) {
-                $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
-            }
-        }
-          
+        ${addModalCode}
+        ${updateModalCode}
+        ${totalRecordsModalCode}
+        ${listModalCode}
+        ${deleteModalCode}     
     }`;
     controllerTemplate=controllerTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
-    
-    console.log('test',getPHPApiModalFunctionCode('update',tableObject,functionSuffixName))
-    //setOutputCode(controllerTemplate);
-    //setVisibleCodeModal(true);
+    modalTemplate=modalTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
+  
+    setOutputCode({
+        ControllerCode:controllerTemplate,
+        modalCode:modalTemplate
+    });
+    setVisibleCodeModal(true);
     console.log('test',tableObject)
    }
     return (
@@ -501,10 +260,23 @@ const PhpApiCoder = (props) => {
                 onCancel={() => { setVisibleCodeModal(false) }}
                 title="Code Generator"
             >
+               
+                <Row gutter={16}>
+                    Controller Code
+                </Row>
+
                 <MyCodeBlock
-                    customStyle={{ height: '500px', overflow: 'auto' }}
-                    text={outputCode}
-                    language="jsx"
+                    customStyle={{ height: '300px', overflow: 'auto' }}
+                    text={outputCode.ControllerCode?outputCode.ControllerCode:''}
+                    language="php"
+                />
+                 <Row gutter={16}>
+                    Modal Code
+                </Row>
+                <MyCodeBlock
+                    customStyle={{ height: '300px', overflow: 'auto' }}
+                    text={outputCode.modalCode?outputCode.modalCode:''}
+                    language="php"
                 />
             </Modal>
         </>
