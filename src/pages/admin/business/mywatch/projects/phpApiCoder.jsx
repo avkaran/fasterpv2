@@ -2,24 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space, Button } from 'antd';
 import { Card } from 'antd';
-import { Form, Input, Select, Menu, Tag, Typography, Drawer,Modal } from 'antd';
+import { Form, Input, Select, Menu, Tag, Typography, Drawer, Modal } from 'antd';
 import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import { FormItem, MyButton } from '../../../../../comp';
 import { green, blue, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch,faClose } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faClose } from '@fortawesome/free-solid-svg-icons';
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
-import { getAllTables,getPHPApiModalFunctionCode } from '../models/devTools';
+import { getAllTables, getPHPApiModalFunctionCode } from '../models/devTools';
 import { MyCodeBlock } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 const PhpApiCoder = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const {userId, projectId,...other}  = props;
+    const { userId, projectId, ...other } = props;
     const [addForm] = Form.useForm();
     const [loader, setLoader] = useState(false);
 
@@ -31,8 +31,8 @@ const PhpApiCoder = (props) => {
     const [selTableName, setSelTableName] = useState(null);
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
     const [outputCode, setOutputCode] = useState({});
-    const [moduleName,setModuleName]=useState('Module');
-    const [functionSuffixName,setFunctionSuffixName]=useState('exam')
+    const [moduleName, setModuleName] = useState('Module');
+    const [functionSuffixName, setFunctionSuffixName] = useState('exam')
     useEffect(() => {
         loadViewData(projectId);
     }, []);
@@ -73,7 +73,7 @@ const PhpApiCoder = (props) => {
         setMenuItemsView(filteredMenus);
 
     }
-   
+
     const getTableColumns = (selTable) => {
         var tRows = [];
         var tableObject = tables.find(item => item.tableName === selTable);
@@ -86,7 +86,7 @@ const PhpApiCoder = (props) => {
                     <td><Tag color={column.isNullable ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{column.isNullable ? 'Yes' : 'No'}</Tag></td>
                     <td>{column.columnDefault}</td>
                     <td>{column.description}</td>
-                  
+
                 </tr>;
                 tRows.push(tRow)
             })
@@ -98,10 +98,10 @@ const PhpApiCoder = (props) => {
         var tableObject = tables.find(item => item.tableName === selTable);
         return tableObject && tableObject.tableObject;
     }
-    
-   const onCodeClick=(selTable)=>{
-    var tableObject = tables.find(item => item.tableName === selTable);
-    var controllerTemplate=`<?php
+
+    const onCodeClick = (selTable) => {
+        var tableObject = tables.find(item => item.tableName === selTable);
+        var controllerTemplate = `<?php
     namespace yourNameSpace;
     use App\TheYak\Controller;
     class {pageName}Controller extends Controller {
@@ -130,13 +130,13 @@ const PhpApiCoder = (props) => {
             $model->xpostDelete();
         }
     }`;
-    let addModalCode=getPHPApiModalFunctionCode('add',tableObject,functionSuffixName);
-    let updateModalCode=getPHPApiModalFunctionCode('update',tableObject,functionSuffixName);
-    let totalRecordsModalCode=getPHPApiModalFunctionCode('total-records',tableObject,functionSuffixName);
-    let listModalCode=getPHPApiModalFunctionCode('list',tableObject,functionSuffixName);
-    let deleteModalCode=getPHPApiModalFunctionCode('delete',tableObject,functionSuffixName);
-   
-    var modalTemplate=`<?php
+        let addModalCode = getPHPApiModalFunctionCode('add', tableObject, functionSuffixName);
+        let updateModalCode = getPHPApiModalFunctionCode('update', tableObject, functionSuffixName);
+        let totalRecordsModalCode = getPHPApiModalFunctionCode('total-records', tableObject, functionSuffixName);
+        let listModalCode = getPHPApiModalFunctionCode('list', tableObject, functionSuffixName);
+        let deleteModalCode = getPHPApiModalFunctionCode('delete', tableObject, functionSuffixName);
+
+        var modalTemplate = `<?php
     namespace App\Models\YourNameSpace;
     use App\TheYak\Model;
     use Rakit\Validation\Validator;
@@ -153,22 +153,22 @@ const PhpApiCoder = (props) => {
         ${listModalCode}
         ${deleteModalCode}     
     }`;
-    controllerTemplate=controllerTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
-    modalTemplate=modalTemplate.replace("{pageName}",capitalizeFirst(moduleName).replace(" ",""));
-  
-    setOutputCode({
-        ControllerCode:controllerTemplate,
-        modalCode:modalTemplate
-    });
-    setVisibleCodeModal(true);
-    console.log('test',tableObject)
-   }
+        controllerTemplate = controllerTemplate.replace("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
+        modalTemplate = modalTemplate.replace("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
+
+        setOutputCode({
+            ControllerCode: controllerTemplate,
+            modalCode: modalTemplate
+        });
+        setVisibleCodeModal(true);
+        console.log('test', tableObject)
+    }
     return (
         <>
             <Spin spinning={loader} >
                 {
                     viewData && (<>
-                            <Row gutter={16}>
+                        <Row gutter={16}>
 
                             <Col className="gutter-row" span={6}>
                                 <Card
@@ -215,11 +215,28 @@ const PhpApiCoder = (props) => {
                                             <Col> {selTableName}
                                             </Col>
                                             <Col>({getTableObject(selTableName)})</Col>
+
                                         </Row>
                                     </>}
-                                extra={<Button type="primary" onClick={()=>onCodeClick(selTableName)}>Code</Button>}    
-                                
+                                    extra={<Button type="primary" onClick={() => onCodeClick(selTableName)}>Code</Button>}
+
                                 >
+                                    <Row gutter={16}>
+                                        <Col span={4}>
+                                            Module Name
+                                        </Col>
+                                        <Col span={4}>
+
+                                            <Input placeholder='Module Name' defaultValue="Module" onChange={(e) => setModuleName(e.target.value)}></Input>
+                                        </Col>
+                                        <Col span={4}>
+                                            Function Suffix
+                                        </Col>
+                                        <Col span={4}>
+
+                                            <Input placeholder='Function Suffix' defaultValue="Exam" onChange={(e) => setFunctionSuffixName(e.target.value)}></Input>
+                                        </Col>
+                                    </Row>
                                     <Table striped bordered hover>
                                         <thead>
                                             <tr>
@@ -229,7 +246,7 @@ const PhpApiCoder = (props) => {
                                                 <th>is NULL?</th>
                                                 <th>Default</th>
                                                 <th>Contraint</th>
-                                                
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -260,22 +277,22 @@ const PhpApiCoder = (props) => {
                 onCancel={() => { setVisibleCodeModal(false) }}
                 title="Code Generator"
             >
-               
+
                 <Row gutter={16}>
                     Controller Code
                 </Row>
 
                 <MyCodeBlock
                     customStyle={{ height: '300px', overflow: 'auto' }}
-                    text={outputCode.ControllerCode?outputCode.ControllerCode:''}
+                    text={outputCode.ControllerCode ? outputCode.ControllerCode : ''}
                     language="php"
                 />
-                 <Row gutter={16}>
+                <Row gutter={16}>
                     Modal Code
                 </Row>
                 <MyCodeBlock
                     customStyle={{ height: '300px', overflow: 'auto' }}
-                    text={outputCode.modalCode?outputCode.modalCode:''}
+                    text={outputCode.modalCode ? outputCode.modalCode : ''}
                     language="php"
                 />
             </Modal>

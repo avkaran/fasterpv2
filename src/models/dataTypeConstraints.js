@@ -43,7 +43,7 @@ const dataTypeConstraints = [
    },
    {
       dataType: "Select",
-      possibleConstraints: "ForeignKey,Collections",
+      possibleConstraints: "ForeignKey,Collections,CustomCollection",
       defaultConstraint: "Collections",
       template: `
     <Select
@@ -85,7 +85,7 @@ const dataTypeConstraints = [
    },
    {
       dataType: "MultiSelect",
-      possibleConstraints: "ForeignKey,Collections",
+      possibleConstraints: "ForeignKey,Collections,CustomCollection",
       defaultConstraint: "Collections",
       template: `
     <Select

@@ -2,17 +2,17 @@ import React, { useState, useEffect, useContext, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space, Checkbox, List, Switch } from 'antd';
 import { Card } from 'antd';
-import { Form, Input, Select, Menu, Tag, Typography, Drawer,Modal } from 'antd';
+import { Form, Input, Select, Menu, Tag, Typography, Drawer, Modal } from 'antd';
 import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import { FormItem, MyButton } from '../../../../../comp';
 import { green, blue, cyan } from '@ant-design/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faBars, faMaximize, faSearch,faClose } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBars, faMaximize, faSearch, faClose } from '@fortawesome/free-solid-svg-icons';
 import Table from 'react-bootstrap/Table';
 import { Button as MButton } from 'antd-mobile'
 import dataTypeConstraints from '../../../../../models/dataTypeConstraints';
-import { getAllTables,getReactCode } from '../models/devTools';
+import { getAllTables, getReactCode } from '../models/devTools';
 import { ReactSortable } from "react-sortablejs";
 import './sortable.css'
 import { Allotment } from "allotment";
@@ -39,8 +39,8 @@ const ReactCodeGenerator = (props) => {
     const [moveColumnLoading, setMoveColumnLoading] = useState(false);
 
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
-    const [moduleName,setModuleName]=useState('Module');
-    const [moduleType,setModuleType]=useState('add-edit');
+    const [moduleName, setModuleName] = useState('Module');
+    const [moduleType, setModuleType] = useState('add-edit');
     const [outputCode, setOutputCode] = useState('');
     useEffect(() => {
         loadViewData(projectId);
@@ -131,18 +131,18 @@ const ReactCodeGenerator = (props) => {
     var CustomComponent = forwardRef(function (props, ref) {
         return <List ref={ref}>{props.children}</List>;
     });
-    const onCodeGenerateClick=()=>{
-        if(finalColumns && finalColumns.length>0){
-          //  console.log('test',finalColumns,tables)
-            var codeStr=getReactCode(tables,finalColumns,'add-edit')
+    const onCodeGenerateClick = () => {
+        if (finalColumns && finalColumns.length > 0) {
+            //  console.log('test',finalColumns,tables)
+            var codeStr = getReactCode(tables, finalColumns, 'add-edit')
             setOutputCode(codeStr);
             setVisibleCodeModal(true)
             message.success("code clicked")
         }
-        else{
+        else {
             message.error("No Columns/Fields to generate Code")
         }
-       
+
     }
     return (
         <>
@@ -216,6 +216,31 @@ const ReactCodeGenerator = (props) => {
                                         </>}
                                         loading={moveColumnLoading}
                                     >
+                                        <Row gutter={3}>
+                                            <Col span={12}>
+                                                Module Name
+                                            </Col>
+                                            <Col span={12}>
+                                                <Input defaultValue="Module"></Input>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={3}>
+                                            <Col span={12}>
+                                                Module Type
+                                            </Col>
+                                            <Col span={12}>
+                                                <Input defaultValue="Add"></Input>
+                                            </Col>
+                                        </Row>
+                                        <Row gutter={3}>
+                                            <Col span={12}>
+                                                Design Type
+                                            </Col>
+                                            <Col span={12}>
+                                                <Input defaultValue="Antd"></Input>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
                                         {
                                             !isTwoColumn && (<ReactSortable list={finalColumns} setList={setFinalColumns}
                                                 animation={150}

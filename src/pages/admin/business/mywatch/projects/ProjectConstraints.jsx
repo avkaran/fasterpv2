@@ -17,7 +17,7 @@ const ProjectConstraints = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const {userId, projectId,...other}  = props;
+    const { userId, projectId, ...other } = props;
     const [addForm] = Form.useForm();
     const [loader, setLoader] = useState(false);
 
@@ -154,7 +154,13 @@ const ProjectConstraints = (props) => {
         processedValues['project_id'] = viewData.id;
         processedValues['table_name'] = selTableName;
         processedValues['column_name'] = selColumn.columnName;
-        var curDescription = values.input_type + "," + values.constraint + "," + (values.constraint_str ? values.constraint_str : '')
+        console.log('test', values)
+        var final_constraint_string='';
+        if(values.constraint_string)
+            final_constraint_string=values.constraint_string;
+        if(values.constraint==='CustomCollection')
+            final_constraint_string=values.constraint_string_custom;
+        var curDescription = values.input_type + "," + values.constraint + "," + final_constraint_string;
         processedValues['description'] = curDescription;
 
         var reqDataInsert = [{
@@ -225,7 +231,7 @@ const ProjectConstraints = (props) => {
             <Spin spinning={loader} >
                 {
                     viewData && (<>
-                            <Row gutter={16}>
+                        <Row gutter={16}>
 
                             <Col className="gutter-row" span={6}>
                                 <Card
@@ -370,12 +376,16 @@ const ProjectConstraints = (props) => {
                     </FormItem>
                     <FormItem
                         label="Constraint Str"
-                        name="constraint_str"
+                        name="constraint_string"
                     // rules={[{ required: true, message: 'Please Select Constraint' }]}
                     >
+
+
+
                         <Select
                             showSearch
                             placeholder="Constraint Str"
+                            allowClear={true}
 
                             optionFilterProp="children"
                             //onChange={designationIdOnChange}
@@ -387,6 +397,15 @@ const ProjectConstraints = (props) => {
                                 })
                             }
                         </Select>
+
+
+                    </FormItem>
+                    <FormItem
+                        label="Custom Collection"
+                        name="constraint_string_custom"
+                    >
+                        <Input.TextArea placeholder='value:text|value:text' rows={4} />
+
                     </FormItem>
                     <FormItem wrapperCol=
                         {context.isMobile ? null : { offset: 10, span: 24 }}
