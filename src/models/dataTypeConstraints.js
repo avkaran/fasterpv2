@@ -4,6 +4,15 @@ const dataTypeConstraints = [
       possibleConstraints: "None,AutoCode,PrimaryKey,PrimaryKey2",
       defaultConstraint: "None",
       template: '<Input placeholder="{placeHolder}" defaultValue={defaultValue} />',
+      templateBootstrap: `<Form.Control
+      type="text"
+      name={name}
+      placeholder="{placeHolder}"
+      defaultValue={defaultValue}
+      className="fw-bold"
+      size="sm"
+      required
+    />`,
       functions: ``,
    },
    {
@@ -11,6 +20,15 @@ const dataTypeConstraints = [
       possibleConstraints: "None",
       defaultConstraint: "None",
       template: '<Input.TextArea rows={3} defaultValue={defaultValue} />',
+      templateBootstrap: ` <Form.Control
+      as="textarea"
+      className="fw-bold"
+      name={name}
+      placeholder="{placeHolder}"
+      defaultValue={defaultValue}
+      rows={3}
+      required
+    />`,
       functions: ``,
    },
    {
@@ -18,6 +36,15 @@ const dataTypeConstraints = [
       possibleConstraints: "None,PrimaryKey",
       defaultConstraint: "None",
       template: `<InputNumber placeholder="{placeHolder}" type="number" defaultValue={defaultValue}  style={{width:'100%'}}/>`,
+      templateBootstrap: `<Form.Control
+      type="number"
+      name={name}
+      placeholder="{placeHolder}"
+      defaultValue={defaultValue}
+      size="sm"
+      className="fw-bold text-end"
+      required
+    />`,
       functions: ``,
    },
    {
@@ -25,6 +52,14 @@ const dataTypeConstraints = [
       possibleConstraints: "None",
       defaultConstraint: "None",
       template: '<InputNumber placeholder="{placeHolder}" type="number" defaultValue={defaultValue} />',
+      templateBootstrap: `<Form.Control
+      type="number"
+      name={name}
+      defaultValue={defaultValue}
+      size="sm"
+      className="fw-bold text-end"
+      required
+    />`,
       functions: ``,
    },
    {
@@ -32,6 +67,15 @@ const dataTypeConstraints = [
       possibleConstraints: "None",
       defaultConstraint: "None",
       template: '<Input.Password placeholder="{placeHolder}" defaultValue={defaultValue} />',
+      templateBootstrap: `<Form.Control
+      type="password"
+      name={name}
+      placeholder="{placeHolder}"
+      defaultValue={defaultValue}
+      size="sm"
+      className="fw-bold text-end"
+      required
+    />`,
       functions: ``,
    },
    {
@@ -39,6 +83,15 @@ const dataTypeConstraints = [
       possibleConstraints: "None,PrimaryKey,ForeignKey",
       defaultConstraint: "None",
       template: '<Input placeholder="{placeHolder}" defaultValue={defaultValue} />',
+      templateBootstrap: `<Form.Control
+      type="email"
+      name={name}
+      placeholder="{placeHolder}"
+      defaultValue={defaultValue}
+      size="sm"
+      className="fw-bold text-end"
+      required
+    />`,
       functions: ``,
    },
    {
@@ -56,6 +109,17 @@ const dataTypeConstraints = [
    >
    {OptionCollection}
    </Select>`,
+      templateBootstrap: `<Form.Control
+   type="select"
+   name={name}
+   placeholder="{placeHolder}"
+   defaultValue={defaultValue}
+   size="sm"
+   className="fw-bold form-select form-select-sm"
+   required
+ >
+ {OptionCollection}
+ </Form.Control>`,
       functions: ``,
    },
    {
@@ -100,6 +164,7 @@ const dataTypeConstraints = [
   >
   {OptionCollection}
   </Select>`,
+  templateBootstrap:``,
       functions: ``,
    },
    {
@@ -108,6 +173,11 @@ const dataTypeConstraints = [
       defaultConstraint: "Collections",
       template: `
       <Checkbox checked={defaultValue}>{label}</Checkbox>`,
+      templateBootstrap:`<Form.Check
+      type="checkbox"
+      label={label}
+      name={name}
+    />`,
       functions: ``,
    },
    {
@@ -119,6 +189,7 @@ const dataTypeConstraints = [
          {OptionCollection}
       </Radio.Group>
       `,
+      templateBootstrap:``,
       functions: ``,
    },
    {
@@ -133,6 +204,14 @@ const dataTypeConstraints = [
                allowClear={false}
             />
       </Space>`,
+      templateBootstrap:`<Form.Control
+      type="date"
+      name={name}
+      className="fw-bold"
+      size="sm"
+      //max={toDate}
+      required
+    />`,
       functions: `
       const onChange={{nameVar}OnChange} = (date) => {
 
@@ -157,6 +236,7 @@ const dataTypeConstraints = [
             allowClear={false}
          />
       </Space>`,
+      templateBootstrap:``,
       functions: ``,
    },
    {
@@ -171,6 +251,7 @@ const dataTypeConstraints = [
          allowClear={false}
       />
       </Space>`,
+      templateBootstrap:``,
       functions: ``,
 
    },
@@ -192,6 +273,7 @@ const dataTypeConstraints = [
       storeFileName={viewData.photo ? viewData.photo : 'public/uploads/' + new Date().valueOf() + '.jpg'}
       onFinish={{nameVar}OnFinish}
       />`,
+      templateBootstrap:``,
       functions: ``,
    },
    {
@@ -204,6 +286,7 @@ const dataTypeConstraints = [
       defaultValue={defaultValue}
       //onChange={phone => {}}
       />`,
+      templateBootstrap:``,
       functions: ``,
    },
    {
