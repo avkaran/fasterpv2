@@ -157,7 +157,7 @@ const getEditValues = (selColumns, formVar) => {
     `+ resultStr + `
     });`;
 }
-const getReactCode = (allTableObjects, selColumns, moduleType, moduleName = 'test') => {
+const getReactCode = (allTableObjects, selColumns, moduleType, moduleName = 'Module',uiType='antd') => {
     var FormItemsCode = '';
     var FormViewItemsCode = '';
     let cnt = 0;

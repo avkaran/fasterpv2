@@ -41,6 +41,7 @@ const ReactCodeGenerator = (props) => {
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
     const [moduleName, setModuleName] = useState('Module');
     const [moduleType, setModuleType] = useState('add-edit');
+    const [uiType,setUiType]=useState('antd')
     const [outputCode, setOutputCode] = useState('');
     useEffect(() => {
         loadViewData(projectId);
@@ -134,7 +135,7 @@ const ReactCodeGenerator = (props) => {
     const onCodeGenerateClick = () => {
         if (finalColumns && finalColumns.length > 0) {
             //  console.log('test',finalColumns,tables)
-            var codeStr = getReactCode(tables, finalColumns, 'add-edit')
+            var codeStr = getReactCode(tables, finalColumns, moduleType,moduleName,uiType)
             setOutputCode(codeStr);
             setVisibleCodeModal(true)
             message.success("code clicked")
@@ -221,7 +222,8 @@ const ReactCodeGenerator = (props) => {
                                                 Module Name
                                             </Col>
                                             <Col span={12}>
-                                                <Input defaultValue="Module"></Input>
+                                                <Input defaultValue="Module" onChange={(e)=>setModuleName(e.targ
+                                                    .value)}></Input>
                                             </Col>
                                         </Row>
                                         <Row gutter={3}>
@@ -229,7 +231,21 @@ const ReactCodeGenerator = (props) => {
                                                 Module Type
                                             </Col>
                                             <Col span={12}>
-                                                <Input defaultValue="Add"></Input>
+                                            <Select
+    showSearch
+    placeholder="Module Type"
+    onChange={(value)=>setModuleType(value)}
+    optionFilterProp="children"
+    style={{width:'100%'}}
+    //onChange={examPatternOnChange}
+    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+   >
+    <Select.Option value="add-edit">Add/Edit</Select.Option>
+                                    <Select.Option value="add">Add</Select.Option>
+                                    <Select.Option value="edit">Edit</Select.Option>
+                                    <Select.Option value="view">View</Select.Option>
+                                    <Select.Option value="list">List</Select.Option>
+   </Select>
                                             </Col>
                                         </Row>
                                         <Row gutter={3}>
@@ -237,7 +253,19 @@ const ReactCodeGenerator = (props) => {
                                                 Design Type
                                             </Col>
                                             <Col span={12}>
-                                                <Input defaultValue="Antd"></Input>
+                                            <Select
+    showSearch
+    placeholder="UI Type"
+    onChange={(value)=>setUiType(value)}
+    optionFilterProp="children"
+    style={{width:'100%'}}
+    //onChange={examPatternOnChange}
+    filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+   >
+    <Select.Option value="antd">Antd</Select.Option>
+                                    <Select.Option value="react-bootstrap">Bootstrap</Select.Option>
+                                    
+   </Select>
                                             </Col>
                                         </Row>
                                         <hr/>
