@@ -1,24 +1,19 @@
-export const FormBootstrapTemplate=`<Form
-name="basic"
-form={{formVar}}
-labelAlign="left"
-labelCol={{ span: 8 }}
-wrapperCol={{ span: 20 }}
-initialValues={{ remember: true }}
-onFinish={{formVar}OnFinish}
-autoComplete="off"
->
+export const FormBootstrapTemplate=`
+<Form
+          method="post"
+          noValidate
+          validated={validated}
+          id="frm_{formVar}"
+          onSubmit={{formVar}OnSubmit}
+        >
 {formItems}
-<FormItem wrapperCol={{ offset: 10, span: 24 }}>
-<Space>
-    <Button size="large" type="outlined"  onClick={()=>{formVar}.resetFields()}>
-        Reset
-    </Button>
-    <MyButton size="large" type="primary" htmlType="submit">
-       Save
-    </MyButton>
-</Space>
-
-</FormItem>
-
+<Row className="mt-3">
+            <Col md={12}>
+              <div className="text-end">
+                <Button type="submit" size="sm">
+                  <i className="fa-solid fa-check me-2"></i> Update
+                </Button>
+              </div>
+            </Col>
+</Row>
 </Form>`;

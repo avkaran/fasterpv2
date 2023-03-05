@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space, Button } from 'antd';
 import { Card } from 'antd';
-import { Form, Input, Select, Menu, Tag, Typography, Drawer, Modal } from 'antd';
+import { Form, Input, Select, Menu, Tag, Typography, Drawer, Modal, Tabs } from 'antd';
 import { Layout, Spin } from 'antd';
 import PsContext from '../../../../../context';
 import { FormItem, MyButton } from '../../../../../comp';
@@ -31,6 +31,7 @@ const PhpApiCoder = (props) => {
     const [selTableName, setSelTableName] = useState(null);
     const [visibleCodeModal, setVisibleCodeModal] = useState(false);
     const [outputCode, setOutputCode] = useState({});
+    const [nameSpaceName,setNameSpaceName]=useState('YourNameSpace')
     const [moduleName, setModuleName] = useState('Module');
     const [functionSuffixName, setFunctionSuffixName] = useState('exam')
     useEffect(() => {
@@ -102,44 +103,44 @@ const PhpApiCoder = (props) => {
     const onCodeClick = (selTable) => {
         var tableObject = tables.find(item => item.tableName === selTable);
         var controllerTemplate = `<?php
-    namespace yourNameSpace;
-    use App\TheYak\Controller;
+    namespace {nameSpaceName};
+    use App\\TheYak\\Controller;
     class {pageName}Controller extends Controller {
         public function __construct() {
             
             parent::__construct();
         }
         public function xpostAdd`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostSave();
+            $model = new \\App\\Models\\{nameSpaceName}\\{pageName}Model();
+            $model->xpostAdd`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `();
         }
         public function xpostUpdate`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostUpdate();
+            $model = new \\App\\Models\\{nameSpaceName}\\{pageName}Model();
+            $model->xpostUpdate`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `();
         }
         public function xpostTotalRecords`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostTotalRecords();
+            $model = new \\App\\Models\\{nameSpaceName}\\{pageName}Model();
+            $model->xpostTotalRecords`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `();
         }
         public function xpostList`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostList();
+            $model = new \\App\\Models\\{nameSpaceName}\\{pageName}Model();
+            $model->xpostList`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `();
         }
         public function xpostDelete`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `(){
-            $model = new \App\Models\WebsiteCMS\ContentModel();
-            $model->xpostDelete();
+            $model = new \\App\\Models\\{nameSpaceName}\\{pageName}Model();
+            $model->xpostDelete`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `();
         }
     }`;
         let addModalCode = getPHPApiModalFunctionCode('add', tableObject, functionSuffixName);
         let updateModalCode = getPHPApiModalFunctionCode('update', tableObject, functionSuffixName);
         let totalRecordsModalCode = getPHPApiModalFunctionCode('total-records', tableObject, functionSuffixName);
-        let listModalCode = getPHPApiModalFunctionCode('list', tableObject, functionSuffixName);
+        let listModalCode = getPHPApiModalFunctionCode('list', tableObject, functionSuffixName, tables);
         let deleteModalCode = getPHPApiModalFunctionCode('delete', tableObject, functionSuffixName);
 
         var modalTemplate = `<?php
-    namespace App\Models\YourNameSpace;
-    use App\TheYak\Model;
-    use Rakit\Validation\Validator;
+    namespace App\\Models\\{nameSpaceName};
+    use App\\TheYak\\Model;
+    use Rakit\\Validation\\Validator;
     class {pageName}Model extends Model
     {
         public function __construct()
@@ -153,15 +154,16 @@ const PhpApiCoder = (props) => {
         ${listModalCode}
         ${deleteModalCode}     
     }`;
-        controllerTemplate = controllerTemplate.replace("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
-        modalTemplate = modalTemplate.replace("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
-
+        controllerTemplate = controllerTemplate.replaceAll("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
+        controllerTemplate=controllerTemplate.replaceAll("{nameSpaceName}",capitalizeFirst(nameSpaceName).replace(" ", ""))
+        modalTemplate = modalTemplate.replaceAll("{pageName}", capitalizeFirst(moduleName).replace(" ", ""));
+        modalTemplate=modalTemplate.replaceAll("{nameSpaceName}",capitalizeFirst(nameSpaceName).replace(" ", ""))
         setOutputCode({
             ControllerCode: controllerTemplate,
             modalCode: modalTemplate
         });
         setVisibleCodeModal(true);
-        console.log('test', tableObject)
+
     }
     return (
         <>
@@ -222,6 +224,13 @@ const PhpApiCoder = (props) => {
 
                                 >
                                     <Row gutter={16}>
+                                    <Col span={4}>
+                                            Namespace
+                                        </Col>
+                                        <Col span={4}>
+
+                                            <Input placeholder='Namespace' defaultValue="YourNameSpace" onChange={(e) => setNameSpaceName(e.target.value)}></Input>
+                                        </Col>
                                         <Col span={4}>
                                             Module Name
                                         </Col>
@@ -278,23 +287,29 @@ const PhpApiCoder = (props) => {
                 title="Code Generator"
             >
 
-                <Row gutter={16}>
-                    Controller Code
-                </Row>
-
-                <MyCodeBlock
-                    customStyle={{ height: '300px', overflow: 'auto' }}
-                    text={outputCode.ControllerCode ? outputCode.ControllerCode : ''}
-                    language="php"
+                <Tabs defaultActiveKey="1"
+                    items={
+                        [{
+                            key: '1',
+                            label: `Controller Code`,
+                            children: <MyCodeBlock
+                                customStyle={{ height: '500px', overflow: 'auto' }}
+                                text={outputCode.ControllerCode ? outputCode.ControllerCode : ''}
+                                language="php"
+                            />,
+                        },
+                        {
+                            key: '2',
+                            label: `Modal Code`,
+                            children: <MyCodeBlock
+                                customStyle={{ height: '500px', overflow: 'auto' }}
+                                text={outputCode.modalCode ? outputCode.modalCode : ''}
+                                language="php"
+                            />,
+                        },]
+                    }
                 />
-                <Row gutter={16}>
-                    Modal Code
-                </Row>
-                <MyCodeBlock
-                    customStyle={{ height: '300px', overflow: 'auto' }}
-                    text={outputCode.modalCode ? outputCode.modalCode : ''}
-                    language="php"
-                />
+                
             </Modal>
         </>
     );

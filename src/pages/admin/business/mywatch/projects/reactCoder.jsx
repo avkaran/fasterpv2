@@ -222,8 +222,7 @@ const ReactCodeGenerator = (props) => {
                                                 Module Name
                                             </Col>
                                             <Col span={12}>
-                                                <Input defaultValue="Module" onChange={(e) => setModuleName(e.targ
-                                                    .value)}></Input>
+                                                <Input defaultValue="Module" onChange={(e) => setModuleName(e.target.value)}></Input>
                                             </Col>
                                         </Row>
                                         <Row gutter={3}>

@@ -2,6 +2,8 @@ import { apiRequest } from "../../../../../models/core";
 import { DbTable, TableColumn } from "../../../../../models/dbTable";
 import { capitalizeFirst } from "../../../../../utils";
 import { FormItemTemplate, FormTemplate, AddEditModuleTemplate, viewModuleTemplate } from '../../../../../devTools/codeTemplates'
+import { FormItemBootstrapTemplate, FormBootstrapTemplate, AddModuleBootstrapTemplate } from '../../../../../devTools/codeTemplates'
+
 const getAllTables = async (project) => {
     const form = new FormData();
     return new Promise((resolve, reject) => {
@@ -139,7 +141,7 @@ const getEditValues = (selColumns, formVar) => {
             columns: columns
         })
     })
-    console.log('test', uniqueTables, selColumns)
+
     var resultStr = ``;
     tables.forEach(table => {
         var tmpStr = ``;
@@ -157,7 +159,13 @@ const getEditValues = (selColumns, formVar) => {
     `+ resultStr + `
     });`;
 }
-const getReactCode = (allTableObjects, selColumns, moduleType, moduleName = 'Module',uiType='antd') => {
+const getReactCode = (allTableObjects, selColumns, moduleType, moduleName, uiType = 'antd') => {
+    if (uiType === "antd")
+        return getReactAntdCode(allTableObjects, selColumns, moduleType, moduleName)
+    else if (uiType === "react-bootstrap")
+        return getReactBootstrapCode(allTableObjects, selColumns, moduleType, moduleName)
+}
+const getReactAntdCode = (allTableObjects, selColumns, moduleType, moduleName) => {
     var FormItemsCode = '';
     var FormViewItemsCode = '';
     let cnt = 0;
@@ -174,61 +182,60 @@ const getReactCode = (allTableObjects, selColumns, moduleType, moduleName = 'Mod
 
         if (column.inputConstraint.template)
             template = column.inputConstraint.template;
+
+
         template = template.replace("defaultValue={defaultValue}", "");
         template = template.replace("{placeHolder}", columnText);
         template = template.replaceAll("{nameVar}", columnVar);
+
         template = template.replace("{OptionCollection}", `{context.psGlobal.collectionOptions(context.psGlobal.collectionData, '` + column.constraintString + `')}`)
         let fItemTemplate = FormItemTemplate;
         fItemTemplate = fItemTemplate.replace("{label}", columnText).replace("{name}", "{['" + column.tableName + "','" + column.columnName + "']}").replace("{placeHolder}", columnText);
-        fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
+        //fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
 
         var isTwoColumnForm = true;
-        if (isTwoColumnForm) {
 
-            var fiFinal = fItemTemplate.replace("{inputTemplate}", template);
-            if (cnt % 2 === 0) {
-                // fiFinal = `<Row gutter={16}>`;
-                fiFinal = ` <Col className='gutter-row' xs={24} xl={12}>
+
+        var fiFinal = fItemTemplate.replace("{inputTemplate}", template);
+        if (cnt % 2 === 0) {
+            // fiFinal = `<Row gutter={16}>`;
+            fiFinal = ` <Col className='gutter-row' xs={24} xl={12}>
                                     `+ fiFinal + `
                                     </Col>
+                                   
                                     `;
-            }
-            else {
-                fiFinal = `<Col className='gutter-row' xs={24} xl={12}>
-                                    `+ fiFinal + `
-                                    </Col>
-                                    `;
-            }
-
-            //  if (cnt % 2 === 1)
-            // fiFinal = fiFinal + `</Row>`;
-            FormItemsCode = FormItemsCode + fiFinal;
-            //for view item
-            var fiFinalView = `<FormViewItem label="` + columnText + `">{viewData.` + column.columnName + `}</FormViewItem>`;
-            if (cnt % 2 === 0) {
-                // fiFinalView = `<Row gutter={16}>`;
-                fiFinalView = `<Col className='gutter-row' xs={24} xl={12}>
-                                    `+ fiFinalView + `
-                                    </Col>
-                                    `;
-            }
-            else {
-                fiFinalView = `<Col className='gutter-row' xs={24} xl={12}>
-                                    `+ fiFinalView + `
-                                    </Col>
-                                    `;
-            }
-
-            // if (cnt % 2 === 1)
-            // fiFinalView = fiFinalView + `</Row>`;
-
-            FormViewItemsCode = FormViewItemsCode + fiFinalView;
         }
         else {
-            FormItemsCode = FormItemsCode + fItemTemplate.replace("{inputTemplate}", template);
-            FormViewItemsCode = FormViewItemsCode + `
-            <FormViewItem label="`+ columnText + `">{viewData.` + column.columnName + `}</FormViewItem>`;
+            fiFinal = `<Col className='gutter-row' xs={24} xl={12}>
+                                    `+ fiFinal + `
+                                    </Col>
+                                    
+                                    `;
         }
+
+        //  if (cnt % 2 === 1)
+        // fiFinal = fiFinal + `</Row>`;
+        FormItemsCode = FormItemsCode + fiFinal;
+        //for view item
+        var fiFinalView = `<FormViewItem label="` + columnText + `">{viewData.` + column.columnName + `}</FormViewItem>`;
+        if (cnt % 2 === 0) {
+            // fiFinalView = `<Row gutter={16}>`;
+            fiFinalView = `<Col className='gutter-row' xs={24} xl={12}>
+                                    `+ fiFinalView + `
+                                    </Col>
+                                    `;
+        }
+        else {
+            fiFinalView = `<Col className='gutter-row' xs={24} xl={12}>
+                                    `+ fiFinalView + `
+                                    </Col>
+                                    `;
+        }
+
+        // if (cnt % 2 === 1)
+        // fiFinalView = fiFinalView + `</Row>`;
+
+        FormViewItemsCode = FormViewItemsCode + fiFinalView;
 
         cnt = cnt + 1;
     })
@@ -259,7 +266,116 @@ const getReactCode = (allTableObjects, selColumns, moduleType, moduleName = 'Mod
     // generateEditQuery(selColumns);
     return (pageCode)
 }
-const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixName = '') => {
+const getReactBootstrapCode = (allTableObjects, selColumns, moduleType, moduleName) => {
+    var FormItemsCode = '';
+    var FormViewItemsCode = '';
+    let cnt = 0;
+    var selColumnObjects = [];
+    selColumns.forEach(selColumn => {
+        // console.log('test2',selColumn.split(".")[0])
+        var curTable = allTableObjects.find(item => item.tableName === selColumn.split(".")[0])
+        var column = curTable.columns.find(item => item.columnName === selColumn.split(".")[1])
+        selColumnObjects.push(column);
+        var template = '';
+        var columnText = capitalizeFirst(column.columnName.replaceAll("_", " "));
+        var columnVar = capitalizeFirst(column.columnName.replaceAll("_", " ")).replaceAll(" ", "");
+        columnVar = columnVar.charAt(0).toLowerCase() + columnVar.slice(1);
+
+        if (column.inputConstraint.templateBootstrap)
+            template = column.inputConstraint.templateBootstrap;
+
+
+        template = template.replace("defaultValue={defaultValue}", "");
+        template = template.replace("{placeHolder}", columnText);
+        template = template.replaceAll("{nameVar}", columnVar);
+        template = template.replaceAll("{name}", "{['" + column.tableName + "','" + column.columnName + "']}");
+        template = template.replace("{OptionCollection}", `{context.psGlobal.collectionOptions(context.psGlobal.collectionData, '` + column.constraintString + `')}`)
+        let fItemTemplate = FormItemBootstrapTemplate;
+        fItemTemplate = fItemTemplate.replace("{label}", columnText).replace("{name}", "{['" + column.tableName + "','" + column.columnName + "']}").replace("{placeHolder}", columnText);
+        fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
+
+        var isTwoColumnForm = true;
+
+
+        var fiFinal = fItemTemplate.replace("{inputTemplate}", template);
+        if (cnt % 2 === 0) {
+            // fiFinal = `<Row gutter={16}>`;
+            fiFinal = `  <Row className="mt-3"><Col md={12}>
+                                    `+ fiFinal + `
+                                    </Col>
+                                    </Row>
+                                    `;
+        }
+        else {
+            fiFinal = ` <Row className="mt-3"><Col md={12}>
+                                    `+ fiFinal + `
+                                    </Col>
+                                    </Row>
+                                    `;
+        }
+
+        //  if (cnt % 2 === 1)
+        // fiFinal = fiFinal + `</Row>`;
+        FormItemsCode = FormItemsCode + fiFinal;
+        //for view item
+        var fiFinalView = `
+            <label>
+            ` + columnText + `
+              </label>
+              <Form.Control
+                as="text"
+                className="fw-bold form-select form-select-sm"
+                name="semester"
+                value={field("` + column.columnName + `")}
+                
+              >
+           `;
+
+        // fiFinalView = `<Row gutter={16}>`;
+        fiFinalView = `<Row className="mt-3"><Col md={12}>
+                                    `+ fiFinalView + `
+                                    </Col>
+                                    </Row>
+                                    `;
+
+
+
+        // if (cnt % 2 === 1)
+        // fiFinalView = fiFinalView + `</Row>`;
+
+        FormViewItemsCode = FormViewItemsCode + fiFinalView;
+
+
+        cnt = cnt + 1;
+    })
+
+    var formVar = moduleType.replace("-", "") + "Form" + moduleName.replace(" ", "");
+    var formCode = FormBootstrapTemplate.replaceAll("{formVar}", formVar).replace("{formItems}", FormItemsCode);
+
+    var pageCode = '';
+    if (moduleType === "add") {
+        pageCode = AddModuleBootstrapTemplate.replaceAll("{pageName}", "AddEdit" + capitalizeFirst(moduleName).replace(" ", ""));
+        pageCode = pageCode.replaceAll("{formVar}", formVar);
+        var primaryTable = "";
+        if (selColumnObjects.length > 0)
+            primaryTable = selColumnObjects[0].tableName;
+
+        pageCode = pageCode.replaceAll("{primaryTable}", primaryTable);
+        pageCode = pageCode.replace("{editQuery}", generateEditQuery(selColumnObjects));
+        pageCode = pageCode.replace("{setEditFieldsValues}", getEditValues(selColumnObjects, formVar));
+        pageCode = pageCode.replace("{form}", formCode)
+
+    } else if (moduleType === "view") {
+        pageCode = viewModuleTemplate.replaceAll("{pageName}", "View" + capitalizeFirst(moduleName));
+        pageCode = pageCode.replace("{viewQuery}", generateEditQuery(selColumnObjects));
+        // pageCode=pageCode.replace("{setEditFieldsValues}",getEditValues(selColumns,formVar));
+        pageCode = pageCode.replace("{viewItems}", FormViewItemsCode)
+    }
+
+    // generateEditQuery(selColumns);
+    return (pageCode)
+}
+const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixName = '', allTables = []) => {
     var resultStr = '';
     if (functionType === 'add') {
         var addValidationItemsCode = '';
@@ -407,7 +523,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                     $this->jsonOutput(['status' => '0', 'message' => $ex->getMessage()]);
                 }
             }`;
-        resultStr = updateModalCode;
+        resultStr = totalRecordsModalCode;
 
     } else if (functionType === 'list') {
 
@@ -415,6 +531,8 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
         if (tableObject.tableObject && tableObject.tableObject !== 'N/A')
             tableObjectForQuery = tableObject.tableObject;
         let ifWhereClauseItemsCode = '';
+
+        var foreignTables = [];
         tableObject.columns.forEach(column => {
 
             //use other items in the if condition.
@@ -424,7 +542,42 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                         $query .= " AND ${tableObjectForQuery}.${column.columnName}='{$this->request->get('${column.columnName}')}'";`;
             }
 
+            if (column.isForeignKey) {
+
+                foreignTables.push({ column: column, foreignTableColumn: column.constraintString })
+            }
+
         })
+
+        var multiTableWhereClauses = [];
+        var multiTableFromClauses = [];
+        var multiTableColumns = [];
+        foreignTables.forEach(fTableColumn => {
+
+            var fTable = allTables.find(tableItem => tableItem.tableName === fTableColumn.foreignTableColumn.split(".")[0]);
+            if (fTable) {
+                multiTableWhereClauses.push(`${tableObjectForQuery}.${fTableColumn.column.columnName}=${fTable.tableObject}.${fTableColumn.foreignTableColumn.split(".")[1]}`);
+
+                multiTableFromClauses.push(`${fTable.tableName} ${fTable.tableObject}`);
+
+                fTable.columns.forEach(fTColumn => {
+                    if (fTColumn.columnName !== 'id' && fTColumn.constraint)
+                        multiTableColumns.push(`${fTable.tableObject}.${fTColumn.columnName}`)
+                })
+            }
+        })
+        var multiTableWhereClausesStr = '';
+        var multiTableFromClausesStr = '';
+        var multiTableColumnsStr = '';
+
+        if (multiTableWhereClauses.length > 0)
+            multiTableWhereClausesStr = ' AND ' + multiTableWhereClauses.join(" AND ");
+        if (multiTableFromClauses.length > 0)
+        multiTableFromClausesStr = ',' + multiTableFromClauses.join(",");
+        if (multiTableColumns.length > 0)
+        multiTableColumnsStr = ',' + multiTableColumns.join(",");
+
+       
         var listModalCode = `
             public function xpostList`+ capitalizeFirst(functionSuffixName).replaceAll(' ', '') + `()
             {
@@ -439,7 +592,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                     if ($validation->fails()) $this->jsonOutput(['status' =>  0, 'message' =>  $validation->errors()->all()]);
                     */
         
-                    $query = "select ${tableObjectForQuery}.* from ${tableObject.tableName} ${tableObjectForQuery} where ${tableObjectForQuery}.status=1";
+                    $query = "select ${tableObjectForQuery}.* ${multiTableColumnsStr} from ${tableObject.tableName} ${tableObjectForQuery} ${multiTableFromClausesStr} where ${tableObjectForQuery}.status=1 ${multiTableWhereClausesStr}";
         
                     ${ifWhereClauseItemsCode}
                     
