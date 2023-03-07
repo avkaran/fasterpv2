@@ -390,7 +390,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
                 `;
             } else {
                 //use other items in the if condition.
-                if (column.columnName != 'id') {
+                if (column.columnName != 'id' && column.constraint) {
                     addPdoIfItemsCode = addPdoIfItemsCode + `
                     if ($this->request->get('${column.columnName}'))
                         $pdata['${column.columnName}'] = $this->request->get('${column.columnName}');`;
@@ -436,7 +436,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
         tableObject.columns.forEach(column => {
 
             //use other items in the if condition.
-            if (column.columnName != 'id') {
+            if (column.columnName != 'id' && column.constraint) {
                 updatePdoIfItemsCode = updatePdoIfItemsCode + `
                         if ($this->request->get('${column.columnName}'))
                             $pdata['${column.columnName}'] = $this->request->get('${column.columnName}');`;
@@ -485,7 +485,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
         tableObject.columns.forEach(column => {
 
             //use other items in the if condition.
-            if (column.columnName != 'id') {
+            if (column.columnName != 'id' && column.constraint) {
                 ifWhereClauseItemsCode = ifWhereClauseItemsCode + `
                         if ($this->request->get('${column.columnName}'))
                         $query .= " AND ${tableObjectForQuery}.${column.columnName}='{$this->request->get('${column.columnName}')}'";`;
@@ -536,7 +536,7 @@ const getPHPApiModalFunctionCode = (functionType, tableObject, functionSuffixNam
         tableObject.columns.forEach(column => {
 
             //use other items in the if condition.
-            if (column.columnName != 'id') {
+            if (column.columnName != 'id' && column.constraint) {
                 ifWhereClauseItemsCode = ifWhereClauseItemsCode + `
                         if ($this->request->get('${column.columnName}'))
                         $query .= " AND ${tableObjectForQuery}.${column.columnName}='{$this->request->get('${column.columnName}')}'";`;

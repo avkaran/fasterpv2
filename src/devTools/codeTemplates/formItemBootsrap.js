@@ -1,4 +1,4 @@
 export const FormItemBootstrapTemplate = `
-<label>Title</label>
+<label>{label}</label>
 {inputTemplate}
 `;

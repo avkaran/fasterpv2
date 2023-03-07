@@ -110,7 +110,7 @@ const dataTypeConstraints = [
    {OptionCollection}
    </Select>`,
       templateBootstrap: `<Form.Control
-   type="select"
+   as="select"
    name={name}
    placeholder="{placeHolder}"
    defaultValue={defaultValue}
