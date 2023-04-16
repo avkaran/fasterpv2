@@ -5,9 +5,13 @@ import { CustomerROLES } from "../../../utils/data";
 
 import Register from "./register";
 import Login from "./login";
-import PublicSearch from "./search/publicSearch";
-import HomeSearch from "./search/homeSearch";
-import PublicMembership from "./membership/publicMembership";
+import PublicTours from './tours/publicTours';
+import PublicTourView from './tours/publicTourView';
+import HomeTourSearch from './tours/publicHomeTourSearch';
+import PublicHotels from './hotels/publicHotels';
+import PublicHotelView from './hotels/publicHotelView';
+import HomeHotelSearch from './hotels/publicHomeHotelSearch';
+
 const UserPublicLayout = React.lazy(() => import('./public-layout'));
 const CustomerPublicRoutes = (props) => {
     return (<>
@@ -26,27 +30,49 @@ const CustomerPublicRoutes = (props) => {
                 allowed={CustomerROLES.ALL}
                 exact={true}
             />
-            <Route
-                path='/public/search'
-                element={< PublicSearch />}
-                title='Login'
-                allowed={CustomerROLES.ALL}
+             <Route
+                path='/public/tours'
+                element={<PublicTours />}
+                title='Tours'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+             <Route
+                path='/public/tour-view/:tourId'
+                element={<PublicTourView />}
+                title='View Tour'
+                allowed={CustomerROLES.CUSTOMER}
                 exact={true}
             />
             <Route
-                path='/public/membership'
-                element={< PublicMembership />}
-                title='Login'
-                allowed={CustomerROLES.ALL}
+                path='/public/home-tour-search/:phrase'
+                element={<HomeTourSearch />}
+                title='Tours'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+              <Route
+                path='/public/hotels'
+                element={<PublicHotels />}
+                title='Hotels'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+             <Route
+                path='/public/hotel-view/:hotelId'
+                element={<PublicHotelView />}
+                title='View Hotel'
+                allowed={CustomerROLES.CUSTOMER}
                 exact={true}
             />
             <Route
-                path='/public/home-search/:phrase'
-                element={< HomeSearch />}
-                title='Login'
-                allowed={CustomerROLES.ALL}
+                path='/public/home-hotel-search/:phrase'
+                element={<HomeHotelSearch />}
+                title='Hotels'
+                allowed={CustomerROLES.CUSTOMER}
                 exact={true}
             />
+           
         </Route>
     </>
     );

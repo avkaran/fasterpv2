@@ -15,7 +15,7 @@ import { green, yellow, grey } from '@ant-design/colors';
 import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
 import FormItem from 'antd/es/form/FormItem';
-const ViewTour = (props) => {
+const ViewHotel = (props) => {
     const context = useContext(PsContext);
     const [addeditFormBooking] = Form.useForm();
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const ViewTour = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from tour_packages where status=1 and id=" + props.tourId
+            query: "select r.*,h.hotel_name from hotel_rooms r,hotels h where r.hotel_id=h.id and r.status=1 and r.id=" + props.hotelId
         };
         context.psGlobal.apiRequest(reqData, "prod").then((res) => {
             setViewData(res[0]);
@@ -67,8 +67,8 @@ const ViewTour = (props) => {
             form.append(key, value)
         })
         form.append('user_id', context.customerUser.id)
-        form.append('booking_type', 'tour')
-        form.append('room_or_tour_id', props.tourId)
+        form.append('booking_type', 'hotel')
+        form.append('room_or_tour_id', props.hotelId)
         form.append('total_cost', viewData.price)
 
         context.psGlobal.apiRequest('admin/bookings/add-booking', "prod", form).then((res) => {
@@ -87,7 +87,7 @@ const ViewTour = (props) => {
     return (
         <>
 
-            <Card title={viewData ? viewData.package_name : '-'} extra={<MyButton type="outlined" href="/#/0/customer/mytours">All Tours</MyButton>}>
+            <Card title={viewData ? viewData.room_type+'-'+viewData.hotel_name : '-'} extra={<MyButton type="outlined" href="/#/0/customer/myhotels">All Hotels</MyButton>}>
 
                 <Spin spinning={loader}>
                     {
@@ -95,19 +95,19 @@ const ViewTour = (props) => {
 
                             <Row gutter={16}>
                                 <Col className='gutter-row' xs={24} xl={12}>
-                                    <Image src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(viewData.package_image))} />
+                                    <Image src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(viewData.room_image))} />
                                 </Col>
                                 <Col className='gutter-row' xs={24} xl={12}>
 
                                     <Row gutter={16}>
                                         <Col className='gutter-row' xs={24} xl={24}>
-                                            <span style={{ color: '#1976bc', fontSize: '24px', fontWeight: 'bold' }}>{viewData.package_name}</span>
+                                            <span style={{ color: '#1976bc', fontSize: '24px', fontWeight: 'bold' }}>{viewData.room_type}-{viewData.hotel_name}</span>
                                         </Col>
                                     </Row>
                                     <Row gutter={16} style={{ marginTop: '5px' }}>
 
                                         <Col className='gutter-row' xs={24} xl={24}>
-                                            Price <span style={{ color: '#1976bc', fontSize: '14px', fontWeight: 'bold' }}>: {"$" + viewData.price.toString() + "/Traveller"}</span>
+                                            Price <span style={{ color: '#1976bc', fontSize: '14px', fontWeight: 'bold' }}>: {"$" + viewData.price.toString() + "/Person"}</span>
                                         </Col>
 
                                     </Row>
@@ -308,4 +308,4 @@ const ViewTour = (props) => {
     );
 
 }
-export default ViewTour;
+export default ViewHotel;

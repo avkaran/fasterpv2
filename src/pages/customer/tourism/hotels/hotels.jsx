@@ -16,7 +16,7 @@ import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
 import './tourStyle.css'
 import { AvatarPaginatedList } from '../../../../comp';
-const Tours = (props) => {
+const Hotels = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
     const filterColumns = useRef(null);
@@ -55,7 +55,7 @@ const Tours = (props) => {
 
     }
     const getCategories = () => {
-        let m = context.psGlobal.collectionData.find(item => item.name === 'tour-package-categories');
+        let m = context.psGlobal.collectionData.find(item => item.name === 'hotel-features');
         let cData = m.collections.split(",");
         return cData.map(item => <Checkbox key={item} value={item} >{item}</Checkbox>)
     }
@@ -63,7 +63,7 @@ const Tours = (props) => {
         var filter_clauses = [];
         var subClauses = [];
         checkedList.forEach(item => {
-            subClauses.push(" m.categories like  '%" + item + "%'")
+            subClauses.push(" m.features like  '%" + item + "%'")
         })
 
         if (subClauses.length > 0)
@@ -103,7 +103,7 @@ const Tours = (props) => {
                     <Card>
                         <Row gutter={16}>
                             <Col xs={12} xl={3}>
-                                Travel Date
+                                Checkin Date
                             </Col>
                             <Col xs={12} xl={4}>
                                 <Space direction="vertical">
@@ -143,9 +143,9 @@ const Tours = (props) => {
                         isDocumentLoaded && (<>
                         <AvatarPaginatedList
                         ref={InfiniteListRef}
-                        listHeading={"Tours"}
-                        countQuery={"select count(*) AS count from tour_packages m where m.status=1 and m.active_status=1 " + context.psGlobal.getWhereClause(filterColumns.current, false)}
-                        listQuery={"select m.*,@rownum:=@rownum+1 as row_num from tour_packages m  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.status=1 and m.active_status=1  " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by id desc"}
+                        listHeading={"Hotels"}
+                        countQuery={"select count(*) AS count from hotel_rooms m,hotels h where m.hotel_id=h.id and m.status=1 and m.availablity=1 " + context.psGlobal.getWhereClause(filterColumns.current, false)}
+                        listQuery={"select m.*,h.hotel_name,@rownum:=@rownum+1 as row_num from hotel_rooms m,hotels h  CROSS JOIN (SELECT @rownum:={rowNumberVar}) crsj  where m.hotel_id=h.id and  m.status=1 and m.availablity=1  " + context.psGlobal.getWhereClause(filterColumns.current, false) + "  order by id desc"}
                         recordsPerRequestOrPage={10}
                         userId={userId}
                         refresh={refreshList}
@@ -158,22 +158,25 @@ const Tours = (props) => {
                                 <div className="col-xs-12 col-sm-4">
                                     <div className="card">
                                         <a className="img-card"
-                                            href={(isLoggedView ? '/#/0/customer/mytour-view/' : '/#/public/tour-view/') + item.id}>
-                                            <img src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(item.package_image))} />
+                                            href={(isLoggedView ? '/#/0/customer/myhotel-view/' : '/#/public/hotel-view/') + item.id}>
+                                            <img src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(item.room_image))} />
                                         </a>
                                         <div className="card-content">
                                             <h6 className="text-center" style={{ color: '#1976bc', fontSize: 'medium' }}>
-                                                <b>{item.package_name}</b>
+                                                <b>{item.room_type}</b>
+                                            </h6>
+                                            <h6 className="text-center" style={{ color: '#1976bc', fontSize: 'medium' }}>
+                                                <b>{item.hotel_name}</b>
                                             </h6>
                                             <h6 className="text-center" style={{ color: 'green', fontSize: 'medium' }}>
                                                 <b>$ {item.price}</b>
                                             </h6>
                                             <p className="text-center">
-                                                {item.categories ? item.categories.slice(0, 50) + "..." : '-'}
+                                                {item.features ? item.features.slice(0, 50) + "..." : '-'}
                                             </p>
                                         </div>
                                         <div className="card-read-more">
-                                            <a href={(isLoggedView ? '/#/0/customer/mytour-view/' : '/#/public/tour-view/') + item.id} className="btn btn-link btn-block" style={{ color: 'white', backgroundColor: '#1976bc' }}>
+                                            <a href={(isLoggedView ? '/#/0/customer/myhotel-view/' : '/#/public/hotel-view/') + item.id} className="btn btn-link btn-block" style={{ color: 'white', backgroundColor: '#1976bc' }}>
                                                 Book Now
                                             </a>
                                         </div>
@@ -198,4 +201,4 @@ const Tours = (props) => {
     );
 
 }
-export default Tours;
+export default Hotels;

@@ -14,26 +14,35 @@ import { MyButton, MyTable } from '../../../../comp'
 import { green, yellow, grey } from '@ant-design/colors';
 import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
-import ViewTour from './viewTour';
-const MyTourView = (props) => {
+import Tours from './tours';
+const HomeTourSearch = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
-    const [curAction, setCurAction] = useState('view')
-    const { tourId } = useParams();
+    const {phrase}=useParams()
+    const [curAction, setCurAction] = useState('view');
+    const [searchData,setSearchData]=useState(null)
     useEffect(() => {
+        var phraseSplit = phrase.split(",");
+        setSearchData(
+            {
+                travel_date:phraseSplit[0],
+                price_from:phraseSplit[1],
+                price_to:phraseSplit[2],
+            }
+        )
+        //console.log(phraseSplit)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const onBookingFinish=()=>{
-        navigate('/0/customer/bookings')
-    }
+
     return (
         <>
-            <div className="container">
-                <ViewTour tourId={tourId} onSaveFinish={onBookingFinish} isLogggedIn={true}/>
-            </div>
-
+          {
+            searchData && (<Tours isLoggedView={false} searchData={searchData}/>)
+          }
+            
+           
         </>
     );
 
 }
-export default MyTourView;
+export default HomeTourSearch;

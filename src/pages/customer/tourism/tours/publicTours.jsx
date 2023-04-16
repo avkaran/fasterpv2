@@ -14,26 +14,22 @@ import { MyButton, MyTable } from '../../../../comp'
 import { green, yellow, grey } from '@ant-design/colors';
 import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
-import ViewTour from './viewTour';
-const MyTourView = (props) => {
+import Tours from './tours';
+const PublicTours = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
     const [curAction, setCurAction] = useState('view')
-    const { tourId } = useParams();
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const onBookingFinish=()=>{
-        navigate('/0/customer/bookings')
-    }
+
     return (
         <>
-            <div className="container">
-                <ViewTour tourId={tourId} onSaveFinish={onBookingFinish} isLogggedIn={true}/>
-            </div>
-
+          
+            <Tours isLoggedView={false}/>
+           
         </>
     );
 
 }
-export default MyTourView;
+export default PublicTours;

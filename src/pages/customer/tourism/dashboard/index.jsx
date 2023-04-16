@@ -101,7 +101,7 @@ const CustomerDashboard = (props) => {
                   Book 
                     <a
                       className="ms-2"
-                      href="#/0/customer/tours"
+                      href="#/0/customer/mytours"
                       style={{ textDecoration: "underline" }}
                     >
                      Tour
@@ -109,7 +109,7 @@ const CustomerDashboard = (props) => {
                     or 
                     <a
                       className="ms-2"
-                      href="#/0/customer/hotels"
+                      href="#/0/customer/myhotels"
                       style={{ textDecoration: "underline" }}
                     >
                      Hotel

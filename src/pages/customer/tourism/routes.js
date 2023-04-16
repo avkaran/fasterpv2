@@ -8,6 +8,9 @@ import CustomerDashboard from "./dashboard";
 import MyProfile from "./profile";
 import MyTours from './tours/myTours';
 import MyTourView from './tours/myTourView';
+import MyBookings from './bookings';
+import MyHotels from './hotels/myHotels';
+import MyHotelView from './hotels/myHotelView';
 const UserLayout = React.lazy(() => import('./layout'));
 const CustomerRoutes = (props) => {
     return (<>
@@ -42,7 +45,27 @@ const CustomerRoutes = (props) => {
                 allowed={CustomerROLES.CUSTOMER}
                 exact={true}
             />
-          
+              <Route
+                path='/:userId/customer/myhotels'
+                element={<MyHotels />}
+                title='My Hotels'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+             <Route
+                path='/:userId/customer/myhotel-view/:hotelId'
+                element={<MyHotelView />}
+                title='View hotel'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
+           <Route
+                path='/:userId/customer/bookings'
+                element={<MyBookings />}
+                title='Bookings'
+                allowed={CustomerROLES.CUSTOMER}
+                exact={true}
+            />
           
         </Route>
     </>

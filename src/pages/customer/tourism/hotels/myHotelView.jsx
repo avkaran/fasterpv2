@@ -14,12 +14,12 @@ import { MyButton, MyTable } from '../../../../comp'
 import { green, yellow, grey } from '@ant-design/colors';
 import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
-import ViewTour from './viewTour';
-const MyTourView = (props) => {
+import ViewHotel from './viewHotel';
+const MyHotelView = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
     const [curAction, setCurAction] = useState('view')
-    const { tourId } = useParams();
+    const { hotelId } = useParams();
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -29,11 +29,11 @@ const MyTourView = (props) => {
     return (
         <>
             <div className="container">
-                <ViewTour tourId={tourId} onSaveFinish={onBookingFinish} isLogggedIn={true}/>
+                <ViewHotel hotelId={hotelId} onSaveFinish={onBookingFinish} isLogggedIn={true}/>
             </div>
 
         </>
     );
 
 }
-export default MyTourView;
+export default MyHotelView;

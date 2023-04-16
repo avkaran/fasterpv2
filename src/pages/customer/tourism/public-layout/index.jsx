@@ -70,11 +70,11 @@ const Layouts = (props) => {
                                             <nav className="nav-menu">
                                                 <ul>
                                                     <li className="nav-item"><a className="nav-link" href="https://www.azizatourism.com/" style={{fontWeight:'bold'}}>Home</a></li>
-                                                    <li className="nav-item"><Link to="#/public/tours" ><a className="nav-link" style={{fontWeight:'bold'}}>Tours</a></Link></li>
-                                                    <li className="nav-item"><Link to="#/public/hotels" ><a className="nav-link" style={{fontWeight:'bold'}}>Hotels</a></Link></li>
+                                                    <li className="nav-item"><Link to="/public/tours" ><a className="nav-link" style={{fontWeight:'bold'}}>Tours</a></Link></li>
+                                                    <li className="nav-item"><Link to="/public/hotels" ><a className="nav-link" style={{fontWeight:'bold'}}>Hotels</a></Link></li>
                                                     <li className="nav-item"><a className="nav-link"  href="https://www.azizatourism.com/about-us" style={{fontWeight:'bold'}}>Our Services</a>
                                                     </li>
-                                                    <li className="nav-item"><Link to="/public/register" ><a className="nav-link" style={{fontWeight:'bold'}}>Register/Login</a></Link>
+                                                    <li className="nav-item"><Link to="/public/login" ><a className="nav-link" style={{fontWeight:'bold'}}>Login/Register</a></Link>
                                                     </li>
                                                    
                                                     <li className="nav-item"><a className="nav-link" href="https://www.azizatourism.com/contact-us" style={{fontWeight:'bold'}}>Contact Us</a></li>
