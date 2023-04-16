@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { message, Card, Spin, Checkbox, Row, Col, Pagination,Space } from 'antd';
+import { message, Card, Spin, Checkbox, Row, Col, Pagination, Space } from 'antd';
 import { cyan } from '@ant-design/colors';
 import PsContext from '../context'
 import axios from 'axios';
 const AvatarPaginatedList = forwardRef((props, ref) => {
     const context = useContext(PsContext);
-    const { countQuery, listQuery, renderItem, recordsPerRequestOrPage, encryptFields, refresh, userId, listHeading, isCheckboxList, onCheckedChange, onPageChange, ...other } = props;
+    const { countQuery, listQuery, renderItem, recordsPerRequestOrPage, encryptFields, refresh, userId, listHeading, isCheckboxList, onCheckedChange, onPageChange, wrapperClass, ...other } = props;
     const [data, setData] = useState([]);
     const [ids, setIds] = useState([]);
     const [checkStatus, setCheckStatus] = useState([]);
@@ -66,8 +66,8 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
                 //  setCheckStatus(currentIds)
                 setInitLoading(false);
                 setCheckedList([])
-                if(onPageChange)
-                onPageChange(page, res['data'].data)
+                if (onPageChange)
+                    onPageChange(page, res['data'].data)
 
             }
             else {
@@ -94,7 +94,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
 
         };
         form.append('queries', context.psGlobal.encrypt(JSON.stringify(reqData)))
-         form.append('mode',"dev")
+        form.append('mode', "dev")
         axios.post('v1/admin/db-query', form).then(res => {
             if (res['data'].status === '1') {
 
@@ -124,6 +124,14 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
         else
             onCheckedChange([], data);
     };
+    const getDataItems = () => {
+        var itemComps = []
+        data.map((item, index) => {
+
+            itemComps.push(renderItem(item, parseInt(item.row_number) - 1));
+        })
+        return itemComps;
+    }
     return (
         <><Spin spinning={initLoading}>
             <Card
@@ -152,7 +160,7 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
                         {
                             data.map((item, index) => {
 
-                                return (<Row  style={{ background: '#fff' }} ><Col style={{ padding: '5px 5px 5px 5px', textAlign: "center" }} span={1}><Checkbox key={item.id} value={item.id} noStyle /></Col><Col span={23}>{renderItem(item, parseInt(item.row_number) - 1)}</Col></Row>)
+                                return (<Row style={{ background: '#fff' }} ><Col style={{ padding: '5px 5px 5px 5px', textAlign: "center" }} span={1}><Checkbox key={item.id} value={item.id} noStyle /></Col><Col span={23}>{renderItem(item, parseInt(item.row_number) - 1)}</Col></Row>)
 
                             })
                         }
@@ -161,12 +169,9 @@ const AvatarPaginatedList = forwardRef((props, ref) => {
             }
             {
                 !isCheckboxList && (
-                    <>{
-                        data.map((item, index) => {
-
-                            return renderItem(item, parseInt(item.row_number) - 1)
-                        })
-                    }
+                    <>
+                        {wrapperClass && (<div className={wrapperClass}>{getDataItems()}</div>)}
+                        {!wrapperClass && (<>{getDataItems()}</>)}
                     </>)
             }
 

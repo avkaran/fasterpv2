@@ -12,6 +12,17 @@ const mynav = [
 		allowed: ROLES.ALL
 	},
 	{
+		name: 'Hotels',
+		path: '/:userId/admin/hotels',
+		icon: 'fa-solid fa-list-alt',
+		exact: false,
+		childrens: [
+			{ name: 'All Hotels', path: '/:userId/admin/hotels', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'hotels.list-hotels'},
+			{ name: 'Rooms', path: '/:userId/admin/hotel-rooms', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'hotels.list-hotel-rooms'},
+		],
+		allowed: ROLES.ALL
+	},
+	{
 		name: 'CMS',
 		path: '/:userId/admin/contents/cms',
 		icon: 'fa-solid fa-globe',

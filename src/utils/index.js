@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 2, name: 'mywatch' };
+export const currentInstance = { index: 3, name: 'tourism' };
 export const businesses = [
   { //0
     key: 'matrimony',
@@ -62,8 +62,8 @@ export const businesses = [
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
     fileStorage:{type:'aws',},
-   //  responsive: { isMobile: true, },
-    hasCustomerPortal: false,
+   // responsive: { isMobile: true, },
+    hasCustomerPortal: true,
   },
   { //4
     key: 'shopy',
