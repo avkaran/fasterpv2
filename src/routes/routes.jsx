@@ -8,7 +8,6 @@ import CryptoJS from 'crypto-js';
 import Branches from '../pages/admin/branches';
 const AdminPublicLayout = React.lazy(() => import('../pages/admin/public-layout-desktop'));
 //const AdminLayout = React.lazy(() => import('../pages/admin/layout-desktop'));
-
 const AdminPublicLayoutMobile = React.lazy(() => import('../pages/admin/public-layout-mobile'));
 //const AdminLayoutMobile = React.lazy(() => import('../pages/admin/layout-mobile'));
 
@@ -53,16 +52,6 @@ const MyRoutes = (props) => {
         {/*  <Route path="/:userId/customer" element={userLayout} />
         <Route path="/public" element={userPublicLayout} /> */}
 
-        {/*   
-  //only for old univeristy association projects(start)
-  <Route path="/member-login" component={userLogin} />
-        <Route path="/member-register" component={userRegister} />
-        <Route path="/activate-member/:memberId" component={userActivate} />
-        <Route path="/member-verify-email" component={userVerifyEmail} />
-        <Route path="/member-reset-password" component={userPasswordReset} /> 
-        
- // only for old univeristy association projects(end)
-        */}
       </Routes >
     </Suspense>
   </HashRouter >

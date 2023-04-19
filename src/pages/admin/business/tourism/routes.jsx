@@ -29,6 +29,7 @@ import TourPackages from './tour-packages';
 import { ROLES } from "../../../../utils/data";
 import Hotels from './hotels';
 import HotelRooms from './hotel-rooms';
+import Bookings from './bookings';
 
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
@@ -151,7 +152,13 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-               
+                <Route
+                    path='/:userId/admin/bookings'
+                    element={<Bookings />}
+                    title='Bookings'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
             </Route>
 
         </>

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 3, name: 'tourism' };
+export const currentInstance = { index: 4, name: 'shopy' };
 export const businesses = [
   { //0
     key: 'matrimony',
@@ -67,8 +67,8 @@ export const businesses = [
   },
   { //4
     key: 'shopy',
-    name: 'Test S',
-    shortName: 'Test',
+    name: 'Mobicare',
+    shortName: 'Mobicare',
     apiUrl: 'https://www.mobbicare.com/api/v3_0/',
     dbName: 'mobbicare',
     // multilingual: ['en', 'ta', 'ml', 'hi'],

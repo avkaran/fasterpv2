@@ -22,6 +22,7 @@ const mynav = [
 		],
 		allowed: ROLES.ALL
 	},
+	{ name: 'Bookings', path: '/:userId/admin/bookings', icon: 'fa-solid fa-house', exact: true, allowed: ROLES.ALL,resourceName:'bookings.list-bookings' },
 	{
 		name: 'CMS',
 		path: '/:userId/admin/contents/cms',

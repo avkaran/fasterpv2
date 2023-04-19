@@ -9,9 +9,9 @@ import { Spin } from 'antd';
 import logo from '../assets/images/logo.png'
 // import 'antd/dist/antd.css';
 import 'react-phone-input-2/lib/style.css'
-import '../assets/css/aos.css';
+//import '../assets/css/aos.css';
 import '../assets/icofont/icofont.min.css';
-import '../assets/css/bootstrap.min.css';
+//import '../assets/css/bootstrap.min.css';
 import '../assets/css/custom.css';
 import { Spinner } from 'react-bootstrap';
 const Layouts = (props) => {
