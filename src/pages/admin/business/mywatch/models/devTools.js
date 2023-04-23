@@ -191,7 +191,7 @@ const getReactAntdCode = (allTableObjects, selColumns, moduleType, moduleName) =
         template = template.replace("{OptionCollection}", `{context.psGlobal.collectionOptions(context.psGlobal.collectionData, '` + column.constraintString + `')}`)
         let fItemTemplate = FormItemTemplate;
         fItemTemplate = fItemTemplate.replace("{label}", columnText).replace("{name}", "{['" + column.tableName + "','" + column.columnName + "']}").replace("{placeHolder}", columnText);
-        //fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
+        fItemTemplate = fItemTemplate.replace("{inputRules}", `rules={[{ required: true, message: 'Please Enter ` + columnText + `' }]}`);
 
         var isTwoColumnForm = true;
 

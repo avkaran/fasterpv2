@@ -75,7 +75,6 @@ const ReactCodeGenerator = (props) => {
 
 
     }
-
     const onSearchTables = (e) => {
         let filteredMenus = menuItems.filter(item => item.label.toUpperCase().indexOf(e.target.value.toUpperCase()) > -1);
         setMenuItemsView(filteredMenus);

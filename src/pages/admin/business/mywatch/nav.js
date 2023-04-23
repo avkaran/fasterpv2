@@ -12,6 +12,16 @@ const mynav = [
 		allowed: ROLES.ALL
 	},
 	{
+		name: 'Templates',
+		path: '/:userId/admin/templates',
+		icon: 'fa-solid fa-list-alt',
+		exact: false,
+		childrens: [
+			{ name: 'Templates', path: '/:userId/admin/templates', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL,resourceName:'templates.list-templates'},
+		],
+		allowed: ROLES.ALL
+	},
+	{
 		name: 'CMS',
 		path: '/:userId/admin/contents/cms',
 		icon: 'fa-solid fa-globe',

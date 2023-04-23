@@ -29,6 +29,7 @@ import Advertisement from "../../advertisements";
 import WhatsappReports from "../../whatsapp";
 import SoftwareProjects from './projects';
 import CodeGenerator from './coder';
+import Templates from './templates';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
 import ViewProject from './projects/viewProject';
@@ -215,6 +216,13 @@ const AuthRoutes = (props) => {
                 <Route
                     path='/:userId/admin/code-generator'
                     element={<CodeGenerator />}
+                    title='Translations'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                 <Route
+                    path='/:userId/admin/templates'
+                    element={<Templates />}
                     title='Translations'
                     allowed={ROLES.ALL}
                     exact={true}
