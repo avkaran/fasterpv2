@@ -43,13 +43,13 @@ const AddEditTemplate = (props) => {
 
         } else {
             setCurAction("add");
-           /*  addeditFormTemplates.setFieldsValue(
-                { templates: { active_status: '1' } }
-            ) */
+            /*  addeditFormTemplates.setFieldsValue(
+                 { templates: { active_status: '1' } }
+             ) */
         }
 
     }, [editIdOrObject]);
-    
+
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
@@ -86,7 +86,7 @@ const AddEditTemplate = (props) => {
 
                 descripiton: mydata.descripiton,
 
-                template: mydata.template,
+
             }
         });
         //setEditorValue(mydata.description);
@@ -143,9 +143,9 @@ const AddEditTemplate = (props) => {
             query: "SELECT * from template_categories"
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-           // console.log('test',res)
+            // console.log('test',res)
             setCategories(res);
-          
+
             setLoader(false)
         }).catch(err => {
             message.error(err);
@@ -203,8 +203,8 @@ const AddEditTemplate = (props) => {
                                         placeholder="Template Category"
 
                                         optionFilterProp="children"
-                                        //onChange={templateCategoryOnChange}
-                                       // filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                                    //onChange={templateCategoryOnChange}
+                                    // filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                     >
                                         {
                                             categories.map(item => {
@@ -227,19 +227,6 @@ const AddEditTemplate = (props) => {
                                     <Input.TextArea rows={3} />
                                 </FormItem>
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
-
-                                <FormItem
-                                    label="Template"
-                                    name={['templates', 'template']}
-                                    rules={[{ required: true, message: 'Please Enter Template' }]}
-                                >
-                                    <Input.TextArea rows={3} />
-                                </FormItem>
-
-                            </Col>
-
-
                         </Row>
 
 

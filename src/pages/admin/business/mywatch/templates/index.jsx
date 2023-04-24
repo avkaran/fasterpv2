@@ -89,7 +89,7 @@ const Templates = (props) => {
                     title="Template"
                     table="templates"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id, template_name: item.template_name, location: item.location, ref: item.id }}
+                    dataItem={{ id: item.id, template_title: item.template_title, string_id: item.string_id, template_type: item.type }}
                     //avatar={context.baseUrl + item.template_image}
                 />)}
 
@@ -180,7 +180,7 @@ const Templates = (props) => {
                         title="Template"
                         table="templates"
                         //id must,+ give first three colums to display
-                        dataItem={{ id: viewOrEditData.id, package_name: viewOrEditData.package_name, price: viewOrEditData.price, ref: viewOrEditData.id }}
+                        dataItem={{ id: viewOrEditData.id, template_title: viewOrEditData.template_title, string_id: viewOrEditData.string_id, template_type: viewOrEditData.type }}
                     // avatar={context.baseUrl + item.course_image}
                     />)
                 }
@@ -246,7 +246,7 @@ const Templates = (props) => {
                                 title={capitalizeFirst(curAction) + " " + heading}
                                 placement="right"
                                 closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
-                                width={500}
+                                width={curAction==='view'?1000:500}
                                 onClose={() => { setVisibleModal(false) }}
                                 open={visibleModal}
                                 extra={rightButtons}
@@ -266,7 +266,7 @@ const Templates = (props) => {
                                 columns={tableColumns}
                                 refresh={refreshTable}
                                 countQuery="select count(*) as count from templates where status=1 "
-                                listQuery={"select t.*,tc.type,tc.category_name,@rownum:=@rownum+1 as row_num from templates t,template_categories tc CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where t.status=1 and t.template_category=tc.id"}
+                                listQuery={"select t.*,tc.type,tc.category_name,tc.output_type,@rownum:=@rownum+1 as row_num from templates t,template_categories tc CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where t.status=1 and t.template_category=tc.id"}
                                 itemsPerPage={20}
                             />
 
@@ -285,7 +285,7 @@ const Templates = (props) => {
                                 userId={userId}
                                 refresh={refreshTable}
                                 countQuery="select count(*) as count from templates  where status=1 "
-                                listQuery="select * from templates t,template_categories tc where t.status=1 and t.template_category=tc.id "
+                                listQuery="select t.* from templates t,template_categories tc where t.status=1 and t.template_category=tc.id "
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
@@ -296,7 +296,7 @@ const Templates = (props) => {
                                                     title="Template"
                                                     table="templates"
                                                     //id must,+ give first three colums to display
-                                                    dataItem={{ id: item.id, package_name: item.package_name, price: item.price, ref: item.id }}
+                                                    dataItem={{ id: item.id, template_title: item.template_title, string_id: item.string_id, template_type: item.type }}
                                                 // avatar={context.baseUrl + item.course_image}
                                                 />,
                                                 //color: 'danger',
