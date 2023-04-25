@@ -10,6 +10,7 @@ import PsContext from '../../../../../context';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import Editor from '@monaco-editor/react';
+import EditTemplateRenderFunction from './editRenderFunction';
 
 const ViewTemplate = (props) => {
     const context = useContext(PsContext);
@@ -22,8 +23,7 @@ const ViewTemplate = (props) => {
     const [heading] = useState('template');
     const { viewIdOrObject, onListClick, userId, formItemLayout, ...other } = props;
     const [viewId, setViewId] = useState(null);
-
-
+    const [editorValue,setEditorValue]=useState(null)
     useEffect(() => {
         if (typeof viewIdOrObject === 'object') {
             setViewId(viewIdOrObject.id);
@@ -39,7 +39,7 @@ const ViewTemplate = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from templates where status=1 and id=" + id
+            query: "select t.*,tc.type,tc.category_name,tc.output_type from templates t,template_categories tc where t.status=1 and t.template_category=tc.id and t.id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setviewData(res[0]);
@@ -49,6 +49,25 @@ const ViewTemplate = (props) => {
             message.error(err);
             setLoader(false);
 
+        })
+    }
+    const handleEditorChange = (value, event) => {
+        setEditorValue(value);
+        //console.log('here is the current model value:', value);
+    }
+    const onEditorSaveClick=(e)=>{
+        var form = new FormData();
+        form.append('id', viewData.id);
+        form.append('template', editorValue);
+        context.psGlobal.apiRequest('admin/templates/update-template', context.adminUser(userId).mode, form).then((res) => {
+           // setLoader(false);
+           loadViewData(viewData.id);
+           setEditorValue(null)
+            message.success('Template Updated');
+
+        }).catch(err => {
+            message.error(err);
+           // setLoader(false);
         })
     }
     return (
@@ -86,11 +105,20 @@ const ViewTemplate = (props) => {
                             <Tabs.TabPane tab="Template" key="template">
                                 <Row>
                                     <Col xs={24} xl={24}>
-                                        <Editor height="500px" language="javascript" value={viewData.template} theme="vs-dark"/>
+                                        <Row gutter={16} style={{marginBottom:'5px'}}>
+                                            <Col xs={24} xl={24}>
+                                                {editorValue && ( <MyButton type="primary" style={{ float: 'right' }} onClick={onEditorSaveClick}>Save</MyButton>)}
+                                               
+
+                                            </Col>
+                                        </Row>
+                                        <Editor height="500px" language="javascript" value={viewData.template}
+                                            onChange={handleEditorChange} theme="vs-dark" />
                                     </Col>
                                 </Row>
                             </Tabs.TabPane>
                             <Tabs.TabPane tab="Render Info" key="Render Info">
+                                <EditTemplateRenderFunction editIdOrObject={viewData} />
                             </Tabs.TabPane>
                         </Tabs>
 

@@ -31,6 +31,7 @@
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.1.1",
     "feather-icons-react": "^0.6.2",
+    "handlebars": "^4.7.7",
     "jquery": "^3.6.1",
     "mdb-react-ui-kit": "^5.0.0",
     "moment": "^2.29.4",

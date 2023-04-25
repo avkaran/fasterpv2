@@ -76,8 +76,9 @@ const PsContextProvider = (props) => {
 		var currentUser=getAdminUser(id);
 		if(currentUser.role==='admin' || currentUser.role==='dev')
 			return true;
-
+			
 		var permissionsAllowed=currentUser.permissions;
+	
 		if(permissionsAllowed.indexOf(resource_name)>-1)
 			return true;
 		else return false;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, message, Space, FloatButton } from 'antd';
 import { MyButton } from '../../../../../comp'
-import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar } from 'antd';
+import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar, Input } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { MyTable, DeleteButton, PaginatedTable, AvatarMobileInfiniteList } from '../../../../../comp';
@@ -29,6 +29,7 @@ const Templates = (props) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const [heading] = useState('Template');
     const [refreshTable, setRefreshTable] = useState(0);
+    const filterColumns = useRef([]);
     useEffect(() => {
         //  loadData();
         if (context.isMobile) {
@@ -90,7 +91,7 @@ const Templates = (props) => {
                     table="templates"
                     //id must,+ give first three colums to display
                     dataItem={{ id: item.id, template_title: item.template_title, string_id: item.string_id, template_type: item.type }}
-                    //avatar={context.baseUrl + item.template_image}
+                //avatar={context.baseUrl + item.template_image}
                 />)}
 
 
@@ -154,16 +155,14 @@ const Templates = (props) => {
 
     }
     const onAddEditSaveFinish = () => {
-
         setCurAction("list");
         setRefreshTable(prev => prev + 1);
         if (dialogType === 'modal' || dialogType === "drawer")
             setVisibleModal(false);
-
     }
     const addEditComponents = () => {
         if (curAction === "view")
-            return <ViewTemplate formItemLayout={formItemLayout} viewIdOrObject={viewOrEditData} onListClick={onAddEditListClick} userId={userId} />
+            return <ViewTemplate formItemLayout={formItemLayout} viewIdOrObject={viewOrEditData.id} onListClick={onAddEditListClick} userId={userId} />
         else if (curAction === "add")
             return <AddEditTemplate formItemLayout={formItemLayout} onListClick={onAddEditListClick} onSaveFinish={onAddEditSaveFinish} userId={userId} />
         else if (curAction === "edit")
@@ -211,6 +210,18 @@ const Templates = (props) => {
         }
         return tmpActions;
     }
+    const onSearch = (value) => {
+        var filter_or_clauses = [];
+        const searchTerms = value.split(" ");
+        searchTerms.forEach(item=>{
+            filter_or_clauses.push("t.template_title like '%" +item +"%'");
+            filter_or_clauses.push("t.string_id like '%" +item +"%'");
+            filter_or_clauses.push("t.descripiton like '%" +item +"%'");
+            filter_or_clauses.push("tc.category_name like '%" +item +"%'");
+        })
+        filterColumns.current = ["("+ filter_or_clauses.join(" OR ")+")"];
+        setRefreshTable((prev) => prev + 1);
+    }
     return (
         <>
             <ResponsiveLayout
@@ -246,7 +257,7 @@ const Templates = (props) => {
                                 title={capitalizeFirst(curAction) + " " + heading}
                                 placement="right"
                                 closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
-                                width={curAction==='view'?1000:500}
+                                width={curAction === 'view' ? 1000 : 500}
                                 onClose={() => { setVisibleModal(false) }}
                                 open={visibleModal}
                                 extra={rightButtons}
@@ -260,13 +271,31 @@ const Templates = (props) => {
                                 {addEditComponents()}
                             </Card>)
                         }
-                        <Card title="Templates" extra={context.isAdminResourcePermit(userId, 'templates.add-new-template') ? <MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Template</MyButton> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+                        <Card
+                            style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+                            <Row gutter={16} style={{marginBottom:'10px'}}>
+                                <Col xs={12} xl={3}>Templates</Col>
+                                <Col xs={12} xl={9}>
+                                <Input.Search
+                                    placeholder="Search here"
+                                    allowClear
+                                    enterButton
+                                    size="middle"
+                                    onSearch={onSearch}
+                                />
+                                </Col>
+                                <Col xs={12} xl={12}>
+                                    {context.isAdminResourcePermit(userId, 'templates.add-new-template') ? <MyButton onClick={onAddClick} style={{float:'right'}}><i className="fa-solid fa-plus pe-2" ></i>Add Template</MyButton> : null}
+                                </Col>
+                            </Row>
 
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from templates where status=1 "
-                                listQuery={"select t.*,tc.type,tc.category_name,tc.output_type,@rownum:=@rownum+1 as row_num from templates t,template_categories tc CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where t.status=1 and t.template_category=tc.id"}
+                                countQuery={"select count(*) as count from templates where status=1 "+
+                                context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select t.*,tc.type,tc.category_name,tc.output_type,@rownum:=@rownum+1 as row_num from templates t,template_categories tc CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where t.status=1 and t.template_category=tc.id"+
+                                context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}
                             />
 
@@ -284,8 +313,10 @@ const Templates = (props) => {
                                 header={<span>Templates</span>}
                                 userId={userId}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from templates  where status=1 "
-                                listQuery="select t.* from templates t,template_categories tc where t.status=1 and t.template_category=tc.id "
+                                countQuery={"select count(*) as count from templates  where status=1 "+
+                                context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select t.* from templates t,template_categories tc where t.status=1 and t.template_category=tc.id "+
+                                context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
