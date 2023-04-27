@@ -167,10 +167,10 @@ const AddEditTemplateVariable = (props) => {
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Object Variables"
+                                    label={<>Object Variables <br/>(comma Separated)</>}
                                     placeholder="(comma Separated)"
                                     name={['template_variables', 'object_variables']}
-                                    rules={[{ required: true, message: 'Please Enter Object Variables' }]}
+                                   // rules={[{ required: true, message: 'Please Enter Object Variables' }]}
                                 >
                                     <Input.TextArea rows={3} />
                                 </FormItem>

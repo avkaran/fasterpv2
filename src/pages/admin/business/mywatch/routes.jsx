@@ -33,6 +33,7 @@ import Templates from './templates';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
 import ViewProject from './projects/viewProject';
+import TemplateEngine from './templates/templateEngine';
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
 
@@ -224,6 +225,13 @@ const AuthRoutes = (props) => {
                     path='/:userId/admin/templates'
                     element={<Templates />}
                     title='Translations'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                 <Route
+                    path='/:userId/admin/tools/template-engine'
+                    element={<TemplateEngine />}
+                    title='Template Engine'
                     allowed={ROLES.ALL}
                     exact={true}
                 />
