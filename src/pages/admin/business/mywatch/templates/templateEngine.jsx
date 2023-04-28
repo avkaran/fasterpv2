@@ -21,6 +21,7 @@ import { getWhereClause } from '../../../../../models/core';
 import ResponsiveLayout from '../../../layout';
 import Handlebars from 'handlebars';
 import Editor from '@monaco-editor/react';
+import { getTemplateFunctionNames } from '../models/templateFunctions';
 const TemplateEngine = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -111,23 +112,28 @@ const TemplateEngine = (props) => {
             tableVariables.forEach(item => {
                 dRows.push({ variableName: item.input_variable_name, rowCount: 5 })
             })
-         
+
             setDynTableRows(dRows)
         });
 
     }
-    const onTableInputChange=(input_variable_name,i,value)=>{
-        console.log('test',input_variable_name,i,value,dynTableRows)
-        var tmpDynTableRows=dynTableRows;
-        tmpDynTableRows=tmpDynTableRows.map(item=>{
-            if(item.variableName===input_variable_name){
-                if(item.rowCount-1===i)//is last row
-                item.rowCount=item.rowCount+1;
-            }
-            return item;
-        })
-        setDynTableRows(tmpDynTableRows)
-    }
+
+    const onTableInputChange = (input_variable_name, i, value) => {
+        setDynTableRows(prevRows => {
+
+            return prevRows.map(item => {
+                if (item.variableName === input_variable_name) {
+
+                    if (parseInt(item.rowCount) - 1 === i) {
+
+                        return { ...item, rowCount: item.rowCount + 1 };
+                    }
+                }
+
+                return item;
+            });
+        });
+    };
     const getInputFormControls = () => {
         var valueOrArrayVariables = inputVariables//.filter(item => item.input_type === 'value' || item.input_type === 'array');
         var fItems = []
@@ -142,6 +148,20 @@ const TemplateEngine = (props) => {
                         rules={[{ required: true, message: 'Please Enter' }]}
                     >
                         <Input placeholder={item.input_variable_name} />
+
+                    </FormItem>
+
+                </Col>)
+            }
+            else if (item.input_type === 'content') {
+
+                fItems.push(<Col className='gutter-row' xs={24} xl={24}>
+                    <FormItem
+                        label={item.input_variable_name}
+                        name={['variables', item.input_variable_name]}
+                        rules={[{ required: true, message: 'Please Enter' }]}
+                    >
+                        <Input.TextArea rows={5} />
 
                     </FormItem>
 
@@ -179,18 +199,22 @@ const TemplateEngine = (props) => {
 
                     var curTableRow = dynTableRows.find(d => d.variableName === item.input_variable_name);
                     if (curTableRow) {
-                        for (var ii = 0; ii < parseInt(curTableRow.rowCount); ii=ii+1) {
+                        for (var ii = 0; ii < parseInt(curTableRow.rowCount); ii = ii + 1) {
                             var RowTds = [];
                             item.object_variables.split(",").forEach((obj) => {
-                                RowTds.push(
-                                    <td style={cellStyle}><FormItem
-                                        // label={item.input_variable_name}
-                                        name={['variables', item.input_variable_name, ii, obj]}
-                                        noStyle
-                                    >
-                                        <Input onChange={(e)=>console.log(item.input_variable_name,ii.toString(),e.target.value,ii)}/>
-                                    </FormItem></td>
-                                )
+                                // Create a new scope with a closure that captures the current value of ii
+                                (function (ii) {
+                                    RowTds.push(
+                                        <td style={cellStyle}>
+                                            <FormItem
+                                                name={['variables', item.input_variable_name, ii, obj]}
+                                                noStyle
+                                            >
+                                                <Input onChange={(e) => onTableInputChange(item.input_variable_name, ii, e.target.value, ii)} />
+                                            </FormItem>
+                                        </td>
+                                    )
+                                })(ii); // Pass in the current value of ii as an argument to the closure
                             })
                             tableTrs.push(<tr>{RowTds}</tr>)
                         }
@@ -201,7 +225,7 @@ const TemplateEngine = (props) => {
                 fItems.push(<Col className='gutter-row' xs={24} xl={24}>
                     <table border="1" cellpadding="3" style={{ borderCollapse: 'collapse' }}>
                         <tr>
-                            <th style={{textAlign:'center'}} colSpan={item.object_variables.split(",").length}><span style={{ color: 'blue' }}>{item.input_variable_name}</span></th>
+                            <th style={{ textAlign: 'center' }} colSpan={item.object_variables.split(",").length}><span style={{ color: 'blue' }}>{item.input_variable_name}</span></th>
                         </tr>
                         <tr>
                             {tableHeadingThs}
@@ -209,7 +233,7 @@ const TemplateEngine = (props) => {
                         </tr>
                         {tableTrs}
 
-                    </table><br/>
+                    </table><br />
                 </Col>)
             }
 
@@ -218,12 +242,67 @@ const TemplateEngine = (props) => {
     }
     const onFinishRender = (values) => {
 
-        const compiledTemplate = Handlebars.compile(selTemplate.template);
-        const renderedTemplate = compiledTemplate(values.variables);
-        setRenderedOutput(renderedTemplate);
+        var finalValues = values.variables;
+        for (let prop in finalValues) {
+            if (Array.isArray(finalValues[prop])) {
+                finalValues[prop] = finalValues[prop].filter((item) => {
+                    let keys = Object.keys(item);
+                    if (keys.length > 0 && (item[keys[0]] === '' || item[keys[0]] === null || item[keys[0]] === undefined)) {
+
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        }
+        var rFunction = getTemplateFunctionNames.find(item => item.function_name === selTemplate.render_function)
+        var result = null;
+
+        if (rFunction) {
+            result = rFunction.function(finalValues, selTemplate);
+        }
+        //const compiledTemplate = Handlebars.compile(selTemplate.template);
+        // const renderedTemplate = compiledTemplate(finalValues);
+        setRenderedOutput(result);
         setVisibleModal(true);
         setOutputLoader()
 
+    }
+    const getArrayToTable = (array_or_data) => {
+        console.log('out',array_or_data)
+        if (array_or_data && Array.isArray(array_or_data) && array_or_data.length > 0) {
+            if (typeof array_or_data[0] === "object") {
+
+
+                var tHeads = [];
+                for (let key in array_or_data[0]) {
+                    tHeads.push(<th style={cellStyle}>{key}</th>)
+                }
+                var trs = [];
+                array_or_data.forEach(obj => {
+                    var tds = [];
+                    for (let key in obj) {
+                        tds.push(<td style={cellStyle}>{obj[key]}</td>)
+                    }
+                    trs.push(<tr>{tds}</tr>)
+                })
+
+                return <table width="100%"  cellpadding="5px" style={{border:'1px solid black',borderCollapse:"collapse"}} >
+                    <tr>{tHeads}</tr>
+                    {trs}
+                </table>
+            }
+            else {
+                var values=[];
+                array_or_data.forEach((obj,index) => {
+                    values.push(<>{index}. {obj}<br/></>)
+                })
+                   return <Card title="Array">
+                    {values}
+                    </Card>
+            }
+        }
+      
     }
     return (
 
@@ -289,7 +368,7 @@ const TemplateEngine = (props) => {
                             selTemplate && (<>
                                 <Card
                                     title={<>{selTemplate.template_title} <span style={{ color: cyan[7] }}>({selTemplate.string_id})</span></>}
-                                    extra={<Button type="primary" onClick={() => onRenderClick(selTemplate)}>Render</Button>}
+                                //  extra={<Button type="primary" onClick={() => onRenderClick(selTemplate)}>Render</Button>}
 
                                 >
                                     <Form
@@ -354,9 +433,23 @@ const TemplateEngine = (props) => {
                 onCancel={() => { setVisibleModal(false) }}
                 title={"Output"}
             >
-                <Editor height="400px" language="javascript" value={renderedOutput}
-                    //onChange={handleEditorChange}
-                    theme="vs-dark" />
+                {
+                    renderedOutput && selTemplate && selTemplate.output_type === 'code-block' && (<>
+                        <Editor height="400px" language="javascript" value={renderedOutput}
+                            //onChange={handleEditorChange}
+                            theme="vs-dark" />
+
+                    </>)
+                }
+                {
+                    renderedOutput && selTemplate &&  selTemplate.output_type === 'array-or-table-data' && (<>
+                        {
+                            getArrayToTable(renderedOutput)
+                        }
+
+                    </>)
+                }
+
             </Modal>
         </>
     );

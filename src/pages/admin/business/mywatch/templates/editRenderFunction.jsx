@@ -148,7 +148,6 @@ const EditTemplateRenderFunction = (props) => {
             query_type: 'query',
             query: "SELECT * from template_variables  where status=1 and template_id=" + (template_id?template_id:editIdOrObject.id)
         };
-        console.log('req',reqData)
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setVariablesDataList(res)
             setVariablesLoading(false)

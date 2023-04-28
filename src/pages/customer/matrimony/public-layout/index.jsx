@@ -11,7 +11,7 @@ import logo from '../assets/images/logo_600.png'
 import 'react-phone-input-2/lib/style.css'
 import '../assets/css/aos.css';
 import '../assets/icofont/icofont.min.css';
-import '../assets/css/bootstrap.min.css';
+//import '../assets/css/bootstrap.min.css';
 import '../assets/css/custom.css';
 import { Spinner } from 'react-bootstrap';
 const Layouts = (props) => {
