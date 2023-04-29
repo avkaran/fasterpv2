@@ -5,7 +5,9 @@ const getTemplateInputTypes = [
     'content',
     'array',
     'table-columns',
-    'table-data-or-objects-array'
+    'table-data-or-objects-array',
+    'project',
+    'database-query'
 ]
 const mustacheRender = (inputData, templateItem) => {
     const compiledTemplate = Handlebars.compile(templateItem.template);
@@ -67,14 +69,20 @@ const textContentToArray = (inputContent, templateItem) => {
     // If input format cannot be determined, return null
     return [];
 }
+const projectDatabaseQueries = (inputContent, templateItem) => {
+    return []
+}
+const projectQueryBuilder = (inputContent, templateItem) => {
+    return 'select * from ....';
+}
 const getTemplateFunctionNames = [
     { function_name: 'mustacheRender()', function: mustacheRender, description: '' },
     { function_name: 'ReactFormGenerate()', function: '', description: '' },
     { function_name: 'textContentToArray()', function: textContentToArray, description: 'Converts comma separated,newline separated,plain text table,' },
-
+    { function_name: 'projectDatabaseQueries()', function: projectDatabaseQueries, description: 'Executes Database Queries on given project' },
+    { function_name: 'projectQueryBuilder()', function: projectQueryBuilder, description: 'Generate Queries based on given inputs, and combining tables' },
 ]
 export {
     getTemplateFunctionNames,
     getTemplateInputTypes,
-    textContentToArray,
 }

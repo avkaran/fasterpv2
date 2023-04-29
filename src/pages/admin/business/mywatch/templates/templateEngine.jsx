@@ -22,6 +22,8 @@ import ResponsiveLayout from '../../../layout';
 import Handlebars from 'handlebars';
 import Editor from '@monaco-editor/react';
 import { getTemplateFunctionNames } from '../models/templateFunctions';
+import TableOutput from '../outputs/tableOutput';
+import * as monaco from 'monaco-editor'
 const TemplateEngine = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -36,13 +38,46 @@ const TemplateEngine = (props) => {
     const [renderedOutput, setRenderedOutput] = useState([])
     const [visibleModal, setVisibleModal] = useState(false);
     const [outputLoader, setOutputLoader] = useState(false);
+    const [projects, setProjects] = useState([])
 
     const [dynTableRows, setDynTableRows] = useState([])
     const cellStyle = { borderCollapse: "collapse", border: '1px solid black' };
+    const QueryEditorOptions = {
+        suggest: [
+          { label: 'SELECT', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'SELECT' },
+          { label: 'FROM', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'FROM' },
+          { label: 'WHERE', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'WHERE' },
+          { label: 'GROUP BY', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'GROUP BY' },
+          { label: 'HAVING', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'HAVING' },
+          { label: 'ORDER BY', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'ORDER BY' },
+          { label: 'ASC', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'ASC' },
+          { label: 'DESC', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'DESC' },
+          { label: 'INNER JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'INNER JOIN' },
+          { label: 'LEFT JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'LEFT JOIN' },
+          { label: 'RIGHT JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'RIGHT JOIN' },
+        ]
+      };
 
     useEffect(() => {
-
+        loadProjects()
     }, []);
+    const loadProjects = (id) => {
+        setLoader(true);
+        var reqData = {
+            query_type: 'query',
+            query: "select * from projects where status=1"
+        };
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+            setProjects(res);
+            // LoadTables(res[0])
+            setLoader(false);
+
+        }).catch(err => {
+            message.error(err);
+            setLoader(false);
+
+        })
+    }
     const loadTemplates = (searchText) => {
 
         setLoader(true);
@@ -137,6 +172,7 @@ const TemplateEngine = (props) => {
     const getInputFormControls = () => {
         var valueOrArrayVariables = inputVariables//.filter(item => item.input_type === 'value' || item.input_type === 'array');
         var fItems = []
+
         valueOrArrayVariables.forEach(item => {
             var inputControl = <></>
             if (item.input_type === 'value') {
@@ -236,6 +272,48 @@ const TemplateEngine = (props) => {
                     </table><br />
                 </Col>)
             }
+            else if (item.input_type === 'project') {
+
+                fItems.push(<Col className='gutter-row' xs={24} xl={24}>
+                    <FormItem
+                        label={item.input_variable_name}
+                        name={['variables', item.input_variable_name]}
+                        rules={[{ required: true, message: 'Please Enter' }]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Category"
+
+                            optionFilterProp="children"
+                            //onChange={categoryOnChange}
+                            filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                        >
+                            {
+                                projects.map(projItem => <Select.Option value={projItem.id}>{projItem.project_name}</Select.Option>)
+                            }
+                        </Select>
+
+                    </FormItem>
+
+                </Col>)
+            }
+            else if (item.input_type === 'database-query') {
+
+                fItems.push(<Col className='gutter-row' xs={24} xl={24}>
+                    <FormItem
+                       // label={item.input_variable_name}
+                        name={['variables', item.input_variable_name]}
+                        rules={[{ required: true, message: 'Please Enter' }]}
+                    >
+                         <Editor height="200px" language="mysql" 
+                            //onChange={handleEditorChange}
+                            
+                            theme="vs-dark" options={QueryEditorOptions}/>
+
+                    </FormItem>
+
+                </Col>)
+            }
 
         });
         return <Row gutter={16}>{fItems}</Row>
@@ -268,42 +346,7 @@ const TemplateEngine = (props) => {
         setOutputLoader()
 
     }
-    const getArrayToTable = (array_or_data) => {
-        console.log('out',array_or_data)
-        if (array_or_data && Array.isArray(array_or_data) && array_or_data.length > 0) {
-            if (typeof array_or_data[0] === "object") {
 
-
-                var tHeads = [];
-                for (let key in array_or_data[0]) {
-                    tHeads.push(<th style={cellStyle}>{key}</th>)
-                }
-                var trs = [];
-                array_or_data.forEach(obj => {
-                    var tds = [];
-                    for (let key in obj) {
-                        tds.push(<td style={cellStyle}>{obj[key]}</td>)
-                    }
-                    trs.push(<tr>{tds}</tr>)
-                })
-
-                return <table width="100%"  cellpadding="5px" style={{border:'1px solid black',borderCollapse:"collapse"}} >
-                    <tr>{tHeads}</tr>
-                    {trs}
-                </table>
-            }
-            else {
-                var values=[];
-                array_or_data.forEach((obj,index) => {
-                    values.push(<>{index}. {obj}<br/></>)
-                })
-                   return <Card title="Array">
-                    {values}
-                    </Card>
-            }
-        }
-      
-    }
     return (
 
         <> <ResponsiveLayout
@@ -442,11 +485,8 @@ const TemplateEngine = (props) => {
                     </>)
                 }
                 {
-                    renderedOutput && selTemplate &&  selTemplate.output_type === 'array-or-table-data' && (<>
-                        {
-                            getArrayToTable(renderedOutput)
-                        }
-
+                    renderedOutput && selTemplate && selTemplate.output_type === 'array-or-table-data' && (<>
+                        <TableOutput userId={userId} tableData={renderedOutput} />
                     </>)
                 }
 
