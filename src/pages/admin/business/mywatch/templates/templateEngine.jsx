@@ -20,10 +20,16 @@ import { Tokenizer, tokenizerFromJson } from 'tf_node_tokenizer';
 import { getWhereClause } from '../../../../../models/core';
 import ResponsiveLayout from '../../../layout';
 import Handlebars from 'handlebars';
-import Editor from '@monaco-editor/react';
+
+
 import { getTemplateFunctionNames } from '../models/templateFunctions';
 import TableOutput from '../outputs/tableOutput';
-import * as monaco from 'monaco-editor'
+import AceEditor from 'react-ace';
+import "ace-builds/src-noconflict/mode-mysql";
+import "ace-builds/src-noconflict/ext-language_tools";
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/theme-monokai';
+import DbQueryOutput from '../outputs/dbQueryOutput';
 const TemplateEngine = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -42,25 +48,13 @@ const TemplateEngine = (props) => {
 
     const [dynTableRows, setDynTableRows] = useState([])
     const cellStyle = { borderCollapse: "collapse", border: '1px solid black' };
-    const QueryEditorOptions = {
-        suggest: [
-          { label: 'SELECT', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'SELECT' },
-          { label: 'FROM', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'FROM' },
-          { label: 'WHERE', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'WHERE' },
-          { label: 'GROUP BY', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'GROUP BY' },
-          { label: 'HAVING', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'HAVING' },
-          { label: 'ORDER BY', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'ORDER BY' },
-          { label: 'ASC', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'ASC' },
-          { label: 'DESC', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'DESC' },
-          { label: 'INNER JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'INNER JOIN' },
-          { label: 'LEFT JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'LEFT JOIN' },
-          { label: 'RIGHT JOIN', kind: monaco.languages.CompletionItemKind.Keyword, insertText: 'RIGHT JOIN' },
-        ]
-      };
+    const [autoCompleteWords, setAutoCompleteWords] = useState(null);
+
 
     useEffect(() => {
         loadProjects()
     }, []);
+
     const loadProjects = (id) => {
         setLoader(true);
         var reqData = {
@@ -169,6 +163,62 @@ const TemplateEngine = (props) => {
             });
         });
     };
+
+    const onLoadAceEditor = (editor) => {
+        var customWords = [
+            { name: 'myFunction', value: 'myFunction', score: 1000, meta: 'function' },
+            { name: 'myVariable', value: 'myVariable', score: 1000, meta: 'variable' }
+        ];
+
+        editor.completers = [{
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                callback(null, autoCompleteWords);
+            }
+        }];
+    }
+    const onLoadAceEditorwithLiveSuggestions = (editor) => {
+        const customWords = [
+            { name: 'myFunction', value: 'myFunction', score: 1000, meta: 'function' },
+            { name: 'myVariable', value: 'myVariable', score: 1000, meta: 'variable' },
+        ];
+        editor.completers.push({
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                callback(null, autoCompleteWords);
+            }
+        });
+        window.ace.require("ace/ext/language_tools").addCompleter(editor.completers[0]);
+    }
+    const onProjectChange = (value) => {
+        setAutoCompleteWords(null)
+        getAllTables(projects.find(item => item.id === value)).then(res => {
+
+            var words = [];
+            var cnt = 1;
+            res.tables.forEach(item => {
+
+                if (item.tableObject === 'N/A' || item.tableObject === '') {
+                    words.push({ name: item.tableName, value: item.tableName, score: 1000, meta: 'variable' })
+                    item.columns.forEach(obj => {
+                        words.push({ name: obj.columnName, value: obj.columnName, score: 1000, meta: 'variable' })
+
+                    })
+                    cnt = cnt + 1;
+
+                }
+                else {
+                    words.push({ name: item.tableName, value: item.tableName, score: 1000, meta: 'variable' })
+                    item.columns.forEach(obj => {
+                        words.push({ name: obj.columnName, value: obj.columnName, score: 1000, meta: 'variable' })
+                        words.push({ name: item.tableObject + "." + obj.columnName, value: item.tableObject + "." + obj.columnName, score: 1000, meta: 'variable' })
+                    })
+                }
+                cnt = cnt + 1;
+            })
+            console.log('words', words)
+            setAutoCompleteWords(words)
+
+        })
+    }
     const getInputFormControls = () => {
         var valueOrArrayVariables = inputVariables//.filter(item => item.input_type === 'value' || item.input_type === 'array');
         var fItems = []
@@ -285,7 +335,7 @@ const TemplateEngine = (props) => {
                             placeholder="Category"
 
                             optionFilterProp="children"
-                            //onChange={categoryOnChange}
+                            onChange={onProjectChange}
                             filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                         >
                             {
@@ -301,14 +351,40 @@ const TemplateEngine = (props) => {
 
                 fItems.push(<Col className='gutter-row' xs={24} xl={24}>
                     <FormItem
-                       // label={item.input_variable_name}
+                        // label={item.input_variable_name}
                         name={['variables', item.input_variable_name]}
                         rules={[{ required: true, message: 'Please Enter' }]}
+                        noStyle
                     >
-                         <Editor height="200px" language="mysql" 
-                            //onChange={handleEditorChange}
-                            
-                            theme="vs-dark" options={QueryEditorOptions}/>
+                        {autoCompleteWords && (<AceEditor
+                            height="200px"
+                            mode="mysql"
+                            width="100%"
+
+
+                            placeholder="Placeholder Text"
+                            theme="monokai"
+                            name="blah2"
+                            onLoad={onLoadAceEditorwithLiveSuggestions}
+                            //onChange={this.onChange}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+
+                            setOptions={{
+                                enableBasicAutocompletion: true,
+                                enableLiveAutocompletion: true,
+                                enableSnippets: true,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                            }}
+                        //onChange={handleCodeChange}
+
+                        />)
+
+                        }
+
 
                     </FormItem>
 
@@ -321,6 +397,7 @@ const TemplateEngine = (props) => {
     const onFinishRender = (values) => {
 
         var finalValues = values.variables;
+        console.log('test', finalValues)
         for (let prop in finalValues) {
             if (Array.isArray(finalValues[prop])) {
                 finalValues[prop] = finalValues[prop].filter((item) => {
@@ -337,13 +414,24 @@ const TemplateEngine = (props) => {
         var result = null;
 
         if (rFunction) {
-            result = rFunction.function(finalValues, selTemplate);
+            if (rFunction.isAsync) {
+                rFunction.function(finalValues, selTemplate).then(resRfunction=>{
+                    console.log('r output', resRfunction)
+                    setRenderedOutput(resRfunction);
+                    setVisibleModal(true);
+                    setOutputLoader()
+                })
+            } else {
+                console.log('r output', result)
+                result = rFunction.function(finalValues, selTemplate);
+                setRenderedOutput(result);
+                setVisibleModal(true);
+                setOutputLoader()
+            }
+          
+           
         }
-        //const compiledTemplate = Handlebars.compile(selTemplate.template);
-        // const renderedTemplate = compiledTemplate(finalValues);
-        setRenderedOutput(result);
-        setVisibleModal(true);
-        setOutputLoader()
+
 
     }
 
@@ -426,6 +514,7 @@ const TemplateEngine = (props) => {
                                         layout={context.isMobile ? "vertical" : 'horizontal'}
                                     >
                                         {getInputFormControls()}
+                                        <br />
                                         <FormItem wrapperCol={context.isMobile ? null : { offset: 10, span: 24 }}
                                         >
                                             {
@@ -439,7 +528,7 @@ const TemplateEngine = (props) => {
                                                 )
                                             }
                                             {
-                                                context.isMobile && (<Row gutter={2}>
+                                                context.isMobile && (<Row gutter={2} >
 
                                                     <Col span={24}>
                                                         <MButton block type='submit' color='primary' size='small'>
@@ -478,15 +567,26 @@ const TemplateEngine = (props) => {
             >
                 {
                     renderedOutput && selTemplate && selTemplate.output_type === 'code-block' && (<>
-                        <Editor height="400px" language="javascript" value={renderedOutput}
-                            //onChange={handleEditorChange}
-                            theme="vs-dark" />
+
+                        <AceEditor
+                            mode="javascript"
+                            theme="monokai"
+                            // onChange={handleCodeChange}
+                            value={renderedOutput}
+
+                            height="400px"
+                        />
 
                     </>)
                 }
                 {
                     renderedOutput && selTemplate && selTemplate.output_type === 'array-or-table-data' && (<>
                         <TableOutput userId={userId} tableData={renderedOutput} />
+                    </>)
+                }
+                {
+                    renderedOutput && selTemplate && selTemplate.output_type === 'db-query-results' && (<>
+                        <DbQueryOutput userId={userId} allData={renderedOutput} />
                     </>)
                 }
 

@@ -17,26 +17,57 @@ import { capitalizeFirst } from '../../../../../utils';
 import * as tf from '@tensorflow/tfjs';
 import { Tokenizer, tokenizerFromJson } from 'tf_node_tokenizer';
 
-const TableOutput = (props) => {
+const DbQueryOutput = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const { userId, tableData, ...other } = props;
+    const { userId,allData, ...other } = props;
+    /*all Data 
+    projectInfo:project details,
+    queryType:queryType, select or execute
+    countQuery:CountQuery,  //if only for select
+    query:inputContent.query,
+    allTables:resTables.tables, all tables in project
+    */
+
     const [loader, setLoader] = useState(false);
-
+    const [tableData,setTableData]=useState(null)
     const [tableDataView, setTableDataView] = useState([]);
-
     const [tableColumns, setTableColumns] = useState([]);
-
     const [checkedListColumns, setCheckedListColumns] = useState([]);
     const [indeterminateColumns, setIndeterminateColumns] = useState(true);
     const [checkAllColumns, setCheckAllColumns] = useState(false);
+    
 
     const cellStyle = { borderCollapse: "collapse", border: '1px solid black' };
     useEffect(() => {
-        loadColumns(tableData);
-        setTableDataView(tableData);
-    }, [tableData]);
+        loadData(1,20);
+    }, [allData]);
+    const loadData=(page,pageSize)=>{
+
+        var reqData = [{
+            query_type: 'query',
+            query: allData.query
+        }];
+
+        var form = new FormData();
+        form.append('api_password', allData.projectInfo.api_password)
+        form.append('database_name', allData.projectInfo.database_name)
+        form.append('database_username', allData.projectInfo.database_username)
+        form.append('database_password', allData.projectInfo.database_password)
+        form.append('queries', JSON.stringify(reqData));
+        context.psGlobal.apiRequest(allData.projectInfo.api_url, "prod", form).then(res => {
+            setTableData(res[0])
+            loadColumns(res[0]);
+            setTableDataView(res[0]);
+            setLoader(false);
+        }).catch(err => {
+            message.error(err);
+            setLoader(false);
+
+        })
+
+    }
     const onCheckBoxChangeColumns = (list) => {
         setCheckedListColumns(list);
         setIndeterminateColumns(!!list.length && list.length < tableColumns.length);
@@ -228,4 +259,4 @@ const TableOutput = (props) => {
     );
 
 }
-export default TableOutput;
+export default DbQueryOutput;
