@@ -27,6 +27,7 @@ import PermissionError from "../../error-pages/permissionError";
 
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
+import MobileServices from './mobile-service';
 
 
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
@@ -124,6 +125,13 @@ const AuthRoutes = (props) => {
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
                     title='Permission Error'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                 <Route
+                    path='/:userId/admin/mobile-service/service-list'
+                    element={<MobileServices />}
+                    title='My Employee Profile'
                     allowed={ROLES.ALL}
                     exact={true}
                 />

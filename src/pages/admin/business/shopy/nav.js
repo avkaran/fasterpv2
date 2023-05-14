@@ -15,7 +15,16 @@ const mynav = [
 		],
 		allowed: ROLES.ALL
 	},
-
+	{
+		name: 'Mobile Services',
+		path: '/:userId/admin/mobile-service',
+		icon: 'fa-solid fa-code-branch',
+		exact: false,
+		childrens: [
+			{ name: 'Mobile Service', path: '/:userId/admin/mobile-service/service-list', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL, resourceName: 'mobile-services.list-mobile-services' },
+		],
+		allowed: ROLES.ALL
+	},
 
 	{
 		name: 'Branches',

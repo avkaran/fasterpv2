@@ -56,7 +56,7 @@ function App() {
 			)}
 		</Toaster>
 		<Routes isMobile={isMobile}/>
-		<iframe title="mytitle" name="print_frame" id="print_frame" width="0" height="0" frameBorder="0" src="about:blank"></iframe>
+		<iframe title="mytitle" name="print_frame" id="print_frame" width="0" height="0" frameBorder="0" ></iframe>
 	</PsContextProvider>
   );
 }
