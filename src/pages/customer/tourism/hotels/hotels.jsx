@@ -16,6 +16,7 @@ import { FormViewItem } from '../../../../comp';
 import moment from 'moment'
 import './tourStyle.css'
 import { AvatarPaginatedList } from '../../../../comp';
+import {Img as LazyImage} from 'react-image';
 const Hotels = (props) => {
     const context = useContext(PsContext);
     const navigate = useNavigate();
@@ -159,7 +160,10 @@ const Hotels = (props) => {
                                     <div className="card">
                                         <a className="img-card"
                                             href={(isLoggedView ? '/#/0/customer/myhotel-view/' : '/#/public/hotel-view/') + item.id}>
-                                            <img src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(item.room_image))} />
+                                            <LazyImage src={context.baseUrl + '/cloud-file/' + encodeURIComponent(encodeURIComponent(item.room_image))} lazyLoad={true} crossorigin="anonymous"
+                                                loader={<Spin Spinning={true}>Loading...</Spin>}
+
+                                            />
                                         </a>
                                         <div className="card-content">
                                             <h6 className="text-center" style={{ color: '#1976bc', fontSize: 'medium' }}>

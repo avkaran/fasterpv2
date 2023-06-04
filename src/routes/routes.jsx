@@ -10,10 +10,8 @@ const AdminPublicLayout = React.lazy(() => import('../pages/admin/public-layout-
 //const AdminLayout = React.lazy(() => import('../pages/admin/layout-desktop'));
 const AdminPublicLayoutMobile = React.lazy(() => import('../pages/admin/public-layout-mobile'));
 //const AdminLayoutMobile = React.lazy(() => import('../pages/admin/layout-mobile'));
-
 //const userLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/layout'));
 //const userPublicLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/public-layout'));
-
 const MyRoutes = (props) => {
   const [adminRoutes, setAdminRoutes] = useState([]);
   const [customerPublicRoutes, setCustomerPublicRoutes] = useState(null)
@@ -35,7 +33,7 @@ const MyRoutes = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (<HashRouter >
-    <Suspense fallback={<div className="text-center" style={{ marginTop: 'calc(30vh)' }} ><Spinner animation="border" /></div>}>
+   {/*  <Suspense fallback={<div className="text-center" style={{ marginTop: 'calc(30vh)' }} ><Spinner animation="border" /></div>}> */}
       <Routes>
 
         {customerPublicRoutes &&  customerPublicRoutes}
@@ -53,7 +51,7 @@ const MyRoutes = (props) => {
         <Route path="/public" element={userPublicLayout} /> */}
 
       </Routes >
-    </Suspense>
+   {/*  </Suspense> */}
   </HashRouter >
   )
 }

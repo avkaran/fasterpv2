@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 4, name: 'shopy'};
+export const currentInstance = { index: 6, name: 'estimate'};
 //compile mode= admin,customer,all
 export const businesses = [
   { //0

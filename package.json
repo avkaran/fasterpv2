@@ -53,6 +53,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
     "react-hot-toast": "^2.4.0",
+    "react-image": "^4.1.0",
     "react-image-gallery": "^1.2.11",
     "react-infinite-scroll-component": "^6.1.0",
     "react-phone-input-2": "^2.15.1",
