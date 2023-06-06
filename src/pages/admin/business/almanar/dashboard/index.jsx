@@ -47,7 +47,7 @@ const {userId}=useParams();
         // loadMemberCounts();
       //  loadCountData();
        // loadTableCountData()
-       loadMetalRates()
+      // loadMetalRates()
     }, []);
     
     const loadMetalRates = () => {
@@ -76,7 +76,7 @@ const {userId}=useParams();
         >
             <Card title="Dashboard">
              
-                <Row gutter={16}>
+               {/*  <Row gutter={16}>
                     <Col xs={24} sm={12} md={6}>
                         <StatCard
 
@@ -117,7 +117,7 @@ const {userId}=useParams();
                             link={"/" + userId + "/admin/products"}
                         />
                     </Col>
-                </Row>
+                </Row> */}
     
             </Card>
             </ResponsiveLayout>

@@ -19,7 +19,7 @@ const AddEditJewelProduct = (props) => {
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
     const [heading] = useState('Product');
-    const { editIdOrObject, onListClick, onSaveFinish, userId,formItemLayout, ...other } = props;
+    const { editIdOrObject, onListClick, onSaveFinish, userId, formItemLayout, ...other } = props;
     const [editId, setEditId] = useState(null);
     useEffect(() => {
 
@@ -69,11 +69,13 @@ const AddEditJewelProduct = (props) => {
             products: {
                 product_code: mydata.product_code,
 
-                metal_type: mydata.metal_type,
+                unit: mydata.unit,
 
                 product_name: mydata.product_name,
 
-                weight: mydata.weight,
+                stock: mydata.stock,
+                cost_price: mydata.cost_price,
+                selling_price: mydata.selling_price,
 
                 active_status: mydata.active_status.toString(),
             }
@@ -134,14 +136,14 @@ const AddEditJewelProduct = (props) => {
                         name="basic"
                         form={addeditFormProducts}
                         labelAlign="left"
-                        labelCol={{ span: formItemLayout==='two-column' || formItemLayout==='one-column'?8:24 }}
+                        labelCol={{ span: formItemLayout === 'two-column' || formItemLayout === 'one-column' ? 8 : 24 }}
                         wrapperCol={{ span: 24 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         autoComplete="off"
                     >
                         <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
                                     label="Product Code"
@@ -152,28 +154,28 @@ const AddEditJewelProduct = (props) => {
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Metal Type"
-                                    name={['products', 'metal_type']}
-                                    rules={[{ required: true, message: 'Please Enter Metal Type' }]}
+                                    label="Unit"
+                                    name={['products', 'unit']}
+                                    rules={[{ required: true, message: 'Please Enter Unit' }]}
                                 >
 
                                     <Select
                                         showSearch
-                                        placeholder="Metal Type"
+                                        placeholder="Unit"
 
                                         optionFilterProp="children"
                                         //onChange={metalTypeOnChange}
                                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                     >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'metal-types')}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'units')}
                                     </Select>
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
                                     label="Product Name"
@@ -184,18 +186,40 @@ const AddEditJewelProduct = (props) => {
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Weight"
-                                    name={['products', 'weight']}
-                                    rules={[{ required: true, message: 'Please Enter Weight' }]}
+                                    label="Opening Stock"
+                                    name={['products', 'stock']}
+                                    rules={[{ required: true, message: 'Please Enter Stock' }]}
                                 >
-                                    <InputNumber placeholder="Weight" type="number" />
+                                    <InputNumber placeholder="Stock" type="number" />
                                 </FormItem>
 
                             </Col>
-                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
+
+                                <FormItem
+                                    label="Cost Price"
+                                    name={['products', 'cost_price']}
+                                    rules={[{ required: true, message: 'Please Enter Cost' }]}
+                                >
+                                    <InputNumber placeholder="Cost Price" type="number" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
+
+                                <FormItem
+                                    label="Selling Price"
+                                    name={['products', 'selling_price']}
+                                    rules={[{ required: true, message: 'Please Enter Selling Price' }]}
+                                >
+                                    <InputNumber placeholder="Selling Price" type="number" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
                                     label="Active Status"
@@ -203,13 +227,13 @@ const AddEditJewelProduct = (props) => {
                                     rules={[{ required: true, message: 'Please Enter Active Status' }]}
                                 >
                                     <Radio.Group defaultValue="1" optionType="default" >
-                                      <Radio.Button value="1">Active</Radio.Button>
-                                      <Radio.Button value="0">Inactive</Radio.Button>
+                                        <Radio.Button value="1">Active</Radio.Button>
+                                        <Radio.Button value="0">Inactive</Radio.Button>
                                     </Radio.Group>
                                 </FormItem>
                             </Col>
                         </Row>
-                       
+
 
                         <FormItem wrapperCol={context.isMobile ? null : { offset: 8, span: 24 }}
                         >

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 6, name: 'estimate'};
+export const currentInstance = { index: 8, name: 'almanar'};
 //compile mode= admin,customer,all
 export const businesses = [
   { //0
@@ -105,7 +105,7 @@ export const businesses = [
     name: 'AIK Estimate',
     shortName: 'AIK',
     apiUrl: 'https://www.avkaran.com/aikestimate/api/v3_0/',
-    dbName: 'mobbicare',
+    dbName: 'aikestimate',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
     //cmsContentListType:'table',
@@ -117,6 +117,41 @@ export const businesses = [
     responsive: { isMobile: true, },
     hasCustomerPortal: false,
   },
+  { //7
+    key: 'esboss',
+    name: 'ES Boss',
+    shortName: 'ES Boss',
+    apiUrl: 'https://www.esboss.in/api/v3_0/',
+    dbName: 'esboss',
+    multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    responsive: { isMobile: false, },
+    hasCustomerPortal: false,
+  },
+  { //8
+    key: 'almanar',
+    name: 'AL Manar',
+    shortName: 'AL Manar',
+    apiUrl: 'https://www.avkaran.com/almanar/api/v3_0/',
+    dbName: 'almanar',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'NHBoard', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+   // responsive: { isMobile: false, },
+    hasCustomerPortal: false,
+  }
+
 
 ]
 export const baseUrl = businesses[currentInstance.index].apiUrl;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,forwardRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, message, Modal, Tree, List } from 'antd';
 import { MyButton } from '../../../../../comp'
@@ -16,7 +16,6 @@ import { ListManager } from "react-beautiful-dnd-grid";
 import { FormItemTemplate, FormTemplate, AddEditModuleTemplate, viewModuleTemplate } from '../../../../../devTools/codeTemplates'
 import ResponsiveLayout from '../../../layout'
 import axios from 'axios';
-import { ReactSortable } from "react-sortablejs";
 const CodeGenerator = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -58,7 +57,7 @@ const CodeGenerator = (props) => {
             },
             {
                 query_type: 'query',
-                query: "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='" + project.database_name + "' order by TABLE_NAME,ORDINAL_POSITION",
+                query: "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='" + project.database_name + "'",
             },
         ];
         var form = new FormData();
@@ -322,16 +321,12 @@ const CodeGenerator = (props) => {
         setVisibleCodeModal(true);
     }
     const onLoadTablesClick = () => {
-        if (selProjectId) {
-            var selProject = projects.find(item => item.id === selProjectId);
+        if (selProjectId){
+            var selProject = projects.find(item => item.id ===selProjectId);
             LoadTables(selProject);
         }
-
+           
     }
-    const CustomComponent = forwardRef((props, ref) => {
-        return <Row ref={ref}>{props.children}</Row>
-      })
-      
     return (
         <>
             <ResponsiveLayout
@@ -433,42 +428,46 @@ const CodeGenerator = (props) => {
                                                 padding: 20
                                             }}
                                         >
-                                           {/* https://stackblitz.com/edit/react-tthjnw */}
-                                                <ReactSortable  list={selectedFields} setList={setSelectedFields}
-                                                    ghostClass="sortable-ghost"
-                                                >
-                                                   
-                                                    {selectedFields.map((item) => (
-                                                        <div xl={12} key={item.key} style={{ background: cyan[4], border: '1px solid blue', padding: '5px', margin: '5px',width:'50%' }}>{item.key}</div>
-                                                    ))}
-                                                 
-                                                </ReactSortable>
+                                            <DragDropContext onDragEnd={onDragEnd}>
+                                                <Droppable droppableId="list">
+                                                    {provided => (
+                                                        <div ref={provided.innerRef} {...provided.droppableProps}>
+                                                            <List
 
+                                                                bordered
+                                                                rowKey="key"
+                                                                dataSource={selectedFields}
+                                                                size="small"
+                                                                renderItem={(item, index) => (
+                                                                    <Draggable draggableId={`draggable-${index}`} index={index}>
+                                                                        {(provided) => (
+                                                                            <div
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                            >
+                                                                                <List.Item style={{ background: cyan[4], border: '1px solid blue' }}>{item.key}</List.Item>
+                                                                            </div>
+                                                                        )}
+                                                                    </Draggable>
+                                                                )}
+                                                            />
+                                                            {provided.placeholder}
+                                                        </div>
+                                                    )}
+                                                </Droppable>
+                                            </DragDropContext>
 
-                                            
                                         </div>)
                                     }
                                     {
-                                        isTwoColumnForm && (<div
-                                            style={{
-                                                background: "#ddd",
-                                                padding: 20
-                                            }}
-                                        >
-                                           {/* https://stackblitz.com/edit/react-tthjnw */}
-                                                <ReactSortable  list={selectedFields} setList={setSelectedFields}
-                                                    ghostClass="sortable-ghost"
-                                                >
-                                                   
-                                                    {selectedFields.map((item) => (
-                                                        <div xl={12} key={item.key} style={{ background: cyan[4], border: '1px solid blue', padding: '5px', margin: '5px',width:'50%' }}>{item.key}</div>
-                                                    ))}
-                                                 
-                                                </ReactSortable>
-
-
-                                            
-                                        </div>)
+                                        isTwoColumnForm && (<ListManager
+                                            items={selectedFields}
+                                            direction="horizontal"
+                                            maxItems={2}
+                                            render={item => <div style={{ display: 'flex', background: cyan[4], border: '1px solid blue', width: '300px', height: '50px', verticalAlign: 'center', padding: '5px 5px 5px 5px' }}>{item.key}</div>}
+                                            onDragEnd={onDragGridEnd}
+                                        />)
                                     }
                                 </Card>
                             </Col>

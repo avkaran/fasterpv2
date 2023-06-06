@@ -7,15 +7,16 @@ import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { MyTable, DeleteButton, PaginatedTable, AvatarMobileInfiniteList } from '../../../../../comp';
 import { green, blue, red, cyan, grey } from '@ant-design/colors';
-import AddEditEstimate from './addEditEstimate'
-import ViewEstimate from './viewEstimate';
+import AddEditAdjustment from './addEditAdjustment'
+import ViewAdjustment from './viewAdjustment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserTimes, faClose, faChevronLeft, faPlus, faPencil, faEye } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../../../utils';
 import ResponsiveLayout from '../../../layout'
 import { List as MList, Dialog, SwipeAction, Toast, MImage } from 'antd-mobile'
 import randomColor from 'randomcolor';
-const Estimates = (props) => {
+import dayjs from 'dayjs'
+const Adjustments = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
     const { Content } = Layout;
@@ -27,7 +28,7 @@ const Estimates = (props) => {
     const [formItemLayout, setFormItemLayout] = useState('two-column'); //one-column,two-column,two-column-wrap
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [visibleModal, setVisibleModal] = useState(false);
-    const [heading] = useState('Estimate');
+    const [heading] = useState('Adjustment');
     const [refreshTable, setRefreshTable] = useState(0);
      useEffect(() => {
         //  loadData();
@@ -46,50 +47,54 @@ const Estimates = (props) => {
             //render: (item) => <strong>{item}</strong>,
         },
         {
-            title: 'Estimate Code',
-            dataIndex: 'estimate_code',
-            key: 'estimate_code',
+            title: 'Product',
+            dataIndex: 'product_name',
+            key: 'product_name',
             //render: (item) => <strong>{item}</strong>,
         },
         {
-            title: 'Estimate Name',
-            dataIndex: 'estimate_name',
-            key: 'estimate_name',
-            //render: (text) => <a>{text}</a>,
+            title: 'date',
+           // dataIndex: 'adjustment_name',
+            key: 'date',
+            render: (item) => <>{dayjs(item.date).format("DD/MM/YYYY")}</>,
         },
         {
-            title: 'Metal',
-            dataIndex: 'metal_type',
-            key: 'metal_type',
+            title: 'Qty',
+            dataIndex: 'qty',
+            key: 'qty',
             // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
         },
         {
-            title: 'Weight',
-            //dataIndex: 'weight',
-            key: 'weight',
-            render: (item) => <>{parseFloat(item.weight).toFixed(3)}</>,
+            title: 'Cost Per',
+            dataIndex: 'cost_per',
+            key: 'cost_per',
+            //render: (item) => <>{parseFloat(item.weight).toFixed(3)}</>,
         },
         {
-            title: 'Status',
-            //dataIndex: 'COLUMN_COMMENT',
-            key: 'active_status',
-            render: (item) => <Tag color={parseInt(item.active_status) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{parseInt(item.active_status) === 1 ? 'Active' : 'Inactive'}</Tag>,
+            title: 'Total',
+            dataIndex: 'total_cost',
+            key: 'total_cost',
+          
+        },
+        {
+            title: 'Narration',
+            dataIndex: 'narration',
+            key: 'narration',
+          
         },
         {
             title: 'Actions',
             // dataIndex: 'actions',
             key: 'actions',
             render: (item) => <Space>
-                <MyButton type="outlined" size="small" shape="circle"
-                    onClick={() => onViewClick(item)} ><i class="fa-solid fa-eye"></i></MyButton>
-                {context.isAdminResourcePermit(userId, 'estimates.edit-estimate') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
+                {context.isAdminResourcePermit(userId, 'adjustments.edit-adjustment') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>)}
-                {context.isAdminResourcePermit(userId, 'estimates.delete-estimate') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
-                    title="Estimate"
-                    table="estimates"
+                {context.isAdminResourcePermit(userId, 'adjustments.delete-adjustment') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
+                    title="Adjustment"
+                    table="adjustments"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id, estimate_code: item.estimate_code, estimate_name: item.estimate_name, metal_type: item.metal_type }}
+                    dataItem={{ id: item.id, adjustment_code: item.adjustment_code, adjustment_name: item.adjustment_name, metal_type: item.metal_type }}
                 // avatar={context.baseUrl + item.course_image}
                 />)}
 
@@ -117,7 +122,7 @@ const Estimates = (props) => {
         </div>
         <div className="right">
             {
-                curAction === "view" && viewOrEditData && context.isAdminResourcePermit(userId, 'estimates.edit-estimate') && (<a className="headerButton" onClick={() => setCurAction("edit")}>
+                curAction === "view" && viewOrEditData && context.isAdminResourcePermit(userId, 'adjustments.edit-adjustment') && (<a className="headerButton" onClick={() => setCurAction("edit")}>
                     <FontAwesomeIcon icon={faPencil} />
                 </a>)
             }
@@ -163,24 +168,24 @@ const Estimates = (props) => {
     }
     const addEditComponents = () => {
         if (curAction === "view")
-            return <ViewEstimate formItemLayout={formItemLayout} viewIdOrObject={viewOrEditData} onListClick={onAddEditListClick} userId={userId} />
+            return <ViewAdjustment formItemLayout={formItemLayout} viewIdOrObject={viewOrEditData} onListClick={onAddEditListClick} userId={userId} />
         else if (curAction === "add")
-            return <AddEditEstimate formItemLayout={formItemLayout} onListClick={onAddEditListClick} onSaveFinish={onAddEditSaveFinish} userId={userId} />
+            return <AddEditAdjustment formItemLayout={formItemLayout} onListClick={onAddEditListClick} onSaveFinish={onAddEditSaveFinish} userId={userId} />
         else if (curAction === "edit")
-            return <AddEditEstimate formItemLayout={formItemLayout} editIdOrObject={viewOrEditData} onListClick={onAddEditListClick} onSaveFinish={onAddEditSaveFinish} userId={userId} />
+            return <AddEditAdjustment formItemLayout={formItemLayout} editIdOrObject={viewOrEditData} onListClick={onAddEditListClick} onSaveFinish={onAddEditSaveFinish} userId={userId} />
         else return <></>
     }
     const rightButtons =
         <Space><MyButton type='primary' onClick={onAddEditListClick}><i className="fa-solid fa-arrow-left pe-2" ></i>Back</MyButton>
             {(curAction === 'view' || curAction === 'edit') && (<>
-                {curAction === 'view' && context.isAdminResourcePermit(userId, 'estimates.edit-estimate') && (<MyButton type='primary' onClick={() => { setCurAction("edit") }}><i className="fa-solid fa-pencil pe-2" ></i>Edit</MyButton>)}
+                {curAction === 'view' && context.isAdminResourcePermit(userId, 'adjustments.edit-adjustment') && (<MyButton type='primary' onClick={() => { setCurAction("edit") }}><i className="fa-solid fa-pencil pe-2" ></i>Edit</MyButton>)}
                 {curAction === 'edit' && (<MyButton type='primary' onClick={() => { setCurAction("view") }}><i className="fa-solid fa-eye pe-2" ></i>View</MyButton>)}
                 {
-                    context.isAdminResourcePermit(userId, 'estimates.delete-estimate') && (<DeleteButton type="outlined" size="small" shape="round" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
-                        title="Estimate"
-                        table="estimates"
+                    context.isAdminResourcePermit(userId, 'adjustments.delete-adjustment') && (<DeleteButton type="outlined" size="small" shape="round" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
+                        title="Adjustment"
+                        table="adjustments"
                         //id must,+ give first three colums to display
-                        dataItem={{ id: viewOrEditData.id, estimate_code: viewOrEditData.estimate_code, estimate_name: viewOrEditData.estimate_name, metal_type: viewOrEditData.metal_type }}
+                        dataItem={{ id: viewOrEditData.id, adjustment_code: viewOrEditData.adjustment_code, adjustment_name: viewOrEditData.adjustment_name, metal_type: viewOrEditData.metal_type }}
                     // avatar={context.baseUrl + item.course_image}
                     />)
                 }
@@ -200,7 +205,7 @@ const Estimates = (props) => {
             },
             ,
         ]
-        if (context.isAdminResourcePermit(userId, 'estimates.edit-estimate')) {
+        if (context.isAdminResourcePermit(userId, 'adjustments.edit-adjustment')) {
             tmpActions.push({
                 key: 'edit',
                 text: <MyButton type="outlined" size="small" shape="circle"
@@ -220,8 +225,8 @@ const Estimates = (props) => {
                 bottomMenues={null}
                 showNav={null}
                 breadcrumbs={[
-                    { name: 'Estimates', link: null },
-                    { name: 'List Estimates', link: null },
+                    { name: 'Adjustments', link: null },
+                    { name: 'List Adjustments', link: null },
                 ]}
             >
                 {
@@ -260,13 +265,13 @@ const Estimates = (props) => {
                                 {addEditComponents()}
                             </Card>)
                         }
-                        <Card title="Estimates" extra={context.isAdminResourcePermit(userId, 'estimates.add-estimate')?<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Estimate</MyButton>:null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+                        <Card title="Adjustments" extra={context.isAdminResourcePermit(userId, 'adjustments.add-adjustment')?<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Adjustment</MyButton>:null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
 
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from estimates where status=1 "
-                                listQuery="select *,@rownum:=@rownum+1 as row_num from estimates CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
+                                countQuery="select count(*) as count from adjustments where status=1 "
+                                listQuery="select a.*,p.product_name,@rownum:=@rownum+1 as row_num from adjustments a,products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where a.status=1 and a.product_id=p.id"
                                 itemsPerPage={20}
                             />
 
@@ -277,26 +282,26 @@ const Estimates = (props) => {
                         {(curAction === "add" || curAction === "edit" || curAction === "view") && (<Card>{addEditComponents()}</Card>)}
                         <div style={{ display: (curAction === "list") ? 'block' : 'none' }}>
                             {
-                                context.isAdminResourcePermit(userId, 'estimates.add-estimate') &&  (<FloatButton type="primary" shape="circle" onClick={onAddClick} icon={<FontAwesomeIcon icon={faPlus} />}></FloatButton>)
+                                context.isAdminResourcePermit(userId, 'adjustments.add-adjustment') &&  (<FloatButton type="primary" shape="circle" onClick={onAddClick} icon={<FontAwesomeIcon icon={faPlus} />}></FloatButton>)
                             }
                             
                             <AvatarMobileInfiniteList
-                                header={<span>Estimates</span>}
+                                header={<span>Adjustments</span>}
                                 userId={userId}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from estimates where status=1 "
-                                listQuery="select * from estimates where status=1 "
+                                countQuery="select count(*) as count from adjustments  where status=1 "
+                                listQuery="select * from adjustments  where status=1 "
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
-                                        rightActions={context.isAdminResourcePermit(userId, 'estimates.delete-estimate') ? [
+                                        rightActions={context.isAdminResourcePermit(userId, 'adjustments.delete-adjustment') ? [
                                             {
                                                 key: 'delete',
                                                 text: <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
-                                                    title="Estimate"
-                                                    table="estimates"
+                                                    title="Adjustment"
+                                                    table="adjustments"
                                                     //id must,+ give first three colums to display
-                                                    dataItem={{ id: item.id, estimate_code: item.estimate_code, estimate_name: item.estimate_name, metal_type: item.metal_type }}
+                                                    dataItem={{ id: item.id, adjustment_code: item.adjustment_code, adjustment_name: item.adjustment_name, metal_type: item.metal_type }}
                                                 // avatar={context.baseUrl + item.course_image}
                                                 />,
                                                 //color: 'danger',
@@ -316,11 +321,11 @@ const Estimates = (props) => {
                                                     fit='cover'
                                                     width={40}
                                                     height={40}
-                                                >{item.estimate_name.charAt(0).toUpperCase()}</Avatar>
+                                                >{item.adjustment_name.charAt(0).toUpperCase()}</Avatar>
                                             }
-                                            description={<>Code: {item.estimate_code} ,Weight: {item.weight}</>}
+                                            description={<>Code: {item.adjustment_code} ,Weight: {item.weight}</>}
                                         >
-                                            {item.estimate_name}
+                                            {item.adjustment_name}
                                         </MList.Item>
                                     </SwipeAction>
                                 }}
@@ -335,4 +340,4 @@ const Estimates = (props) => {
         </>
     );
 }
-export default Estimates;
+export default Adjustments;

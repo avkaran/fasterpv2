@@ -11,12 +11,12 @@ import Branches from "../../branches";
 import Employees from "../../employees";
 import MyAdminProfile from "../../my-accounts";
 import EmployeeProfile from "../../my-accounts/employee/employeeProfile";
-
+import Collections from "../../collections";
 import PermissionError from "../../error-pages/permissionError";
 import JewelProducts from './products';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
-import Estimates from './estimates';
+import Adjustments from './adjustments';
 
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
@@ -37,7 +37,7 @@ const AuthRoutes = (props) => {
                     exact={true}
                 />
 
-              
+
                 <Route
                     path='/:userId/admin/employee-designations'
                     element={<EmployeeDesignations />}
@@ -59,7 +59,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                
+
                 <Route
                     path='/:userId/admin/myaccounts/account-profile'
                     element={<MyAdminProfile />}
@@ -74,7 +74,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-               
+
                 <Route
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
@@ -82,17 +82,24 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                 <Route
+                <Route
                     path='/:userId/admin/products'
                     element={<JewelProducts />}
                     title='Products'
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-               <Route
-                    path='/:userId/admin/estimates'
-                    element={<Estimates />}
+                <Route
+                    path='/:userId/admin/adjustments'
+                    element={<Adjustments />}
                     title='Estimates'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    path='/:userId/admin/collections'
+                    element={<Collections />}
+                    title='Collections'
                     allowed={ROLES.ALL}
                     exact={true}
                 />

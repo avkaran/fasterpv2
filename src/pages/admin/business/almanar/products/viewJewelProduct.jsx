@@ -64,16 +64,22 @@ const ViewJewelProduct = (props) => {
                                 <FormViewItem label="Product Code" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_code}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Metal Type" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.metal_type}</FormViewItem>
+                                <FormViewItem label="Unit" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.metal_type}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
                                 <FormViewItem label="Product Name" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_name}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Weight" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.weight}</FormViewItem>
+                                <FormViewItem label="Opening Stock" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.stock}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Active Status" colon={formItemLayout!=='two-column-wrap' || context.isMobile}><Tag color={parseInt(viewData.active_status) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{parseInt(viewData.active_status)===1?'Active':'Inactive'}</Tag></FormViewItem>
+                                <FormViewItem label="Cost Price" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.cost_price}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                                <FormViewItem label="Selling Price" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.selling_price}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                                <FormViewItem label="Active Status" colon={formItemLayout!=='two-column-wrap' || context.isMobile}><Tag color={parseInt(viewData.active_status) === 1 ? 'green' : 'red'} style={{ fontStock: 'bold' }}>{parseInt(viewData.active_status)===1?'Active':'Inactive'}</Tag></FormViewItem>
                             </Col>
                         </Row>
 

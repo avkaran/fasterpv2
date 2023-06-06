@@ -58,22 +58,22 @@ const JewelProducts = (props) => {
             //render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Metal',
-            dataIndex: 'metal_type',
-            key: 'metal_type',
+            title: 'Unit',
+            dataIndex: 'unit',
+            key: 'unit',
             // render: (item) => <span>{item.COLUMN_KEY + "," + item.EXTRA} </span>,
         },
         {
-            title: 'Weight',
-            //dataIndex: 'weight',
-            key: 'weight',
-            render: (item) => <>{parseFloat(item.weight).toFixed(3)}</>,
+            title: 'Stock',
+            //dataIndex: 'stock',
+            key: 'stock',
+            render: (item) => <>{(parseFloat(item.stock)+parseFloat(item.purchase)-parseFloat(item.sales)).toFixed(2)}</>,
         },
         {
             title: 'Status',
             //dataIndex: 'COLUMN_COMMENT',
             key: 'active_status',
-            render: (item) => <Tag color={parseInt(item.active_status) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{parseInt(item.active_status) === 1 ? 'Active' : 'Inactive'}</Tag>,
+            render: (item) => <Tag color={parseInt(item.active_status) === 1 ? 'green' : 'red'} style={{ fontStock: 'bold' }}>{parseInt(item.active_status) === 1 ? 'Active' : 'Inactive'}</Tag>,
         },
         {
             title: 'Actions',
@@ -89,7 +89,7 @@ const JewelProducts = (props) => {
                     title="Product"
                     table="products"
                     //id must,+ give first three colums to display
-                    dataItem={{ id: item.id, product_code: item.product_code, product_name: item.product_name, metal_type: item.metal_type }}
+                    dataItem={{ id: item.id, product_code: item.product_code, product_name: item.product_name, unit: item.unit }}
                 // avatar={context.baseUrl + item.course_image}
                 />)}
 
@@ -180,7 +180,7 @@ const JewelProducts = (props) => {
                         title="Product"
                         table="products"
                         //id must,+ give first three colums to display
-                        dataItem={{ id: viewOrEditData.id, product_code: viewOrEditData.product_code, product_name: viewOrEditData.product_name, metal_type: viewOrEditData.metal_type }}
+                        dataItem={{ id: viewOrEditData.id, product_code: viewOrEditData.product_code, product_name: viewOrEditData.product_name, unit: viewOrEditData.unit }}
                     // avatar={context.baseUrl + item.course_image}
                     />)
                 }
@@ -266,7 +266,7 @@ const JewelProducts = (props) => {
                                 columns={tableColumns}
                                 refresh={refreshTable}
                                 countQuery="select count(*) as count from products where status=1 "
-                                listQuery="select *,@rownum:=@rownum+1 as row_num from products CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where status=1 "
+                                listQuery="select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase') as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales') as sales,@rownum:=@rownum+1 as row_num from products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 "
                                 itemsPerPage={20}
                             />
 
@@ -296,7 +296,7 @@ const JewelProducts = (props) => {
                                                     title="Product"
                                                     table="products"
                                                     //id must,+ give first three colums to display
-                                                    dataItem={{ id: item.id, product_code: item.product_code, product_name: item.product_name, metal_type: item.metal_type }}
+                                                    dataItem={{ id: item.id, product_code: item.product_code, product_name: item.product_name, unit: item.unit }}
                                                 // avatar={context.baseUrl + item.course_image}
                                                 />,
                                                 //color: 'danger',
@@ -318,7 +318,7 @@ const JewelProducts = (props) => {
                                                     height={40}
                                                 >{item.product_name.charAt(0).toUpperCase()}</Avatar>
                                             }
-                                            description={<>Code: {item.product_code} ,Weight: {item.weight}</>}
+                                            description={<>Code: {item.product_code} ,Stock: {item.stock}</>}
                                         >
                                             {item.product_name}
                                         </MList.Item>
