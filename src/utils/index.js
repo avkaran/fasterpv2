@@ -148,7 +148,7 @@ export const businesses = [
       adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
-   // responsive: { isMobile: false, },
+    responsive: { isMobile: true, },
     hasCustomerPortal: false,
   }
 

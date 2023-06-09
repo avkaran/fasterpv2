@@ -64,7 +64,7 @@ const ViewJewelProduct = (props) => {
                                 <FormViewItem label="Product Code" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_code}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Unit" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.metal_type}</FormViewItem>
+                                <FormViewItem label="Unit" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.unit}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
                                 <FormViewItem label="Product Name" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_name}</FormViewItem>

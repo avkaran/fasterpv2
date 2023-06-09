@@ -11,9 +11,9 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PsContext from '../../../../../context';
-import { Breadcrumb, Layout, Form } from 'antd';
+import { Breadcrumb, Layout, Form, DatePicker } from 'antd';
 import StatCard from './statcard';
-import { green, blue, red, cyan, grey, magenta, yellow,gold } from '@ant-design/colors';
+import { green, blue, red, cyan, grey, magenta, yellow, gold } from '@ant-design/colors';
 import { MyButton, MyTable } from '../../../../../comp';
 import dayjs from 'dayjs';
 import { HomeOutlined } from '@ant-design/icons';
@@ -22,11 +22,12 @@ import HomeContainer from '../../../layout-mobile/homeContainer';
 import ResponsiveLayout from '../../../layout'
 const Dashboard = (props) => {
     const context = useContext(PsContext);
-const {userId}=useParams();
+    const { userId } = useParams();
     const { Content } = Layout;
     const [loader, setLoader] = useState(false);
     const [metalRates, setMetalRates] = useState(null);
-    const [tableCountData, setTableCountData] = useState(null)
+    const [countData, setCountData] = useState(null)
+    const [selDate, setSelDate] = useState(dayjs().format("YYYY-MM-DD"))
     const theme = {
         primaryColor: '#007bff',
         infoColor: '#1890ff',
@@ -45,83 +46,100 @@ const {userId}=useParams();
     useEffect(() => {
         //console.log('userdata',context.adminUser(userId))
         // loadMemberCounts();
-      //  loadCountData();
-       // loadTableCountData()
-      // loadMetalRates()
+        //  loadCountData();
+        // loadTableCountData()
+        // loadMetalRates()
+        loadCountData(selDate)
     }, []);
-    
-    const loadMetalRates = () => {
+    const loadCountData = (date) => {
         setLoader(true)
-        var reqData ={
-                query_type: 'query',
-                query: "select * from today_rates order by id"
-            }
+        var reqData = [{
+            query_type: 'query',
+            query: "select coalesce(sum(a.qty),0) as qty,coalesce(sum(a.qty*a.cost_per),0) as sales_cost,coalesce(sum(a.qty*p.cost_price),0) as purchase_cost  from adjustments a,products p where  a.product_id=p.id and a.adjustment_type='Sales'  and a.status=1 and date(a.date)='" + date + "'"
+        },
+        {
+            query_type: 'query',
+            query: "select coalesce(sum(a.qty),0) as qty,coalesce(sum(a.qty*a.cost_per),0) as purchase_cost  from adjustments a,products p where  a.product_id=p.id and a.adjustment_type='Purchase'  and a.status=1 and date(a.date)='" + date + "'"
+        },
+        ]
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            setMetalRates(res);
+            console.log('data', res)
+            setCountData(res)
             setLoader(false)
-
         }).catch(err => {
             message.error(err);
-            setLoader(false);
+
         })
     }
-   
+
+    const onDateChange = (date) => {
+        setSelDate(dayjs(date).format("YYYY-MM-DD"))
+        loadCountData(dayjs(date).format("YYYY-MM-DD"))
+    }
     return (
         <>
-        <ResponsiveLayout 
-         userId={userId}
-         customHeader={null}
-         bottomMenues={null}
-         breadcrumbs={[{name:'Dashboard',link:'#/'+userId+'/admin'}]}
-        >
-            <Card title="Dashboard">
-             
-               {/*  <Row gutter={16}>
-                    <Col xs={24} sm={12} md={6}>
-                        <StatCard
+            <ResponsiveLayout
+                userId={userId}
+                customHeader={null}
+                bottomMenues={null}
+                breadcrumbs={[{ name: 'Dashboard', link: '#/' + userId + '/admin' }]}
+            >
+                <Card title={
+                    <DatePicker
+                        onChange={onDateChange}
+                        defaultValue={dayjs()}
+                        format="DD/MM/YYYY"
+                        allowClear={false}
+                    />
+                }>
+                    <Spin spinning={loader}>
 
-                            title="Gold"
-                            value={metalRates && metalRates[0].rate.toFixed(2)}
-                            icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
-                            color={gold[5]}
-                            link={"/" + userId + "/admin/members/orders-by-status/Paid"}
-                        />
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <StatCard
+                        <Row gutter={16}>
+                            <Col xs={24} sm={12} md={6}>
+                                <StatCard
 
-                            title="Silver"
-                            value={metalRates && metalRates[1].rate.toFixed(2)}
-                            icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
-                            color={grey[3]}
-                            link={"/" + userId + "/admin/members/orders-by-status/Payment Tried"}
-                        />
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <StatCard
+                                    title="Sales"
+                                    value={countData[0][0].sales_cost +" ("+ countData[0][0].qty +")"}
+                                    icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
+                                    color={gold[5]}
+                                    //link={"/" + userId + "/admin/members/orders-by-status/Paid"}
+                                />
+                            </Col>
+                            <Col xs={24} sm={12} md={6}>
+                                <StatCard
 
-                            title="Estimates"
-                            value={0}
-                            icon={<FontAwesomeIcon icon={faListCheck} />}
-                            color="#10239e"
-                            link={"/" + userId + "/admin/estimates"}
-                        />
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <StatCard
+                                    title="Profit"
+                                    value={countData[0] && (parseFloat(countData[0][0].sales_cost)-parseFloat(countData[0][0].purchase_cost)).toFixed(2)}
+                                    icon={<FontAwesomeIcon icon={faIndianRupeeSign} />}
+                                    color={grey[3]}
+                                   // link={"/" + userId + "/admin/members/orders-by-status/Payment Tried"}
+                                />
+                            </Col>
+                            <Col xs={24} sm={12} md={6}>
+                               {/*  <StatCard
 
-                            title="Products"
-                            value={0}
-                            icon={<FontAwesomeIcon icon={faList} />}
-                            color="#d4380d"
-                            link={"/" + userId + "/admin/products"}
-                        />
-                    </Col>
-                </Row> */}
-    
-            </Card>
+                                    title="Purchase"
+                                    value={countData[1] && countData[1][0].purchase_cost +" ("+ countData[1][0].qty +")"}
+                                    icon={<FontAwesomeIcon icon={faListCheck} />}
+                                    color="#10239e"
+                                   // link={"/" + userId + "/admin/estimates"}
+                                /> */}
+                            </Col>
+                            <Col xs={24} sm={12} md={6}>
+                              {/*   <StatCard
+
+                                    title="Stock"
+                                    value={0}
+                                    icon={<FontAwesomeIcon icon={faList} />}
+                                    color="#d4380d"
+                                    link={"/" + userId + "/admin/products"}
+                                /> */}
+                            </Col>
+                        </Row>
+                    </Spin>
+                </Card>
             </ResponsiveLayout>
         </>)
- 
+
 };
 export default Dashboard;

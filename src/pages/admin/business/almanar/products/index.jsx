@@ -10,11 +10,12 @@ import { green, blue, red, cyan, grey } from '@ant-design/colors';
 import AddEditJewelProduct from './addEditJewelProduct'
 import ViewJewelProduct from './viewJewelProduct';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faUserTimes, faClose, faChevronLeft, faPlus, faPencil, faEye } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faUserTimes, faClose, faChevronLeft, faPlus, faPencil, faEye, faFileExcel } from '@fortawesome/free-solid-svg-icons'
 import { capitalizeFirst } from '../../../../../utils';
 import ResponsiveLayout from '../../../layout'
 import { List as MList, Dialog, SwipeAction, Toast, MImage } from 'antd-mobile'
 import randomColor from 'randomcolor';
+import * as xlsx from "xlsx";
 const JewelProducts = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -29,7 +30,7 @@ const JewelProducts = (props) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const [heading] = useState('Product');
     const [refreshTable, setRefreshTable] = useState(0);
-     useEffect(() => {
+    useEffect(() => {
         //  loadData();
         if (context.isMobile) {
             setFormItemLayout('two-column-wrap');
@@ -67,7 +68,13 @@ const JewelProducts = (props) => {
             title: 'Stock',
             //dataIndex: 'stock',
             key: 'stock',
-            render: (item) => <>{(parseFloat(item.stock)+parseFloat(item.purchase)-parseFloat(item.sales)).toFixed(2)}</>,
+            render: (item) => <>{(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)}</>,
+        },
+        {
+            title: 'Cost Value',
+            //dataIndex: 'stock',
+            key: 'Cost Value',
+            render: (item) => <>{((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2)}</>,
         },
         {
             title: 'Status',
@@ -103,6 +110,44 @@ const JewelProducts = (props) => {
         setCurAction("add");
         if (dialogType === 'modal' || dialogType === "drawer")
             setVisibleModal(true);
+
+
+    }
+    const onExcelClick = () => {
+        // var table_elt = document.getElementById("my_class_mark_table");
+        // Extract Data (create a workbook object from the table)
+        // var workbook = xlsx.utils.table_to_book(table_elt);
+        // Process Data (add a new row)
+        // var ws = workbook.Sheets["Sheet1"];
+        // xlsx.utils.sheet_add_aoa(ws, [["Created "+new Date().toISOString()]], {origin:-1});
+        //select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase') as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales') as sales,@rownum:=@rownum+1 as row_num from products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1
+
+        var reqData = {
+            query_type: 'query',
+            query: "select p.product_code,p.product_name,p.cost_price,p.selling_price,p.stock,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase') as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales') as sales from products p  where p.status=1"
+        }
+        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+            var data = [...res];
+            data = data.map(item => {
+                item.current_stock = (parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2);
+                item.current_stock_value = ((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2);
+                return item;
+
+            })
+            const workbook = xlsx.utils.book_new();
+            const worksheet = xlsx.utils.json_to_sheet(data);
+
+            // Add the worksheet to the workbook
+            xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+            // Package and Release Data (`writeFile` tries to write and save an XLSB file)
+            xlsx.writeFile(workbook, "products.xlsx");
+
+
+        }).catch(err => {
+            message.error(err);
+
+        })
 
 
     }
@@ -260,13 +305,13 @@ const JewelProducts = (props) => {
                                 {addEditComponents()}
                             </Card>)
                         }
-                        <Card title="Products" extra={context.isAdminResourcePermit(userId, 'products.add-product')?<MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Product</MyButton>:null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+                        <Card title="Products" extra={context.isAdminResourcePermit(userId, 'products.add-product') ? <><Space><MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Product</MyButton><MyButton onClick={onExcelClick} ><i className="fa-solid fa-file-excel pe-2" ></i>Excel</MyButton></Space></> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
 
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
                                 countQuery="select count(*) as count from products where status=1 "
-                                listQuery="select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase') as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales') as sales,@rownum:=@rownum+1 as row_num from products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 "
+                                listQuery="select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase' and status=1) as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales' and status=1) as sales,@rownum:=@rownum+1 as row_num from products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 "
                                 itemsPerPage={20}
                             />
 
@@ -277,15 +322,36 @@ const JewelProducts = (props) => {
                         {(curAction === "add" || curAction === "edit" || curAction === "view") && (<Card>{addEditComponents()}</Card>)}
                         <div style={{ display: (curAction === "list") ? 'block' : 'none' }}>
                             {
-                                context.isAdminResourcePermit(userId, 'products.add-product') &&  (<FloatButton type="primary" shape="circle" onClick={onAddClick} icon={<FontAwesomeIcon icon={faPlus} />}></FloatButton>)
+                                context.isAdminResourcePermit(userId, 'products.add-product') && (<>
+                                   
+                                        <FloatButton
+                                            type="primary"
+                                            shape="circle"
+                                            onClick={onAddClick}
+                                            icon={<FontAwesomeIcon icon={faPlus} />}
+                                            style={{
+                                                right: 96,
+                                              }}
+                                        />
+                                        <FloatButton
+                                            type="primary"
+                                            shape="circle"
+                                            onClick={onExcelClick}
+                                            icon={<FontAwesomeIcon icon={faFileExcel} />}
+                                            style={{
+                                                right: 24,
+                                              }}
+                                        />
+                                   
+                                </>)
                             }
-                            
+
                             <AvatarMobileInfiniteList
                                 header={<span>Products</span>}
                                 userId={userId}
                                 refresh={refreshTable}
                                 countQuery="select count(*) as count from products where status=1 "
-                                listQuery="select * from products where status=1 "
+                                listQuery="select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase' and status=1) as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales' and status=1) as sales from products p  where p.status=1"
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
@@ -318,7 +384,7 @@ const JewelProducts = (props) => {
                                                     height={40}
                                                 >{item.product_name.charAt(0).toUpperCase()}</Avatar>
                                             }
-                                            description={<>Code: {item.product_code} ,Stock: {item.stock}</>}
+                                            description={<>Code: {item.product_code} ,Stock: {(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)} ,Cost: {((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2)}</>}
                                         >
                                             {item.product_name}
                                         </MList.Item>
