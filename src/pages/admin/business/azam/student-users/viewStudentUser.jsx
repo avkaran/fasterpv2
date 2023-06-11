@@ -9,7 +9,7 @@ import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
 import { ImageUpload, FormItem, MyButton, FormViewItem } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
-const ViewEstimate = (props) => {
+const ViewStudentUser = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ const ViewEstimate = (props) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "select * from products where status=1 and id=" + id
+            query: "select * from users where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setviewData(res[0]);
@@ -61,19 +61,25 @@ const ViewEstimate = (props) => {
                     >
                         <Row gutter={3}>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Product Code" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_code}</FormViewItem>
+                                <FormViewItem label="User Code" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.user_code}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Metal Type" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.metal_type}</FormViewItem>
+                                <FormViewItem label="Unit" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.unit}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Product Name" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.product_name}</FormViewItem>
+                                <FormViewItem label="User Name" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.user_name}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Weight" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.weight}</FormViewItem>
+                                <FormViewItem label="Opening Stock" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.stock}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Active Status" colon={formItemLayout!=='two-column-wrap' || context.isMobile}><Tag color={parseInt(viewData.active_status) === 1 ? 'green' : 'red'} style={{ fontWeight: 'bold' }}>{parseInt(viewData.active_status)===1?'Active':'Inactive'}</Tag></FormViewItem>
+                                <FormViewItem label="Cost Price" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.cost_price}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                                <FormViewItem label="Selling Price" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.selling_price}</FormViewItem>
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
+                                <FormViewItem label="Active Status" colon={formItemLayout!=='two-column-wrap' || context.isMobile}><Tag color={parseInt(viewData.active_status) === 1 ? 'green' : 'red'} style={{ fontStock: 'bold' }}>{parseInt(viewData.active_status)===1?'Active':'Inactive'}</Tag></FormViewItem>
                             </Col>
                         </Row>
 
@@ -86,4 +92,4 @@ const ViewEstimate = (props) => {
     );
 
 }
-export default ViewEstimate;
+export default ViewStudentUser;

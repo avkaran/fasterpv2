@@ -6,17 +6,29 @@ import { currentInstance, businesses } from '../../../../utils';
 
 //this project components
 import Dashboard from "./dashboard";
+
+import AddContent from "../../cms/addContent";
+import ListContents from "../../cms"
+import EditContent from "../../cms/editContent";
+import ViewContent from "../../cms/viewContent";
+
+import Collections from "../../collections";
+
 import EmployeeDesignations from "../../employee-designations";
 import Branches from "../../branches";
 import Employees from "../../employees";
 import MyAdminProfile from "../../my-accounts";
 import EmployeeProfile from "../../my-accounts/employee/employeeProfile";
-import Collections from "../../collections";
+
 import PermissionError from "../../error-pages/permissionError";
-import JewelProducts from './products';
+
+
+
+
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
-import Adjustments from './adjustments';
+import StudentUsers from './student-users';
+
 
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
@@ -37,7 +49,41 @@ const AuthRoutes = (props) => {
                     exact={true}
                 />
 
-
+                <Route
+                    path='/:userId/admin/contents/:content_type/add'
+                    element={<AddContent />}
+                    title='Add Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    path='/:userId/admin/contents/:content_type/edit/:id'
+                    element={<EditContent />}
+                    title='Edit Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    exact={true}
+                    path='/:userId/admin/contents/:contentype/list'
+                    element={<ListContents />}
+                    title='List Content'
+                    allowed={ROLES.ALL}
+                />
+                <Route
+                    path='/:userId/admin/contents/:content_type/view/:id'
+                    element={<ViewContent />}
+                    title='View Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    path='/:userId/admin/collections'
+                    element={<Collections />}
+                    title='Collections'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
                 <Route
                     path='/:userId/admin/employee-designations'
                     element={<EmployeeDesignations />}
@@ -59,7 +105,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-
+             
                 <Route
                     path='/:userId/admin/myaccounts/account-profile'
                     element={<MyAdminProfile />}
@@ -74,7 +120,7 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-
+               
                 <Route
                     path='/:userId/admin/error/permission-error'
                     element={<PermissionError />}
@@ -82,27 +128,15 @@ const AuthRoutes = (props) => {
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                <Route
-                    path='/:userId/admin/products'
-                    element={<JewelProducts />}
-                    title='Products'
+                 <Route
+                    path='/:userId/admin/users/user-list'
+                    element={<StudentUsers />}
+                    title='My Employee Profile'
                     allowed={ROLES.ALL}
                     exact={true}
                 />
-                <Route
-                    path='/:userId/admin/adjustments'
-                    element={<Adjustments />}
-                    title='Estimates'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
-                <Route
-                    path='/:userId/admin/collections'
-                    element={<Collections />}
-                    title='Collections'
-                    allowed={ROLES.ALL}
-                    exact={true}
-                />
+               
+               
             </Route>
 
         </>
