@@ -2,31 +2,27 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, message, Space } from 'antd';
 import { Button, Card } from 'antd';
-import { Form, Input, Select, InputNumber, Radio, Checkbox, DatePicker } from 'antd';
+import { Form, Input, Select, InputNumber, Radio, Checkbox } from 'antd';
 import { Breadcrumb, Layout, Spin } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { Editor } from '@tinymce/tinymce-react';
-import { green, blue, red, cyan, grey } from '@ant-design/colors';
 import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
-import dayjs from 'dayjs'
-import esES from 'antd/lib/locale-provider/es_ES';
-const AddEditAdjustment = (props) => {
+const AddEditJewelProduct = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
     const navigate = useNavigate();
-    const [addeditFormAdjustments] = Form.useForm();
-    const [newAdjustmentForm] = Form.useForm();
+    const [addeditFormProducts] = Form.useForm();
     const [loader, setLoader] = useState(false);
     const [curAction, setCurAction] = useState('add');
     const [editData, setEditData] = useState(null);
-    const [heading] = useState('Adjustment');
+    const [heading] = useState('Product');
     const { editIdOrObject, onListClick, onSaveFinish, userId, formItemLayout, ...other } = props;
     const [editId, setEditId] = useState(null);
-    const [products, setProducts] = useState([])
     useEffect(() => {
+
         if (editIdOrObject) {
             if (typeof editIdOrObject === 'object') {
                 setCurAction("edit");
@@ -43,34 +39,17 @@ const AddEditAdjustment = (props) => {
 
         } else {
             setCurAction("add");
-            addeditFormAdjustments.setFieldsValue(
-                { adjustments: { active_status: '1', date: dayjs() } }
+            addeditFormProducts.setFieldsValue(
+                { products: { active_status: '1' } }
             )
-
-
         }
 
     }, [editIdOrObject]);
-    useEffect(() => {
-        loadProducts();
-    }, [])
-    const loadProducts = () => {
-
-        var reqData = {
-            query_type: 'query',
-            query: "select p.*,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Purchase' and status=1) as purchase,(select coalesce(sum(qty),0) from adjustments where product_id=p.id and adjustment_type='Sales' and status=1) as sales from products p where p.active_status=1 and p.status=1"
-        };
-        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
-            setProducts(res);
-        }).catch(err => {
-            message.error(err);
-        })
-    }
     const loadEditData = (id) => {
         setLoader(true);
         var reqData = {
             query_type: 'query',
-            query: "SELECT * from adjustments where status=1 and id=" + id
+            query: "SELECT * from products where status=1 and id=" + id
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setEditData(res[0]);
@@ -84,48 +63,38 @@ const AddEditAdjustment = (props) => {
 
         })
     }
-    const getStock = (id) => {
-        var item = products.find(item => parseInt(item.id) === parseInt(id));
-        var stock = 0;
-        if (item)
-            stock = parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)
-console.log('stock',stock)
-        return stock;
-
-    }
     const setEditValues = (mydata) => {
-        addeditFormAdjustments.setFieldsValue({
+        addeditFormProducts.setFieldsValue({
 
-            adjustments: {
-                adjustment_type: mydata.adjustment_type,
+            products: {
+                product_code: mydata.product_code,
 
-                date: dayjs(mydata.date),
+                unit: mydata.unit,
 
-                product_id: mydata.product_id,
+                product_name: mydata.product_name,
 
-                qty: mydata.qty,
+                stock: mydata.stock,
+                cost_price: mydata.cost_price,
+                selling_price: mydata.selling_price,
 
-                cost_per: mydata.cost_per,
-
-                narration: mydata.narration,
+                active_status: mydata.active_status.toString(),
             }
         });
     }
     const onFinish = (values) => {
         setLoader(true);
         var processedValues = {};
-        Object.entries(values.adjustments).forEach(([key, value]) => {
+        Object.entries(values.products).forEach(([key, value]) => {
             if (value) {
                 processedValues[key] = value;
             }
         });
 
-        processedValues['date'] = dayjs(values.adjustments.date).format("YYYY-MM-DD HH:mm:ss")
-        processedValues['total_cost'] = parseFloat(values.adjustments.qty) * parseFloat(values.adjustments.cost_per)
+
         if (curAction === "add") {
             var reqDataInsert = {
                 query_type: 'insert',
-                table: 'adjustments',
+                table: 'products',
                 values: processedValues
 
             };
@@ -141,7 +110,7 @@ console.log('stock',stock)
         } else if (curAction === "edit") {
             var reqDataUpdate = {
                 query_type: 'update',
-                table: 'adjustments',
+                table: 'products',
                 where: { id: editId },
                 values: processedValues
 
@@ -158,14 +127,6 @@ console.log('stock',stock)
         }
 
     };
-    const productIdOnChange=(value)=>{
-        if(curAction==="add"){
-            var curProduct=products.find(item=>parseInt(item.id)===parseInt(value))
-            if(curProduct)
-            addeditFormAdjustments.setFieldsValue({adjustments:{cost_per:curProduct.selling_price}})
-        }
-    }
-
     return (
         <>
 
@@ -173,7 +134,7 @@ console.log('stock',stock)
                 {
                     (curAction === "add" || (curAction === "edit" && editData)) && (<Form
                         name="basic"
-                        form={addeditFormAdjustments}
+                        form={addeditFormProducts}
                         labelAlign="left"
                         labelCol={{ span: formItemLayout === 'two-column' || formItemLayout === 'one-column' ? 8 : 24 }}
                         wrapperCol={{ span: 24 }}
@@ -182,67 +143,34 @@ console.log('stock',stock)
                         autoComplete="off"
                     >
                         <Row gutter={16}>
-                            <Col className='gutter-row' xs={24} xl={12}>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Adjustment Type"
-                                    name={['adjustments', 'adjustment_type']}
-                                    rules={[{ required: true, message: 'Please Enter Adjustment Type' }]}
+                                    label="Product Code"
+                                    name={['products', 'product_code']}
+                                    rules={[{ required: true, message: 'Please Enter Product Code' }]}
+                                >
+                                    <Input placeholder="Product Code" />
+                                </FormItem>
+
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
+
+                                <FormItem
+                                    label="Unit"
+                                    name={['products', 'unit']}
+                                    rules={[{ required: true, message: 'Please Enter Unit' }]}
                                 >
 
                                     <Select
                                         showSearch
-                                        placeholder="Adjustment Type"
+                                        placeholder="Unit"
 
                                         optionFilterProp="children"
-                                        //onChange={adjustmentTypeOnChange}
+                                        //onChange={metalTypeOnChange}
                                         filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
                                     >
-                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'adjustment-types')}
-                                    </Select>
-                                </FormItem>
-
-                            </Col>
-
-                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
-
-                                <FormItem
-                                    label="Date"
-                                    name={['adjustments', 'date']}
-                                    rules={[{ required: true, message: 'Please Enter Date' }]}
-                                >
-
-                                    <DatePicker //onChange={receivedDateOnChange} 
-                                        format='DD/MM/YYYY'
-                                        //  defaltValue={dayjs()}
-                                        locale={esES}
-
-                                        //disabledDate={receivedDateDisabled}
-                                        allowClear={false}
-                                    />
-                                </FormItem>
-
-                            </Col>
-
-                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
-
-                                <FormItem
-                                    label="Product"
-                                    name={['adjustments', 'product_id']}
-                                    rules={[{ required: true, message: 'Please EnterProduct' }]}
-                                >
-
-                                    <Select
-                                        showSearch
-                                        placeholder="Product "
-
-                                        optionFilterProp="children"
-                                        onChange={productIdOnChange}
-                                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-                                    >
-                                        {products.map(item => {
-                                            return <Select.Option value={item.id}>{item.product_name}</Select.Option>
-                                        })}
+                                        {context.psGlobal.collectionOptions(context.psGlobal.collectionData, 'units')}
                                     </Select>
                                 </FormItem>
 
@@ -250,52 +178,60 @@ console.log('stock',stock)
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Narration"
-                                    name={['adjustments', 'narration']}
-                                // rules={[{ required: true, message: 'Please Enter Narration' }]}
+                                    label="Product Name"
+                                    name={['products', 'product_name']}
+                                    rules={[{ required: true, message: 'Please Enter Product Name' }]}
                                 >
-                                    <Input.TextArea rows={1} />
+                                    <Input placeholder="Product Name" />
                                 </FormItem>
 
                             </Col>
-
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Qty"
-                                    name={['adjustments', 'qty']}
-                                    rules={[
-                                        { required: true, message: 'Please Enter Qty' }
-                                        ,
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (getFieldValue(["adjustments", "product_id"]) && getStock(getFieldValue(["adjustments", "product_id"])) < parseFloat(value) && curAction === 'add' && getFieldValue(["adjustments", "adjustment_type"]) === 'Sales') {
-                                                    return Promise.reject(new Error('No Such Stock'))
-                                                }
-
-                                                return Promise.resolve();
-                                            },
-                                        }),
-                                    ]}
+                                    label="Opening Stock"
+                                    name={['products', 'stock']}
+                                    rules={[{ required: true, message: 'Please Enter Stock' }]}
                                 >
-                                    <InputNumber placeholder="Qty" type="number" />
+                                    <InputNumber placeholder="Stock" type="number" />
                                 </FormItem>
 
                             </Col>
-
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Cost Per"
-                                    name={['adjustments', 'cost_per']}
-                                    rules={[{ required: true, message: 'Please Enter Cost Per' }]}
+                                    label="Cost Price"
+                                    name={['products', 'cost_price']}
+                                    rules={[{ required: true, message: 'Please Enter Cost' }]}
                                 >
-                                    <InputNumber placeholder="Cost Per" type="number" />
+                                    <InputNumber placeholder="Cost Price" type="number" />
                                 </FormItem>
 
                             </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
+                                <FormItem
+                                    label="Selling Price"
+                                    name={['products', 'selling_price']}
+                                    rules={[{ required: true, message: 'Please Enter Selling Price' }]}
+                                >
+                                    <InputNumber placeholder="Selling Price" type="number" />
+                                </FormItem>
 
+                            </Col>
+                            <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
+
+                                <FormItem
+                                    label="Active Status"
+                                    name={['products', 'active_status']}
+                                    rules={[{ required: true, message: 'Please Enter Active Status' }]}
+                                >
+                                    <Radio.Group defaultValue="1" optionType="default" >
+                                        <Radio.Button value="1">Active</Radio.Button>
+                                        <Radio.Button value="0">Inactive</Radio.Button>
+                                    </Radio.Group>
+                                </FormItem>
+                            </Col>
                         </Row>
 
 
@@ -343,4 +279,4 @@ console.log('stock',stock)
     );
 
 }
-export default AddEditAdjustment;
+export default AddEditJewelProduct;
