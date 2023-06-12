@@ -469,7 +469,8 @@ const Adjustments = (props) => {
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from adjustments where status=1 "
+                                countQuery={"select count(*) as count from adjustments a where status=1 " + 
+                                context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 listQuery={"select a.*,p.product_name,p.cost_price,@rownum:=@rownum+1 as row_num from adjustments a,products p CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where a.status=1 and a.product_id=p.id " +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}

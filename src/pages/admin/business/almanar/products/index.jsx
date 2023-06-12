@@ -135,8 +135,8 @@ const JewelProducts = (props) => {
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             var data = [...res];
             data = data.map(item => {
-                item.current_stock = (parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2);
-                item.current_stock_value = ((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2);
+                item.current_stock = parseFloat((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2));
+                item.current_stock_value = parseFloat(((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2));
                 return item;
 
             })
