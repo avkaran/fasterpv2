@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 8, name: 'almanar'};
+export const currentInstance = { index: 10, name: 'masanik'};
 //compile mode= admin,customer,all
 export const businesses = [
   { //0
@@ -167,7 +167,24 @@ export const businesses = [
     },
     responsive: { isMobile: true, },
     hasCustomerPortal: false,
-  }
+  },
+  { //10
+    key: 'masanik',
+    name: 'SRI MASANIK',
+    shortName: 'SRIMASANIK',
+    apiUrl: 'https://app.srimasanik.com/api/v3_0/',
+    dbName: 'srimasanikapp',
+    // multilingual: ['en', 'ta', 'ml', 'hi'],
+    activeModels: ['dashboard', 'members', 'contents',],
+    //cmsContentListType:'table',
+    companies: [{ id: '1', name: 'MASANIK', logo: '' }],
+    theme: {
+      adminTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+      adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
+    },
+    responsive: { isMobile: true, },
+    hasCustomerPortal: false,
+  },
 
 ]
 export const baseUrl = businesses[currentInstance.index].apiUrl;

@@ -65,20 +65,20 @@ const HomeContainer = (props) => {
 							</a>
 						</div>
 						<div className="pageTitle">
-							<img src={context.baseUrl + "public/mobileapp-logo.png"} alt="logo" className="logo" />
+							{/* <img src={context.baseUrl + "public/mobileapp-logo.png"} alt="logo" className="logo" /> */} SRI MASANIK
 						</div>
 						<div className="right">
-							<a href="app-notifications.html" className="headerButton">
+							{/* <a href="app-notifications.html" className="headerButton">
 								<FontAwesomeIcon icon={faBell} />
 								<span className="badge badge-danger">4</span>
-							</a>
+							</a> */}
 							<a onClick={log_out} className="headerButton">
 								<img
 									src={context.noMale}
 									alt="image"
 									className="imaged w32"
 								/>
-								<span className="badge badge-danger">6</span>
+								{/* <span className="badge badge-danger">6</span> */}
 							</a>
 						</div>
 					</div>

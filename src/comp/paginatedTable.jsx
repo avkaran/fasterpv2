@@ -31,7 +31,7 @@ const PaginatedTable = (props) => {
             query_type: 'query',
             query: listQuery.replace("{rowNumberVar}", ((page - 1) * pageSize).toString()) + " LIMIT " + ((page - 1) * pageSize) + "," + pageSize
         };
-        apiRequest(reqData, "dev").then((res) => {
+        apiRequest(reqData, "prod").then((res) => {
             setData(res);
             setPageLoading(false);
         }).catch(err => {
