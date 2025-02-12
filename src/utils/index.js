@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 10, name: 'masanik'};
+export const currentInstance = { index: 8, name: 'almanar'};
 //compile mode= admin,customer,all
 export const businesses = [
   { //0
@@ -136,10 +136,10 @@ export const businesses = [
   },
   { //8
     key: 'almanar',
-    name: 'AL Manar',
+    name: 'Fat2Fit',
     shortName: 'AL Manar',
-    apiUrl: 'https://www.avkaran.com/almanar/api/v3_0/',
-    dbName: 'almanar',
+    apiUrl: 'https://www.fat2fit.ae.org/api/v3_0/',
+    dbName: 'fat2bit',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
     activeModels: ['dashboard', 'members', 'contents',],
     //cmsContentListType:'table',
