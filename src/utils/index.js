@@ -137,7 +137,7 @@ export const businesses = [
   { //8
     key: 'almanar',
     name: 'Fat2Fit',
-    shortName: 'AL Manar',
+    shortName: 'Fat2Fit',
     apiUrl: 'https://www.fat2fit.ae.org/api/v3_0/',
     dbName: 'fat2bit',
     // multilingual: ['en', 'ta', 'ml', 'hi'],
