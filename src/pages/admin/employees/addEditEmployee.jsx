@@ -323,7 +323,7 @@ const AddEditEmployee = (props) => {
                             <FormItem
                                 label="Gender"
                                 name={['employees', 'gender']}
-                                rules={[{ required: true, message: 'Please Enter Gender' }]}
+                              //  rules={[{ required: true, message: 'Please Enter Gender' }]}
                             >
 
                                 <Select
@@ -456,7 +456,7 @@ const AddEditEmployee = (props) => {
                             <FormItem
                                 label="Whatsapp No"
                                 name={['employees', 'whatsapp_no']}
-                                rules={[
+                               /*  rules={[
                                     { required: true, message: 'Please Enter Whatsapp No' },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
@@ -467,7 +467,7 @@ const AddEditEmployee = (props) => {
                                             return Promise.resolve();
                                         },
                                     }),
-                                ]}
+                                ]} */
                             >
 
                                 <PhoneInput
@@ -527,7 +527,7 @@ const AddEditEmployee = (props) => {
                             <FormItem
                                 label="Address"
                                 name={['employees', 'address']}
-                                rules={[{ required: true, message: 'Please Enter Address' }]}
+                               // rules={[{ required: true, message: 'Please Enter Address' }]}
                             >
                                 <Input.TextArea rows={3} />
                             </FormItem>
@@ -551,7 +551,7 @@ const AddEditEmployee = (props) => {
                             <FormItem
                                 label="Date of Birth"
                                 name={['employees', 'dob']}
-                                rules={[{ required: true, message: 'Please Enter Dob' }]}
+                               // rules={[{ required: true, message: 'Please Enter Dob' }]}
                             >
 
                                 <Space direction="vertical">
@@ -573,7 +573,7 @@ const AddEditEmployee = (props) => {
                             <FormItem
                                 label="Date of Join"
                                 name={['employees', 'doj']}
-                                rules={[{ required: true, message: 'Please Enter Doj' }]}
+                                //rules={[{ required: true, message: 'Please Enter Doj' }]}
                             >
 
                                 <Space direction="vertical">

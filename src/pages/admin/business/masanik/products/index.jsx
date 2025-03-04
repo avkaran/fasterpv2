@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext,useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, message, Space, FloatButton } from 'antd';
 import { MyButton } from '../../../../../comp'
-import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar,Input } from 'antd';
+import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar, Input, DatePicker, Form, Radio } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { MyTable, DeleteButton, PaginatedTable, AvatarMobileInfiniteList } from '../../../../../comp';
@@ -31,7 +31,10 @@ const JewelProducts = (props) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const [heading] = useState('Bill');
     const [refreshTable, setRefreshTable] = useState(0);
-     const filterColumns = useRef([]);
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [selectedType, setSelectedType] = useState('')
+    const [selectedSearchText,setSelectedSearchText]=useState("")
+    const filterColumns = useRef([]);
     useEffect(() => {
         //  loadData();
         if (context.isMobile) {
@@ -40,7 +43,9 @@ const JewelProducts = (props) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    useEffect(() => {
+        onSearch(selectedSearchText)
+    }, [selectedDate,selectedType]);
     const tableColumns = [
         {
             title: 'S.No',
@@ -56,9 +61,15 @@ const JewelProducts = (props) => {
         },
         {
             title: 'Customer',
-           // dataIndex: 'employee_id',
+            // dataIndex: 'employee_id',
             key: 'employee_id',
             render: (item) => <strong>{item.name}({item.mobile_no})</strong>,
+        },
+        {
+            title: 'Sender',
+            // dataIndex: 'employee_id',
+            key: 'username',
+            render: (item) => <strong>{item.username}</strong>,
         },
         {
             title: 'Amount',
@@ -68,22 +79,22 @@ const JewelProducts = (props) => {
         },
         {
             title: 'Bill Date',
-           // dataIndex: 'bill_date',
+            // dataIndex: 'bill_date',
             key: 'bill_date',
-            render: (item) => <a>{dayjs(item.bill_date).format("DD/MM/YYYY")}</a>,
+            render: (item) => <a>{item.bill_date ? dayjs(item.bill_date).format("DD/MM/YYYY") : ''}</a>,
         },
         {
             title: 'Due Date',
-           // dataIndex: 'due_date',
+            // dataIndex: 'due_date',
             key: 'due_date',
-            render: (item) => <a>{item.due_date?dayjs(item.due_date).format("DD/MM/YYYY"):''}</a>,
+            render: (item) => <a>{item.due_date ? dayjs(item.due_date).format("DD/MM/YYYY") : ''}</a>,
         },
-       /*  {
-            title: 'Customer',
-            //dataIndex: 'stock',
-            key: 'stock',
-            render: (item) => <>{(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)}</>,
-        }, */
+        /*  {
+             title: 'Customer',
+             //dataIndex: 'stock',
+             key: 'stock',
+             render: (item) => <>{(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)}</>,
+         }, */
         {
             title: 'Status',
             //dataIndex: 'COLUMN_COMMENT',
@@ -113,17 +124,35 @@ const JewelProducts = (props) => {
         },
     ]
     const onSearch = (value) => {
+        setSelectedSearchText(value);
         var filter_or_clauses = [];
+        var filter_classes = [];
+
         const searchTerms = value.split(" ");
-        searchTerms.forEach(item=>{
-            filter_or_clauses.push("p.bill_no like '%" +item +"%'");
-            filter_or_clauses.push("e.mobile_no like '%" +item +"%'");
-            filter_or_clauses.push("e.name like '%" +item +"%'");
-           // filter_or_clauses.push("t.string_id like '%" +item +"%'");
-           // filter_or_clauses.push("t.descripiton like '%" +item +"%'");
-           // filter_or_clauses.push("tc.category_name like '%" +item +"%'");
+        searchTerms.forEach(item => {
+            filter_or_clauses.push("p.bill_no like '%" + item + "%'");
+            filter_or_clauses.push("e.mobile_no like '%" + item + "%'");
+            filter_or_clauses.push("e.name like '%" + item + "%'");
+            filter_or_clauses.push("u.username like '%" + item + "%'");
+            // filter_or_clauses.push("t.string_id like '%" +item +"%'");
+            // filter_or_clauses.push("t.descripiton like '%" +item +"%'");
+            // filter_or_clauses.push("tc.category_name like '%" +item +"%'");
         })
-        filterColumns.current = ["("+ filter_or_clauses.join(" OR ")+")"];
+        filter_classes.push("(" + filter_or_clauses.join(" OR ") + ")")
+        if (selectedType) {
+            if (selectedType === "received"){
+                filter_classes.push("p.employee_id=p.sent_by")
+                //filter_classes.push("p.employee_id!=p.sent_by")
+            }
+            else if (selectedType === "sent")
+                filter_classes.push("p.employee_id!=p.sent_by")
+        }
+        if(selectedDate){
+            filter_classes.push(`p.bill_date='${selectedDate}'`)
+        }
+        
+
+        filterColumns.current = filter_classes
         setRefreshTable((prev) => prev + 1);
     }
     const onAddClick = () => {
@@ -329,28 +358,51 @@ const JewelProducts = (props) => {
                         }
                         <Card title={
                             <Row>
-                                <Col xs={12} xl={3}>All Bills</Col>
-                                <Col xs={12} xl={9}>
-                                <Input.Search
-                                    placeholder="Search here"
-                                    allowClear
-                                    enterButton
-                                    size="middle"
-                                    onSearch={onSearch}
-                                />
+                                <Col xs={24} xl={6}>
+
+                                    <Radio.Group optionType="button" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                                        <Radio.Button value="">All</Radio.Button >
+                                        <Radio.Button value="received">Recd</Radio.Button >
+                                        <Radio.Button value="sent">Sent</Radio.Button >
+                                    </Radio.Group>
+                                </Col>
+                                <Col xs={24} xl={8}>
+                                    <Input.Search
+                                        placeholder="Search here"
+                                        allowClear
+                                        enterButton
+                                        size="middle"
+                                        onSearch={onSearch}
+                                    />
+                                </Col>
+                                <Col xs={24} xl={6}>
+                                    <Form.Item
+                                        label="Date"
+                                        name="ad_dates"
+                                    // rules={[{ required: true, message: 'Please Enter Msg Date' }]}
+                                    >
+                                        <Space direction="vertical">
+                                            <DatePicker
+                                                onChange={(date) => setSelectedDate(date ? dayjs(date).format("YYYY-MM-DD") : null)}
+                                                value={selectedDate ? dayjs(selectedDate, "YYYY-MM-DD") : null} // Ensure value is a dayjs object
+                                                format="DD/MM/YYYY"
+                                                allowClear={true}
+                                            />
+                                        </Space>
+                                    </Form.Item>
                                 </Col>
                             </Row>
                         }
-                        
-                        extra={context.isAdminResourcePermit(userId, 'allbills.add-new-bill') ? <><Space><MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Bill</MyButton>{/* <MyButton onClick={onExcelClick} ><i className="fa-solid fa-file-excel pe-2" ></i>Excel</MyButton> */}</Space></> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+
+                            extra={context.isAdminResourcePermit(userId, 'allbills.add-new-bill') ? <><Space><MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Bill</MyButton>{/* <MyButton onClick={onExcelClick} ><i className="fa-solid fa-file-excel pe-2" ></i>Excel</MyButton> */}</Space></> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
 
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
-                                countQuery={"select count(*) as count from bills where status=1 "+
-                                context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,@rownum:=@rownum+1 as row_num from bills p,employees e CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id"+
-                                context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                    context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                    context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}
                             />
 
@@ -362,17 +414,17 @@ const JewelProducts = (props) => {
                         <div style={{ display: (curAction === "list") ? 'block' : 'none' }}>
                             {
                                 context.isAdminResourcePermit(userId, 'allbills.add-new-bill') && (<>
-                                   
-                                        <FloatButton
-                                            type="primary"
-                                            shape="circle"
-                                            onClick={onAddClick}
-                                            icon={<FontAwesomeIcon icon={faPlus} />}
-                                            style={{
-                                                right: 96,
-                                              }}
-                                        />
-                                        {/* <FloatButton
+
+                                    <FloatButton
+                                        type="primary"
+                                        shape="circle"
+                                        onClick={onAddClick}
+                                        icon={<FontAwesomeIcon icon={faPlus} />}
+                                        style={{
+                                            right: 96,
+                                        }}
+                                    />
+                                    {/* <FloatButton
                                             type="primary"
                                             shape="circle"
                                             onClick={onExcelClick}
@@ -381,16 +433,53 @@ const JewelProducts = (props) => {
                                                 right: 24,
                                               }}
                                         /> */}
-                                   
+
                                 </>)
                             }
+                             <Row style={{marginTop:'7px'}}>
+                                <Col xs={12} xl={6} >
+
+                                    <Radio.Group optionType="button" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                                        <Radio.Button value="">All</Radio.Button >
+                                        <Radio.Button value="received">Recd</Radio.Button >
+                                        <Radio.Button value="sent">Sent</Radio.Button >
+                                    </Radio.Group>
+                                </Col>
+                                <Col xs={12} xl={6}>
+                                    <Form.Item
+                                        label="Date"
+                                        name="ad_dates"
+                                    // rules={[{ required: true, message: 'Please Enter Msg Date' }]}
+                                    >
+                                        <Space direction="vertical">
+                                            <DatePicker
+                                                onChange={(date) => setSelectedDate(date ? dayjs(date).format("YYYY-MM-DD") : null)}
+                                                value={selectedDate ? dayjs(selectedDate, "YYYY-MM-DD") : null} // Ensure value is a dayjs object
+                                                format="DD/MM/YYYY"
+                                                allowClear={true}
+                                            />
+                                        </Space>
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} xl={8}>
+                                    <Input.Search
+                                        placeholder="Search here"
+                                        allowClear
+                                        enterButton
+                                        size="middle"
+                                        onSearch={onSearch}
+                                    />
+                                </Col>
+                                
+                            </Row>
 
                             <AvatarMobileInfiniteList
                                 header={<span>Bills</span>}
                                 userId={userId}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from bills where status=1 "
-                                listQuery="select p.*,e.name,e.mobile_no from bills p,employees e  where p.status=1 and p.employee_id=e.id"
+                                countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" + context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username from bills p,employees e,vi_users u  where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                    context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
@@ -423,10 +512,10 @@ const JewelProducts = (props) => {
                                                     height={40}
                                                 >{item.name.charAt(0).toUpperCase()}</Avatar>
                                             }
-                                            description={<>Bill No: {item.bill_no}<br/>
-                                            Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Total Cost: {item.total_amount}</>}
+                                            description={<>Bill No: {item.bill_no}<br />
+                                                Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Total Cost: {item.total_amount}</>}
                                         >
-                                             {item.name}
+                                            {item.name}
                                         </MList.Item>
                                     </SwipeAction>
                                 }}

@@ -26,6 +26,7 @@ const AddEditJewelProduct = (props) => {
     const [employees, setEmployees] = useState([])
     useEffect(() => {
         loadEmployees()
+       // console.log("user",context.)
     }, [])
     useEffect(() => {
 
@@ -190,7 +191,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill No"
                                     name={['bills', 'bill_no']}
-                                    rules={[{ required: true, message: 'Please Enter Bill No' }]}
+                                    //rules={[{ required: true, message: 'Please Enter Bill No' }]}
                                 >
                                     <Input placeholder="Bill No" />
                                 </FormItem>
@@ -226,7 +227,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill Date"
                                     name={['bills', 'bill_date']}
-                                    rules={[{ required: true, message: 'Please Select Bill Date' }]}
+                                   // rules={[{ required: true, message: 'Please Select Bill Date' }]}
                                 >
                                     <DatePicker
                                         // onChange={dateOnChange}
@@ -245,7 +246,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Due Date"
                                     name={['bills', 'due_date']}
-                                    rules={[{ required: true, message: 'Please Due Date' }]}
+                                   // rules={[{ required: true, message: 'Please Due Date' }]}
                                 >
                                     <DatePicker
                                         //onChange={dateOnChange}
@@ -263,10 +264,10 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill Image"
                                     name={['bills', 'bill_image']}
-                                    rules={[{ required: true, message: 'Please Enter Cost' }]}
+                                    rules={[{ required: true, message: 'Please Select Bill Image' }]}
                                 >
                                     <ImageUpload
-                                        // cropRatio="4/3"
+                                         cropRatio="3/4"
                                         defaultImage={editData && editData.bill_image ? 'cloud-file/' + encodeURIComponent(encodeURIComponent(editData.bill_image)) : null}
                                         storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
                                         onFinish={(fileName) => { addeditFormProducts.setFieldsValue({ bills: { bill_image: fileName } }) }}
@@ -279,7 +280,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill Amount"
                                     name={['bills', 'total_amount']}
-                                    rules={[{ required: true, message: 'Please Enter Amount' }]}
+                                   // rules={[{ required: true, message: 'Please Enter Amount' }]}
                                 >
                                     <InputNumber placeholder="Bill Amount" type="number" style={{ width: '200px' }} />
                                 </FormItem>

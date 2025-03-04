@@ -2,13 +2,7 @@ import { ROLES } from "../../../../utils/data"
 const mynav = [
 	{ name: 'Dashboard', path: '/:userId/admin', icon: 'fa-solid fa-house', exact: true, allowed: ROLES.ALL },
 	{ name: 'All Bills', path: '/:userId/admin/products', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL, allowed: ROLES.ALL, resourceName: 'allbills.list-bills' },
-
-	{ name: 'All Disputes', path: '/:userId/admin/adjustments', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL, allowed: ROLES.ALL, resourceName: 'alldisputes.list-disputes' },
-
 	{ name: 'My Bills', path: '/:userId/admin/mybills', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL, allowed: ROLES.ALL, resourceName: 'mybills.list-bills' },
-
-	{ name: 'My Disputes', path: '/:userId/admin/mydisputes', icon: 'fa-solid fa-user-tie', exact: true, allowed: ROLES.ALL, allowed: ROLES.ALL, resourceName: 'mydisputes.list-disputes' },
-
 	{
 		name: 'Branches',
 		path: '/:userId/admin/branches',
@@ -30,8 +24,6 @@ const mynav = [
 		],
 		allowed: ROLES.ALL
 	},
-	{ name: 'Form Settings', path: '/:userId/admin/collections', icon: 'fa-regular fa-square-plus', exact: true, allowed: ROLES.ALL, resourceName: 'form-settings.list-settings' },
-
 	{
 		name: 'My Account',
 		path: '/:userId/admin/myaccounts',

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, message, Space, FloatButton } from 'antd';
 import { MyButton } from '../../../../../comp'
-import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar, Input } from 'antd';
+import { Breadcrumb, Layout, Spin, Card, Tag, Modal, Button, Drawer, Avatar, Input, DatePicker, Form, Radio } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import PsContext from '../../../../../context';
 import { MyTable, DeleteButton, PaginatedTable, AvatarMobileInfiniteList } from '../../../../../comp';
@@ -31,19 +31,23 @@ const MyBills = (props) => {
     const [visibleModal, setVisibleModal] = useState(false);
     const [heading] = useState('Bill');
     const [refreshTable, setRefreshTable] = useState(0);
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [selectedType, setSelectedType] = useState('')
+    const [selectedSearchText,setSelectedSearchText]=useState("")
     const filterColumns = useRef([
-        'p.employee_id=' + context.adminUser(userId).ref_id,
+        '(p.employee_id=' + context.adminUser(userId).ref_id + ' OR p.sent_by=' + context.adminUser(userId).ref_id + ')'
     ]);
     useEffect(() => {
         //  loadData();
-        console.log('userinfo', context.adminUser(userId))
         if (context.isMobile) {
             setFormItemLayout('two-column-wrap');
             setDialogType('container')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    useEffect(() => {
+        onSearch(selectedSearchText)
+    }, [selectedDate,selectedType]);
     const tableColumns = [
         {
             title: 'S.No',
@@ -64,6 +68,12 @@ const MyBills = (props) => {
             render: (item) => <strong>{item.name}({item.mobile_no})</strong>,
         },
         {
+            title: 'Sender',
+            // dataIndex: 'employee_id',
+            key: 'username',
+            render: (item) => <strong>{item.username}</strong>,
+        },
+        {
             title: 'Amount',
             dataIndex: 'total_amount',
             key: 'total_amount',
@@ -73,7 +83,7 @@ const MyBills = (props) => {
             title: 'Bill Date',
             // dataIndex: 'bill_date',
             key: 'bill_date',
-            render: (item) => <a>{dayjs(item.bill_date).format("DD/MM/YYYY")}</a>,
+            render: (item) => <a>{item.bill_date ? dayjs(item.bill_date).format("DD/MM/YYYY") : ''}</a>,
         },
         {
             title: 'Due Date',
@@ -100,10 +110,10 @@ const MyBills = (props) => {
             render: (item) => <Space>
                 <MyButton type="outlined" size="small" shape="circle"
                     onClick={() => onViewClick(item)} ><i class="fa-solid fa-eye"></i></MyButton>
-                {context.isAdminResourcePermit(userId, 'mybills.edit-bill') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
+                {context.isAdminResourcePermit(userId, 'allbills.edit-bill') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>)}
-                {context.isAdminResourcePermit(userId, 'mybills.delete-bill') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
+                {context.isAdminResourcePermit(userId, 'allbills.delete-bill') && (<DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
                     title="Bill"
                     table="bills"
                     //id must,+ give first three colums to display
@@ -116,17 +126,37 @@ const MyBills = (props) => {
         },
     ]
     const onSearch = (value) => {
+        setSelectedSearchText(value);
         var filter_or_clauses = [];
+        var filter_classes = [];
+
         const searchTerms = value.split(" ");
         searchTerms.forEach(item => {
             filter_or_clauses.push("p.bill_no like '%" + item + "%'");
             filter_or_clauses.push("e.mobile_no like '%" + item + "%'");
             filter_or_clauses.push("e.name like '%" + item + "%'");
+            filter_or_clauses.push("u.username like '%" + item + "%'");
             // filter_or_clauses.push("t.string_id like '%" +item +"%'");
             // filter_or_clauses.push("t.descripiton like '%" +item +"%'");
             // filter_or_clauses.push("tc.category_name like '%" +item +"%'");
         })
-        filterColumns.current = ["(" + filter_or_clauses.join(" OR ") + ")", 'p.employee_id=' + context.adminUser(userId).ref_id,];
+        filter_classes.push("(" + filter_or_clauses.join(" OR ") + ")")
+        if (selectedType) {
+            if (selectedType === "received"){
+                filter_classes.push("p.employee_id=p.sent_by")
+                //filter_classes.push("p.employee_id!=p.sent_by")
+            }
+            else if (selectedType === "sent")
+                filter_classes.push("p.employee_id!=p.sent_by")
+        }
+        if(selectedDate){
+            filter_classes.push(`p.bill_date='${selectedDate}'`)
+        }
+
+        filter_classes.push('(p.employee_id=' + context.adminUser(userId).ref_id + ' OR p.sent_by=' + context.adminUser(userId).ref_id + ')')
+        
+
+        filterColumns.current = filter_classes
         setRefreshTable((prev) => prev + 1);
     }
     const onAddClick = () => {
@@ -187,7 +217,7 @@ const MyBills = (props) => {
         </div>
         <div className="right">
             {
-                curAction === "view" && viewOrEditData && context.isAdminResourcePermit(userId, 'mybills.edit-bill') && (<a className="headerButton" onClick={() => setCurAction("edit")}>
+                curAction === "view" && viewOrEditData && context.isAdminResourcePermit(userId, 'allbills.edit-bill') && (<a className="headerButton" onClick={() => setCurAction("edit")}>
                     <FontAwesomeIcon icon={faPencil} />
                 </a>)
             }
@@ -243,10 +273,10 @@ const MyBills = (props) => {
     const rightButtons =
         <Space><MyButton type='primary' onClick={onAddEditListClick}><i className="fa-solid fa-arrow-left pe-2" ></i>Back</MyButton>
             {(curAction === 'view' || curAction === 'edit') && (<>
-                {curAction === 'view' && context.isAdminResourcePermit(userId, 'mybills.edit-bill') && (<MyButton type='primary' onClick={() => { setCurAction("edit") }}><i className="fa-solid fa-pencil pe-2" ></i>Edit</MyButton>)}
+                {curAction === 'view' && context.isAdminResourcePermit(userId, 'allbills.edit-bill') && (<MyButton type='primary' onClick={() => { setCurAction("edit") }}><i className="fa-solid fa-pencil pe-2" ></i>Edit</MyButton>)}
                 {curAction === 'edit' && (<MyButton type='primary' onClick={() => { setCurAction("view") }}><i className="fa-solid fa-eye pe-2" ></i>View</MyButton>)}
                 {
-                    context.isAdminResourcePermit(userId, 'mybills.delete-bill') && (<DeleteButton type="outlined" size="small" shape="round" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
+                    context.isAdminResourcePermit(userId, 'allbills.delete-bill') && (<DeleteButton type="outlined" size="small" shape="round" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
                         title="Bill"
                         table="bills"
                         //id must,+ give first three colums to display
@@ -270,7 +300,7 @@ const MyBills = (props) => {
             },
             ,
         ]
-        if (context.isAdminResourcePermit(userId, 'mybills.edit-bill')) {
+        if (context.isAdminResourcePermit(userId, 'allbills.edit-bill')) {
             tmpActions.push({
                 key: 'edit',
                 text: <MyButton type="outlined" size="small" shape="circle"
@@ -332,8 +362,15 @@ const MyBills = (props) => {
                         }
                         <Card title={
                             <Row>
-                                <Col xs={12} xl={3}>All Bills</Col>
-                                <Col xs={12} xl={9}>
+                                <Col xs={24} xl={6}>
+
+                                    <Radio.Group optionType="button" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                                        <Radio.Button value="">All</Radio.Button >
+                                        <Radio.Button value="received">Recd</Radio.Button >
+                                        <Radio.Button value="sent">Sent</Radio.Button >
+                                    </Radio.Group>
+                                </Col>
+                                <Col xs={24} xl={8}>
                                     <Input.Search
                                         placeholder="Search here"
                                         allowClear
@@ -342,17 +379,33 @@ const MyBills = (props) => {
                                         onSearch={onSearch}
                                     />
                                 </Col>
+                                <Col xs={24} xl={6}>
+                                    <Form.Item
+                                        label="Date"
+                                        name="ad_dates"
+                                    // rules={[{ required: true, message: 'Please Enter Msg Date' }]}
+                                    >
+                                        <Space direction="vertical">
+                                            <DatePicker
+                                                onChange={(date) => setSelectedDate(date ? dayjs(date).format("YYYY-MM-DD") : null)}
+                                                value={selectedDate ? dayjs(selectedDate, "YYYY-MM-DD") : null} // Ensure value is a dayjs object
+                                                format="DD/MM/YYYY"
+                                                allowClear={true}
+                                            />
+                                        </Space>
+                                    </Form.Item>
+                                </Col>
                             </Row>
                         }
 
-                            extra={context.isAdminResourcePermit(userId, 'mybills.add-new-bill') ? <><Space><MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Bill</MyButton>{/* <MyButton onClick={onExcelClick} ><i className="fa-solid fa-file-excel pe-2" ></i>Excel</MyButton> */}</Space></> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
+                            extra={context.isAdminResourcePermit(userId, 'allbills.add-new-bill') ? <><Space><MyButton onClick={onAddClick} ><i className="fa-solid fa-plus pe-2" ></i>Add Bill</MyButton>{/* <MyButton onClick={onExcelClick} ><i className="fa-solid fa-file-excel pe-2" ></i>Excel</MyButton> */}</Space></> : null} style={{ display: (curAction === "list" || dialogType !== 'container') ? 'block' : 'none' }}>
 
                             <PaginatedTable
                                 columns={tableColumns}
                                 refresh={refreshTable}
-                                countQuery={"select count(*) as count from bills where status=1 " +
+                                countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,@rownum:=@rownum+1 as row_num from bills p,employees e CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id" +
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}
                             />
@@ -364,7 +417,7 @@ const MyBills = (props) => {
                         {(curAction === "add" || curAction === "edit" || curAction === "view") && (<Card>{addEditComponents()}</Card>)}
                         <div style={{ display: (curAction === "list") ? 'block' : 'none' }}>
                             {
-                                context.isAdminResourcePermit(userId, 'mybills.add-new-bill') && (<>
+                                context.isAdminResourcePermit(userId, 'allbills.add-new-bill') && (<>
 
                                     <FloatButton
                                         type="primary"
@@ -375,29 +428,66 @@ const MyBills = (props) => {
                                             right: 96,
                                         }}
                                     />
-                                   {/*  <FloatButton
-                                        type="primary"
-                                        shape="circle"
-                                        onClick={onExcelClick}
-                                        icon={<FontAwesomeIcon icon={faFileExcel} />}
-                                        style={{
-                                            right: 24,
-                                        }}
-                                    /> */}
+                                    {/* <FloatButton
+                                            type="primary"
+                                            shape="circle"
+                                            onClick={onExcelClick}
+                                            icon={<FontAwesomeIcon icon={faFileExcel} />}
+                                            style={{
+                                                right: 24,
+                                              }}
+                                        /> */}
 
                                 </>)
                             }
+                             <Row style={{marginTop:'7px'}}>
+                                <Col xs={12} xl={6} >
+
+                                    <Radio.Group optionType="button" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                                        <Radio.Button value="">All</Radio.Button >
+                                        <Radio.Button value="received">Recd</Radio.Button >
+                                        <Radio.Button value="sent">Sent</Radio.Button >
+                                    </Radio.Group>
+                                </Col>
+                                <Col xs={12} xl={6}>
+                                    <Form.Item
+                                        label="Date"
+                                        name="ad_dates"
+                                    // rules={[{ required: true, message: 'Please Enter Msg Date' }]}
+                                    >
+                                        <Space direction="vertical">
+                                            <DatePicker
+                                                onChange={(date) => setSelectedDate(date ? dayjs(date).format("YYYY-MM-DD") : null)}
+                                                value={selectedDate ? dayjs(selectedDate, "YYYY-MM-DD") : null} // Ensure value is a dayjs object
+                                                format="DD/MM/YYYY"
+                                                allowClear={true}
+                                            />
+                                        </Space>
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} xl={8}>
+                                    <Input.Search
+                                        placeholder="Search here"
+                                        allowClear
+                                        enterButton
+                                        size="middle"
+                                        onSearch={onSearch}
+                                    />
+                                </Col>
+                                
+                            </Row>
 
                             <AvatarMobileInfiniteList
                                 header={<span>Bills</span>}
                                 userId={userId}
                                 refresh={refreshTable}
-                                countQuery="select count(*) as count from bills where status=1 "
-                                listQuery="select p.*,e.name,e.mobile_no from bills p,employees e  where p.status=1 and p.employee_id=e.id"
+                                countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" + context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username from bills p,employees e,vi_users u  where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                    context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
                                     return <SwipeAction
-                                        rightActions={context.isAdminResourcePermit(userId, 'mybills.delete-bill') ? [
+                                        rightActions={context.isAdminResourcePermit(userId, 'allbills.delete-bill') ? [
                                             {
                                                 key: 'delete',
                                                 text: <DeleteButton type="outlined" size="small" shape="circle" color={red[7]} onFinish={() => { setCurAction("list"); setRefreshTable(prev => prev + 1); }}
@@ -424,12 +514,12 @@ const MyBills = (props) => {
                                                     fit='cover'
                                                     width={40}
                                                     height={40}
-                                                >{dayjs(item.bill_date).format("MMM").toString().charAt(0).toUpperCase()}</Avatar>
+                                                >{item.name.charAt(0).toUpperCase()}</Avatar>
                                             }
                                             description={<>Bill No: {item.bill_no}<br />
-                                                Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Due Date:{dayjs(item.due_date).format("DD/MM/YYYY")} </>}
+                                                Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Total Cost: {item.total_amount}</>}
                                         >
-                                            {item.total_amount}
+                                            {item.name}
                                         </MList.Item>
                                     </SwipeAction>
                                 }}
