@@ -4,6 +4,12 @@ import AOS from "aos";
 import PsContext from '../../../../context'
 import { currentInstance, businesses } from '../../../../utils';
 
+
+import AddContent from "../../cms/addContent";
+import ListContents from "../../cms"
+import EditContent from "../../cms/editContent";
+import ViewContent from "../../cms/viewContent";
+
 //this project components
 import Dashboard from "./dashboard";
 import EmployeeDesignations from "../../employee-designations";
@@ -17,6 +23,7 @@ import JewelProducts from './products';
 //addes for testing.
 import { ROLES } from "../../../../utils/data";
 import Adjustments from './adjustments';
+import ProductOrders from './orders';
 
 const AdminLayout = React.lazy(() => import('../../layout-desktop'));
 const AdminLayoutMobile = React.lazy(() => import('../../layout-mobile'));
@@ -37,7 +44,34 @@ const AuthRoutes = (props) => {
                     exact={true}
                 />
 
-
+                <Route
+                    path='/:userId/admin/contents/:content_type/add'
+                    element={<AddContent />}
+                    title='Add Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    path='/:userId/admin/contents/:content_type/edit/:id'
+                    element={<EditContent />}
+                    title='Edit Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                <Route
+                    exact={true}
+                    path='/:userId/admin/contents/:contentype/list'
+                    element={<ListContents />}
+                    title='List Content'
+                    allowed={ROLES.ALL}
+                />
+                <Route
+                    path='/:userId/admin/contents/:content_type/view/:id'
+                    element={<ViewContent />}
+                    title='View Content'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
                 <Route
                     path='/:userId/admin/employee-designations'
                     element={<EmployeeDesignations />}
@@ -86,6 +120,13 @@ const AuthRoutes = (props) => {
                     path='/:userId/admin/products'
                     element={<JewelProducts />}
                     title='Products'
+                    allowed={ROLES.ALL}
+                    exact={true}
+                />
+                  <Route
+                    path='/:userId/admin/orders'
+                    element={<ProductOrders />}
+                    title='orders'
                     allowed={ROLES.ALL}
                     exact={true}
                 />

@@ -16,6 +16,7 @@ import ResponsiveLayout from '../../../layout'
 import { List as MList, Dialog, SwipeAction, Toast, MImage } from 'antd-mobile'
 import randomColor from 'randomcolor';
 import * as xlsx from "xlsx";
+import { Editor } from '@tinymce/tinymce-react';
 const JewelProducts = (props) => {
     const context = useContext(PsContext);
     const { userId } = useParams();
@@ -28,8 +29,10 @@ const JewelProducts = (props) => {
     const [formItemLayout, setFormItemLayout] = useState('one-column'); //one-column,two-column,two-column-wrap
     const [viewOrEditData, setViewOrEditData] = useState(null);
     const [visibleModal, setVisibleModal] = useState(false);
+    const [visibleDescription, setVisibleDescription] = useState(false)
     const [heading] = useState('Product');
     const [refreshTable, setRefreshTable] = useState(0);
+    const [editorValue, setEditorValue] = useState('');
     useEffect(() => {
         //  loadData();
         if (context.isMobile) {
@@ -38,7 +41,29 @@ const JewelProducts = (props) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    const onDescriptonUpdate = () => {
+        var formedit = new FormData();
+        formedit.append('id', viewOrEditData.id);
 
+        formedit.append("product_description",editorValue)
+
+        context.psGlobal.apiRequest('admin/products/update', context.adminUser(userId).mode, formedit).then((res) => {
+            //setLoader(false);
+            message.success(heading + ' Saved Successfullly');
+            
+            //navigate('/' + userId + '/admin/courses');
+        }).catch(err => {
+            message.error(err);
+            //setLoader(false);
+        })
+    }
+    const handleEditorChange = (content) => {
+        setEditorValue(content);
+        /*   addForm.setFieldsValue({
+              content_html: { html: content }
+          }) */
+        //// setEditorValue(content);
+    }
     const tableColumns = [
         {
             title: 'S.No',
@@ -95,6 +120,8 @@ const JewelProducts = (props) => {
             render: (item) => <Space>
                 <MyButton type="outlined" size="small" shape="circle"
                     onClick={() => onViewClick(item)} ><i class="fa-solid fa-eye"></i></MyButton>
+                <MyButton type="outlined" size="small" shape="circle"
+                    onClick={() => onDescriptionClick(item)} ><i class="fa-solid fa-list"></i></MyButton>
                 {context.isAdminResourcePermit(userId, 'products.edit-product') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>)}
@@ -197,6 +224,12 @@ const JewelProducts = (props) => {
             setVisibleModal(true);
 
 
+    }
+    const onDescriptionClick = (item) => {
+        setViewOrEditData(item);
+        setVisibleDescription(true)
+        setEditorValue(item.product_description)
+        // alert("description under constructions")
     }
     const onAddEditListClick = () => {
         setCurAction("list");
@@ -329,26 +362,26 @@ const JewelProducts = (props) => {
                         <div style={{ display: (curAction === "list") ? 'block' : 'none' }}>
                             {
                                 context.isAdminResourcePermit(userId, 'products.add-product') && (<>
-                                   
-                                        <FloatButton
-                                            type="primary"
-                                            shape="circle"
-                                            onClick={onAddClick}
-                                            icon={<FontAwesomeIcon icon={faPlus} />}
-                                            style={{
-                                                right: 96,
-                                              }}
-                                        />
-                                        <FloatButton
-                                            type="primary"
-                                            shape="circle"
-                                            onClick={onExcelClick}
-                                            icon={<FontAwesomeIcon icon={faFileExcel} />}
-                                            style={{
-                                                right: 24,
-                                              }}
-                                        />
-                                   
+
+                                    <FloatButton
+                                        type="primary"
+                                        shape="circle"
+                                        onClick={onAddClick}
+                                        icon={<FontAwesomeIcon icon={faPlus} />}
+                                        style={{
+                                            right: 96,
+                                        }}
+                                    />
+                                    <FloatButton
+                                        type="primary"
+                                        shape="circle"
+                                        onClick={onExcelClick}
+                                        icon={<FontAwesomeIcon icon={faFileExcel} />}
+                                        style={{
+                                            right: 24,
+                                        }}
+                                    />
+
                                 </>)
                             }
 
@@ -390,8 +423,8 @@ const JewelProducts = (props) => {
                                                     height={40}
                                                 >{item.product_name.charAt(0).toUpperCase()}</Avatar>
                                             }
-                                            description={<>Code: {item.product_code} ,Stock: {(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)} <br/>
-                                            Cost per:{item.cost_price} ,Total Cost: {((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2)}</>}
+                                            description={<>Code: {item.product_code} ,Stock: {(parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)).toFixed(2)} <br />
+                                                Cost per:{item.cost_price} ,Total Cost: {((parseFloat(item.stock) + parseFloat(item.purchase) - parseFloat(item.sales)) * parseFloat(item.cost_price)).toFixed(2)}</>}
                                         >
                                             {item.product_name}
                                         </MList.Item>
@@ -404,6 +437,46 @@ const JewelProducts = (props) => {
 
 
             </ResponsiveLayout>
+
+            <Modal
+                open={visibleDescription}
+                zIndex={999}
+                footer={null}
+                closeIcon={<MyButton type="outlined" shape="circle" ><FontAwesomeIcon icon={faClose} /></MyButton>}
+                centered={false}
+                closable={true}
+                width={1000}
+                onCancel={() => { setVisibleDescription(false) }}
+                title={<><MyButton type="outlined" size="small" onClick={onDescriptonUpdate} >Update </MyButton> Descripiton : {viewOrEditData?.product_name}</>}
+
+            >
+                <Editor
+                    apiKey='aqgwg5nhsm57d07rdlff1bu6lj1aej23f41cyg7txuzc527u'
+                    init={{
+                        height: '500',
+                        auto_focus: false,
+                        menubar: false,
+                        statusbar: false,
+                        plugins: 'hr lists table textcolor code link image',
+                        toolbar: 'bold italic forecolor link image| alignleft aligncenter alignright | hr bullist numlist table | subscript superscript | removeformat code',
+
+                        // allow custom url in link? nah just disabled useless dropdown..
+                        anchor_top: false,
+                        anchor_bottom: false,
+                        draggable_modal: true,
+                        table_default_attributes: {
+                            border: '0',
+                        },
+                    }}
+                    // initialValue={viewData.content_html}
+                    value={editorValue}
+
+
+                    onEditorChange={handleEditorChange}
+                // onChange={handleEditorChange}
+                />
+
+            </Modal>
 
         </>
     );

@@ -1,8 +1,10 @@
 import Axios from 'axios';
 import toast from 'react-hot-toast';
 import { Select, Radio, message } from 'antd';
-import crypto from 'crypto';
+/* import crypto from 'crypto-browserify'; */
+import CryptoJS from "crypto-js";
 import dayjs from 'dayjs'
+
 export const listCollections = async () => {
 	const form = new FormData();
 	return new Promise((resolve, reject) => {
@@ -50,7 +52,7 @@ export const getBase64 = (img, callback) => {
 };
 
 
-export const encrypt = (textToEncrypt) => {
+/* export const encrypt = (textToEncrypt) => {
 	let encryptionMethod = 'AES-256-CBC';
 	let secret = "My32charPasswordAndInitVectorStr"; //must be 32 char length
 	let iv = secret.substr(0, 16);
@@ -65,7 +67,33 @@ export const decrypt = (encryptedMessage) => {
 	var decryptor = crypto.createDecipheriv(encryptionMethod, secret, iv);
 	var decryptedMessage = decryptor.update(encryptedMessage, 'base64', 'utf8') + decryptor.final('utf8');
 	return decryptedMessage;
-}
+} */
+
+export const encrypt = (textToEncrypt) => {
+	const secretKey = CryptoJS.enc.Utf8.parse("My32charPasswordAndInitVectorStr"); // 32-char key
+const iv = CryptoJS.enc.Utf8.parse("My32charPasswordAndInit"); // 16-char IV
+
+    const encrypted = CryptoJS.AES.encrypt(textToEncrypt, secretKey, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+    });
+    return encrypted.toString(); // Convert to Base64
+};
+
+// Decrypt function (AES-256-CBC)
+export const decrypt = (encryptedMessage) => {
+	const secretKey = CryptoJS.enc.Utf8.parse("My32charPasswordAndInitVectorStr"); // 32-char key
+const iv = CryptoJS.enc.Utf8.parse("My32charPasswordAndInit"); // 16-char IV
+
+    const decrypted = CryptoJS.AES.decrypt(encryptedMessage, secretKey, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+    });
+    return decrypted.toString(CryptoJS.enc.Utf8);
+};
+
 export const getWhereClause = (filterColumns, withWhere = false) => {
 	var whereClause = "";
 	if (filterColumns) {

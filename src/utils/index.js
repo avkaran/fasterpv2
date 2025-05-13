@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React from 'react';
-export const currentInstance = { index: 8, name: 'almanar'};
+export const currentInstance = { index: 8, name: 'almanar'}; 
+//export const currentInstance = { index: 10, name: 'masanik'}; 
 //compile mode= admin,customer,all
 export const businesses = [
   { //0
@@ -149,7 +150,7 @@ export const businesses = [
       adminMobileTheme: { baseColor: { color: '#00474f', reverseColor: '#fff' } },
     },
     responsive: { isMobile: true, },
-    hasCustomerPortal: false,
+    hasCustomerPortal: true,
   },
   { //9
     key: 'azam',

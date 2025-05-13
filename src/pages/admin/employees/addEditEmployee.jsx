@@ -241,6 +241,13 @@ const AddEditEmployee = (props) => {
         };
         context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
             setBranches(res);
+            addeditFormEmployee.setFieldsValue({
+                employees: {
+                    branch_id: res[0].id
+                   
+                },
+                
+            });
         }).catch(err => {
             message.error(err);
         })
@@ -271,12 +278,12 @@ const AddEditEmployee = (props) => {
             if (curAction === 'add') {
                 reqData = {
                     query_type: 'query',
-                    query: "select * from vi_users where username='" + username + "'"
+                    query: "select * from vi_users where status=1 and username='" + username + "'"
                 };
             } else if (curAction === 'edit') {
                 reqData = {
                     query_type: 'query',
-                    query: "select * from vi_users where username='" + username + "' and ref_id<>" + editId
+                    query: "select * from vi_users where status=1 and username='" + username + "' and ref_id<>" + editId
                 };
             }
            

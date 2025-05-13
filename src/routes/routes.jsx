@@ -11,7 +11,7 @@ const AdminPublicLayout = React.lazy(() => import('../pages/admin/public-layout-
 const AdminPublicLayoutMobile = React.lazy(() => import('../pages/admin/public-layout-mobile'));
 //const AdminLayoutMobile = React.lazy(() => import('../pages/admin/layout-mobile'));
 //const userLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/layout'));
-//const userPublicLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/public-layout'));
+const userPublicLayout = React.lazy(() => import('../pages/customer/' + currentInstance.name + '/public-layout'));
 const MyRoutes = (props) => {
   const [adminRoutes, setAdminRoutes] = useState([]);
   const [customerPublicRoutes, setCustomerPublicRoutes] = useState(null)

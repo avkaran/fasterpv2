@@ -33,7 +33,7 @@ const MyBills = (props) => {
     const [refreshTable, setRefreshTable] = useState(0);
     const [selectedDate, setSelectedDate] = useState(null)
     const [selectedType, setSelectedType] = useState('')
-    const [selectedSearchText,setSelectedSearchText]=useState("")
+    const [selectedSearchText, setSelectedSearchText] = useState("")
     const filterColumns = useRef([
         '(p.employee_id=' + context.adminUser(userId).ref_id + ' OR p.sent_by=' + context.adminUser(userId).ref_id + ')'
     ]);
@@ -47,7 +47,7 @@ const MyBills = (props) => {
     }, []);
     useEffect(() => {
         onSearch(selectedSearchText)
-    }, [selectedDate,selectedType]);
+    }, [selectedDate, selectedType]);
     const tableColumns = [
         {
             title: 'S.No',
@@ -61,18 +61,47 @@ const MyBills = (props) => {
             key: 'bill_no',
             //render: (item) => <strong>{item}</strong>,
         },
-        {
-            title: 'Customer',
-            // dataIndex: 'employee_id',
-            key: 'employee_id',
-            render: (item) => <strong>{item.name}({item.mobile_no})</strong>,
-        },
-        {
-            title: 'Sender',
+        ...(!selectedType ?
+            [{
+                title: 'Type',
+                // dataIndex: 'employee_id',
+                key: 'employee_id',
+                render: (item) => <strong>{item.employee_id === context.adminUser(userId).ref_id ? 'Recd' : 'Sent'}</strong>
+            }]
+            : [])
+        ,
+        ...(selectedType && selectedType === 'received' ?
+            [
+                {
+                    title: 'Sender',
+                    // dataIndex: 'employee_id',
+                    key: 'username',
+                    render: (item) => <strong>{item.username} ({item.sender_mobile})</strong>,
+                }
+            ] : []),
+        ...(selectedType && selectedType === 'sent' ?
+            [
+                {
+                    title: 'Receiver',
+                    // dataIndex: 'employee_id',
+                    key: 'username',
+                    render: (item) => <strong>{item.name} ({item.mobile_no})</strong>,
+                }
+            ] : []),
+        ...(!selectedType ? [{
+            title: 'By',
             // dataIndex: 'employee_id',
             key: 'username',
-            render: (item) => <strong>{item.username}</strong>,
-        },
+            render: (item) => <>
+                {item.employee_id === context.adminUser(userId).ref_id && (
+                    <><strong>{item.username} ({item.sender_mobile})</strong></>
+                )}
+                {item.sent_by === context.adminUser(userId).ref_id && (
+                    <><strong>{item.name} ({item.mobile_no})</strong></>
+                )}
+            </>
+        }] : []),
+
         {
             title: 'Amount',
             dataIndex: 'total_amount',
@@ -142,19 +171,19 @@ const MyBills = (props) => {
         })
         filter_classes.push("(" + filter_or_clauses.join(" OR ") + ")")
         if (selectedType) {
-            if (selectedType === "received"){
-                filter_classes.push("p.employee_id=p.sent_by")
+            if (selectedType === "received") {
+                filter_classes.push(`p.employee_id=${context.adminUser(userId).ref_id}`)
                 //filter_classes.push("p.employee_id!=p.sent_by")
             }
             else if (selectedType === "sent")
-                filter_classes.push("p.employee_id!=p.sent_by")
+                filter_classes.push(`p.sent_by=${context.adminUser(userId).ref_id}`)
         }
-        if(selectedDate){
+        if (selectedDate) {
             filter_classes.push(`p.bill_date='${selectedDate}'`)
         }
 
         filter_classes.push('(p.employee_id=' + context.adminUser(userId).ref_id + ' OR p.sent_by=' + context.adminUser(userId).ref_id + ')')
-        
+
 
         filterColumns.current = filter_classes
         setRefreshTable((prev) => prev + 1);
@@ -405,7 +434,7 @@ const MyBills = (props) => {
                                 refresh={refreshTable}
                                 countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,u.username,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username,e2.mobile_no as sender_mobile,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u,employees e2 CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and p.sent_by=e2.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}
                             />
@@ -440,7 +469,7 @@ const MyBills = (props) => {
 
                                 </>)
                             }
-                             <Row style={{marginTop:'7px'}}>
+                            <Row style={{ marginTop: '7px' }}>
                                 <Col xs={12} xl={6} >
 
                                     <Radio.Group optionType="button" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
@@ -474,7 +503,7 @@ const MyBills = (props) => {
                                         onSearch={onSearch}
                                     />
                                 </Col>
-                                
+
                             </Row>
 
                             <AvatarMobileInfiniteList
@@ -482,7 +511,7 @@ const MyBills = (props) => {
                                 userId={userId}
                                 refresh={refreshTable}
                                 countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" + context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,u.username from bills p,employees e,vi_users u  where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username,e2.mobile_no as sender_mobile from bills p,employees e,vi_users u,employees e2  where p.status=1 and p.employee_id=e.id and p.sent_by=e2.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
@@ -514,12 +543,13 @@ const MyBills = (props) => {
                                                     fit='cover'
                                                     width={40}
                                                     height={40}
-                                                >{item.name.charAt(0).toUpperCase()}</Avatar>
+                                                >{(item.employee_id === context.adminUser(userId).ref_id?item.username:item.name).charAt(0).toUpperCase()}</Avatar>
                                             }
                                             description={<>Bill No: {item.bill_no}<br />
                                                 Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Total Cost: {item.total_amount}</>}
                                         >
-                                            {item.name}
+                                            {item.employee_id === context.adminUser(userId).ref_id &&(<><i className='fa-solid fa-reply-all'></i> {item.username} </>)}
+                                            {item.sent_by === context.adminUser(userId).ref_id && (<><i className='fa-solid fa-paper-plane'></i> {item.name} </>)}
                                         </MList.Item>
                                     </SwipeAction>
                                 }}

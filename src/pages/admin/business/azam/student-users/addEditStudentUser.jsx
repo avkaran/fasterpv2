@@ -14,7 +14,7 @@ import PhoneInput from 'react-phone-input-2'
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import dayjs from 'dayjs'
 
-import esES from 'antd/lib/locale-provider/es_ES';
+//import esES from 'antd/lib/locale-provider/es_ES';
 const AddEditStudentUser = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -284,7 +284,7 @@ const AddEditStudentUser = (props) => {
 
                                     <DatePicker //onChange={dobOnChange} 
                                         format='DD/MM/YYYY'
-                                        locale={esES}
+                                        //locale={esES}
                                         //disabledDate={dobDisabled}
                                         allowClear={false}
                                     />

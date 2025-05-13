@@ -60,17 +60,18 @@ const JewelProducts = (props) => {
             //render: (item) => <strong>{item}</strong>,
         },
         {
-            title: 'Customer',
-            // dataIndex: 'employee_id',
-            key: 'employee_id',
-            render: (item) => <strong>{item.name}({item.mobile_no})</strong>,
-        },
-        {
             title: 'Sender',
             // dataIndex: 'employee_id',
-            key: 'username',
-            render: (item) => <strong>{item.username}</strong>,
+            key: 'sent_by',
+            render: (item) => <strong>{item.username} ({item.sender_mobile})</strong>,
         },
+        {
+            title: 'Receiver',
+            // dataIndex: 'employee_id',
+            key: 'username',
+            render: (item) => <strong>{item.name} ({item.mobile_no})</strong>,
+        },
+      
         {
             title: 'Amount',
             dataIndex: 'total_amount',
@@ -101,6 +102,7 @@ const JewelProducts = (props) => {
             key: 'active_status',
             render: (item) => <Tag color={parseInt(item.active_status) === 1 ? 'green' : 'red'} style={{ fontStock: 'bold' }}>{parseInt(item.active_status) === 1 ? 'Active' : 'Inactive'}</Tag>,
         },
+
         {
             title: 'Actions',
             // dataIndex: 'actions',
@@ -108,6 +110,7 @@ const JewelProducts = (props) => {
             render: (item) => <Space>
                 <MyButton type="outlined" size="small" shape="circle"
                     onClick={() => onViewClick(item)} ><i class="fa-solid fa-eye"></i></MyButton>
+               
                 {context.isAdminResourcePermit(userId, 'allbills.edit-bill') && (<MyButton type="outlined" size="small" shape="circle" color={blue[7]}
                     onClick={() => onEditClick(item)}
                 ><i class="fa-solid fa-pencil"></i></MyButton>)}
@@ -141,11 +144,11 @@ const JewelProducts = (props) => {
         filter_classes.push("(" + filter_or_clauses.join(" OR ") + ")")
         if (selectedType) {
             if (selectedType === "received"){
-                filter_classes.push("p.employee_id=p.sent_by")
+                filter_classes.push("e2.designation_id=2")
                 //filter_classes.push("p.employee_id!=p.sent_by")
             }
             else if (selectedType === "sent")
-                filter_classes.push("p.employee_id!=p.sent_by")
+                filter_classes.push("e.designation_id=2")
         }
         if(selectedDate){
             filter_classes.push(`p.bill_date='${selectedDate}'`)
@@ -241,6 +244,10 @@ const JewelProducts = (props) => {
         if (dialogType === 'modal' || dialogType === "drawer")
             setVisibleModal(true);
 
+
+    }
+    const onDescriptionClick = (item) => {
+       alert("description under constructions")
 
     }
     const onAddEditListClick = () => {
@@ -401,7 +408,7 @@ const JewelProducts = (props) => {
                                 refresh={refreshTable}
                                 countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,u.username,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                listQuery={"select p.*,e.name,e.mobile_no,u.username,e2.mobile_no as sender_mobile,@rownum:=@rownum+1 as row_num from bills p,employees e,vi_users u,employees e2 CROSS JOIN (SELECT @rownum:={rowNumberVar}) c where p.status=1 and p.employee_id=e.id and p.sent_by=e2.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 itemsPerPage={20}
                             />
@@ -477,8 +484,8 @@ const JewelProducts = (props) => {
                                 header={<span>Bills</span>}
                                 userId={userId}
                                 refresh={refreshTable}
-                                countQuery={"select count(*) as count from bills p,employees e,vi_users u where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" + context.psGlobal.getWhereClause(filterColumns.current, false)}
-                                listQuery={"select p.*,e.name,e.mobile_no,u.username from bills p,employees e,vi_users u  where p.status=1 and p.employee_id=e.id and u.ref_id=p.sent_by" +
+                                countQuery={"select count(*) as count from bills p,employees e,vi_users u,employees e2 where p.status=1 and p.employee_id=e.id and p.sent_by=e2.id and u.ref_id=p.sent_by" + context.psGlobal.getWhereClause(filterColumns.current, false)}
+                                listQuery={"select p.*,e.name,e2.designation_id as e2_designation_id,e.mobile_no,u.username,e2.mobile_no as sender_mobile from bills p,employees e,vi_users u,employees e2  where p.status=1 and p.employee_id=e.id and p.sent_by=e2.id and u.ref_id=p.sent_by" +
                                     context.psGlobal.getWhereClause(filterColumns.current, false)}
                                 recordsPerRequestOrPage={20}
                                 renderItem={(item, index) => {
@@ -510,12 +517,15 @@ const JewelProducts = (props) => {
                                                     fit='cover'
                                                     width={40}
                                                     height={40}
-                                                >{item.name.charAt(0).toUpperCase()}</Avatar>
+                                                >
+                                                  
+                                                    
+                                                    {item.e2_designation_id===2?<i className='fa-solid fa-reply-all'></i>:<i className='fa-solid fa-paper-plane'></i>}</Avatar>
                                             }
                                             description={<>Bill No: {item.bill_no}<br />
                                                 Date:{dayjs(item.bill_date).format("DD/MM/YYYY")} ,Total Cost: {item.total_amount}</>}
                                         >
-                                            {item.name}
+                                           {item.username}  <i className='fa-solid fa-arrow-right'></i> {item.name}
                                         </MList.Item>
                                     </SwipeAction>
                                 }}

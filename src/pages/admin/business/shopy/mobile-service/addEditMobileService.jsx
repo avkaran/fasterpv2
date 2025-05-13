@@ -13,7 +13,7 @@ import { Button as MButton } from 'antd-mobile'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import dayjs from 'dayjs'
-import esES from 'antd/lib/locale-provider/es_ES';
+//import esES from 'antd/lib/locale-provider/es_ES';
 const AddEditMobileService = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -190,7 +190,7 @@ const AddEditMobileService = (props) => {
                                 <DatePicker //onChange={receivedDateOnChange} 
                                     format='DD/MM/YYYY'
                                     //  defaltValue={dayjs()}
-                                    locale={esES}
+                                    //locale={esES}
 
                                     //disabledDate={receivedDateDisabled}
                                     allowClear={false}

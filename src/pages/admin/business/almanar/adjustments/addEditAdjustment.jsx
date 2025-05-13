@@ -12,7 +12,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
 import dayjs from 'dayjs'
-import esES from 'antd/lib/locale-provider/es_ES';
+//import esES from 'antd/lib/locale-provider/es_ES';
 const AddEditAdjustment = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -215,7 +215,7 @@ console.log('stock',stock)
                                     <DatePicker //onChange={receivedDateOnChange} 
                                         format='DD/MM/YYYY'
                                         //  defaltValue={dayjs()}
-                                        locale={esES}
+                                       // locale={esES}
 
                                         //disabledDate={receivedDateDisabled}
                                         allowClear={false}

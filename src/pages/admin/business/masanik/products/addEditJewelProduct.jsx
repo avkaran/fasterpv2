@@ -11,7 +11,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
 import dayjs from 'dayjs'
-import esES from 'antd/lib/locale-provider/es_ES';
+//import esES from 'antd/lib/locale-provider/es_ES';
 const AddEditJewelProduct = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -26,7 +26,7 @@ const AddEditJewelProduct = (props) => {
     const [employees, setEmployees] = useState([])
     useEffect(() => {
         loadEmployees()
-       // console.log("user",context.)
+        // console.log("user",context.)
     }, [])
     useEffect(() => {
 
@@ -47,18 +47,29 @@ const AddEditJewelProduct = (props) => {
         } else {
             setCurAction("add");
             addeditFormProducts.setFieldsValue(
-                { bills: { active_status: '1' } }
+                { bills: { active_status: '1',bill_date:dayjs() } }
             )
         }
 
     }, [editIdOrObject]);
     const loadEmployees = () => {
         setLoader(true);
+        console.log("context", context.adminUser(userId))
+        var curDesig = context.adminUser(userId).designation_id
+        /*  1 	Employee(s) 	
+            2 	Customers 	
+            11 	Employee 	
+            12 	Office  */
+        var listQuery = ""
+        if (curDesig === 2)
+            listQuery = `SELECT id,name from employees where status=1 and employee_status='Active' and designation_id<>2 and id<>${context.adminUser(userId).ref_id} and id>2`
+        else
+            listQuery = `SELECT id,name from employees where status=1 and employee_status='Active' and id<>${context.adminUser(userId).ref_id} and id>2`
         var reqData = {
             query_type: 'query',
-            query: "SELECT id,name from employees where status=1 and employee_status='Active' and designation_id=2"
+            query: listQuery
         };
-        context.psGlobal.apiRequest(reqData, context.adminUser(userId).mode).then((res) => {
+        context.psGlobal.apiRequest(reqData, "dev").then((res) => {
             setEmployees(res);
             setLoader(false);
 
@@ -93,7 +104,7 @@ const AddEditJewelProduct = (props) => {
                 bill_no: mydata.bill_no,
                 total_amount: mydata.total_amount,
                 bill_date: dayjs(mydata.bill_date),
-                due_date: dayjs(mydata.due_date),
+                due_date: mydata.due_date?dayjs(mydata.due_date):null,
                 employee_id: mydata.employee_id,
                 bill_image: mydata.bill_image,
                 active_status: mydata.active_status.toString(),
@@ -191,7 +202,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill No"
                                     name={['bills', 'bill_no']}
-                                    //rules={[{ required: true, message: 'Please Enter Bill No' }]}
+                                //rules={[{ required: true, message: 'Please Enter Bill No' }]}
                                 >
                                     <Input placeholder="Bill No" />
                                 </FormItem>
@@ -200,7 +211,7 @@ const AddEditJewelProduct = (props) => {
                             <Col className='gutter-row' xs={24} xl={formItemLayout === 'one-column' ? 24 : 12}>
 
                                 <FormItem
-                                    label="Customer"
+                                    label="Sent To"
                                     name={['bills', 'employee_id']}
                                     rules={[{ required: true, message: 'Please Select Customer' }]}
                                 >
@@ -227,12 +238,12 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill Date"
                                     name={['bills', 'bill_date']}
-                                   // rules={[{ required: true, message: 'Please Select Bill Date' }]}
+                                // rules={[{ required: true, message: 'Please Select Bill Date' }]}
                                 >
                                     <DatePicker
                                         // onChange={dateOnChange}
                                         format='DD/MM/YYYY'
-                                         locale={esES}
+                                        //locale={esES}
 
                                         //disabledDate={dateDisabled}
                                         allowClear={false}
@@ -246,12 +257,12 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Due Date"
                                     name={['bills', 'due_date']}
-                                   // rules={[{ required: true, message: 'Please Due Date' }]}
+                                // rules={[{ required: true, message: 'Please Due Date' }]}
                                 >
                                     <DatePicker
                                         //onChange={dateOnChange}
                                         format='DD/MM/YYYY'
-                                        locale={esES}
+                                        //locale={esES}
 
                                         //disabledDate={dateDisabled}
                                         allowClear={false}
@@ -267,7 +278,7 @@ const AddEditJewelProduct = (props) => {
                                     rules={[{ required: true, message: 'Please Select Bill Image' }]}
                                 >
                                     <ImageUpload
-                                         cropRatio="3/4"
+                                        cropRatio="3/4"
                                         defaultImage={editData && editData.bill_image ? 'cloud-file/' + encodeURIComponent(encodeURIComponent(editData.bill_image)) : null}
                                         storeFileName={'public/uploads/' + new Date().valueOf() + '.jpg'}
                                         onFinish={(fileName) => { addeditFormProducts.setFieldsValue({ bills: { bill_image: fileName } }) }}
@@ -280,7 +291,7 @@ const AddEditJewelProduct = (props) => {
                                 <FormItem
                                     label="Bill Amount"
                                     name={['bills', 'total_amount']}
-                                   // rules={[{ required: true, message: 'Please Enter Amount' }]}
+                                // rules={[{ required: true, message: 'Please Enter Amount' }]}
                                 >
                                     <InputNumber placeholder="Bill Amount" type="number" style={{ width: '200px' }} />
                                 </FormItem>

@@ -631,7 +631,7 @@ const {userId,content_type:contentType,id:contentId}=useParams();
                                         }]}
                                     ><div className="editor-wrapper">
                                             <Editor
-
+      apiKey='aqgwg5nhsm57d07rdlff1bu6lj1aej23f41cyg7txuzc527u'
                                                 init={{
                                                     height: '500',
                                                     auto_focus: false,

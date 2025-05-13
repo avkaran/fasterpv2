@@ -11,7 +11,7 @@ import { ImageUpload, FormItem, MyButton } from '../../../../../comp';
 import { capitalizeFirst } from '../../../../../utils';
 import { Button as MButton } from 'antd-mobile'
 import dayjs from 'dayjs'
-import esES from 'antd/lib/locale-provider/es_ES';
+//import esES from 'antd/lib/locale-provider/es_ES';
 const AddEditBooking = (props) => {
     const context = useContext(PsContext);
     const { Content } = Layout;
@@ -190,7 +190,7 @@ const AddEditBooking = (props) => {
                                         <DatePicker
                                             onChange={dateOnChange}
                                             format='DD/MM/YYYY'
-                                            locale={esES}
+                                           // locale={esES}
 
                                             //disabledDate={dateDisabled}
                                             allowClear={false}
@@ -252,7 +252,7 @@ const AddEditBooking = (props) => {
                                             onChange={passportExpiryDateOnChange}
                                             format='MM/YYYY'
                                             picker="month"
-                                            locale={esES}
+                                           // locale={esES}
 
                                             //disabledDate={passportExpiryDateDisabled}
                                             allowClear={false}

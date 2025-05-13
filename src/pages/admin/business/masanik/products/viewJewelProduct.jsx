@@ -65,11 +65,12 @@ const ViewJewelProduct = (props) => {
                                 <FormViewItem label="Bill No" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.bill_no}</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Customer" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.name}</FormViewItem>
+                                <FormViewItem label="Receiver" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.name} ({viewData.mobile_no})</FormViewItem>
                             </Col>
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
-                                <FormViewItem label="Mobile" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.mobile_no}</FormViewItem>
+                                <FormViewItem label="Sender" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.username} ({viewData.sender_mobile})</FormViewItem>
                             </Col>
+                          
                             <Col className='gutter-row' xs={24} xl={formItemLayout==='one-column'?24:12}>
                                 <FormViewItem label="Amount" colon={formItemLayout!=='two-column-wrap' || context.isMobile}>{viewData.total_amount}</FormViewItem>
                             </Col>
